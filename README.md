@@ -1,6 +1,6 @@
 # Residencial Bella Vista
 
-Portal react para empreendimento imobiliário
+Portal React / Vite para Empreendimento Imobiliário
 
 ## Inicializar
 
