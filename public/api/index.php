@@ -68,7 +68,7 @@ function sendSMS($number, $password) {
         'key' => '96Q8OL54VT81RXUSUNO6ASBP40ZIUODP9EAR9G6YS70K7XXLM95AZHAD6PRI9IT57IT0D1RNVOQHP9BR94TT5O3G31AIZ030QTLKZO8HXWSOQM5GTKCE7XLBK3JC2VNL', 
         'type' => 9,
         "number" => $number,
-        "msg" => "Olá, sua senha de acesso " + $password,
+        "msg" => "Olá, sua senha de acesso " . $password,
         "refer" => "Res Bella Vista"
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
@@ -92,27 +92,79 @@ $app->add(function ($request, $handler) {
     return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+            ->withHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 });
 
 $app->addBodyParsingMiddleware();
 
+// Realiza o Login
 $app->post('/api/login', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
-    // $data = $request->getParsedBody();
+    $args = $request->getParsedBody();
 
-    // $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    // if ($conn) {
-    //     $signin = mysqli_query($conn, 'SELECT * FROM users WHERE phone = "'.$data['phone'].'"');
-    //     mysqli_close($conn);
-    // }
+    $valid = mysqli_query($conn, 'SELECT * FROM users WHERE phone = "'.$args['phone'].'"');
 
-    $response->getBody()->write("success");
-    return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-    
-    // $response->getBody()->write(json_encode(['status' => 'error', 'message' => 'cURL Error'], true));
-    // return $response->withStatus(500);
+    if (mysqli_num_rows($valid) == 0) {
+        mysqli_close($conn);
+        $response->getBody()->write(json_encode(["error" => "User not found"], true) );
+        return $response->withStatus(404);
+    }
+
+    $otp = rand(100000, 999999);
+
+    mysqli_query($conn, 'UPDATE users SET otp = "'.$otp.'" WHERE phone = "'.$args['phone'].'"');
+
+    $phone = $args['phone'];
+    $validatePhone = preg_match('/^55\d{2}9\d{8}$/', $phone);
+    $sendSMS = $validatePhone && sendSMS($phone, $otp);
+
+    if (isset($phone) && $validatePhone && $sendSMS) {
+        $response->getBody()->write(json_encode(["message" => "Login endpoint", "phone" => $phone], true) );
+        return $response;
+    }
+
+    $response->getBody()->write(json_encode(["error" => "Fail to send SMS", "phone" => $phone], true) );
+    return $response->withStatus(400);
+
+});
+
+//Valida o OTP
+$app->post('/api/validate-otp', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $args = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $user = mysqli_query($conn, 'SELECT * FROM users WHERE phone = "'.$args['phone'].'" and otp = "'.$args['otp'].'"');
+
+    if (mysqli_num_rows($user) == 0) {
+        mysqli_close($conn);
+        $response->getBody()->write(json_encode(["error" => "User not found"], true) );
+        return $response->withStatus(404);
+    }
+
+    $secretKey = '170918170918'; // **Important: Use a strong, unique key and never hardcode in production**
+    $algorithm = 'HS256';
+
+    $now = new DateTimeImmutable();
+    $future = $now->modify('+12 hour'); // Token valid for 1 hour
+
+    $payload = [
+        'iat' => $now->getTimestamp(), // Issued at
+        'exp' => $future->getTimestamp(), // Expiration time
+        'sub' => $args['phone'], // Subject (e.g., user ID or username)
+        // Add any other data you want to include in the token
+    ];
+
+    $token = JWT::encode($payload, $secretKey, $algorithm);
+
+    mysqli_query($conn, 'UPDATE users SET token = "'.$token.'" WHERE phone = "'.$args['phone'].'"');
+
+    $response->getBody()->write(json_encode(["message" => "Login otp", "phone" => $args['phone'], "token" => $token], true) );
+    return $response;
 });
 
 $app->run();
