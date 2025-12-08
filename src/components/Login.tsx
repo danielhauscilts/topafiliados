@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
+import env from '../utils/env';
 
 import './Login.scss';
 
@@ -8,10 +9,12 @@ function Login() {
 
     const [send, setSend] =  useState(false);
     const [phone, setPhone] =  useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const sendSms = (phone: String) => {
         axios.post(
-            'http://localhost:8080/api/login',
+            `${env}api/login`,
             {
                 "phone": phone,
             },
@@ -20,12 +23,13 @@ function Login() {
                     'Content-Type': 'application/json',
                 },
             }
-        ).then((e)=>{
+        ).then(()=>{
             setSend(true);
             setPhone(phone.toString());
-            console.log('Enviado com sucesso', e.data);
         }).catch((error) => {
-            console.log('Falha no envio', error.response.data);
+            if (error.status === 401) {
+                setError('Telefone não encontrado');
+            }
         })
     }
 
@@ -33,7 +37,7 @@ function Login() {
         // Implement login logic here
 
         axios.post(
-            'http://localhost:8080/api/validate-otp',
+            `${env}api/validate-otp`,
             {
                 "phone": phone,
                 "otp": otp,
@@ -44,11 +48,12 @@ function Login() {
                 },
             }
         ).then((e)=>{
-            setSend(true);
+            window.localStorage.setItem('user', JSON.stringify(e.data.user));
             window.localStorage.setItem('token', e.data.token);
-            console.log('OTP validado com sucesso', e.data);
+            setSuccess(true);
         }).catch((error) => {
             console.log('Falha na validação do OTP', error.response.data);
+            setError('Erro na validação, tente novamente!');
         })
     }
 
@@ -57,27 +62,54 @@ function Login() {
             <form className="login-form">
                 <Container>
                     <Row>
-                        <Col md={12}>
-                            <h2>Área restrita</h2>
-                        </Col>
-                        {!send &&
+                        {!send && !success &&
                             <>
                                 <Col md={8}>
-                                    <input type="text" style={{width: '100%'}} id="phone" name="phone" placeholder='5511900000000' required />
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='5511900000000' 
+                                        style={{width: '100%'}} 
+                                        id="phone"
+                                        name='phone' />
                                 </Col>
                                 <Col md={4}>
-                                    <button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendSms((document.getElementById('phone') as HTMLInputElement).value)}} className="login-button">Solicitar Senha</button>
+                                    <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendSms((document.getElementById('phone') as HTMLInputElement).value)}} className="login-button">Solicitar Senha</Button>
                                 </Col>
+                                { error !== '' && (
+                                <Col md={12}>
+                                    <div className='login-error'>{error}</div>
+                                </Col>
+                                )}
                             </>
                         }
-                        {send &&
+                        {send && !success &&
                             <>
                                 <Col md={12}>
                                     <p>Um SMS foi enviado para o número {phone}. Por favor, verifique seu celular.</p>
-                                    <input type="password" style={{width: '100%'}} id="otp" name="otp" placeholder='******' required />
+                                </Col>
+                                <Col md={8}>
+                                    <Form.Control 
+                                        type="password" 
+                                        style={{width: '100%'}} 
+                                        id="otp" 
+                                        name="otp" 
+                                        placeholder='******' 
+                                        required />
                                 </Col>
                                 <Col md={4}>
-                                    <button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</button>
+                                    <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</Button>
+                                </Col>
+                                { error !== '' && (
+                                <Col md={12}>
+                                    <div className='login-error'>{error}</div>
+                                </Col>
+                                )}
+                            </>
+                        }
+                        { success && 
+                            <>
+                                <Col md={12}>
+                                    Usuário logado com sucesso!
                                 </Col>
                             </>
                         }
