@@ -9,21 +9,6 @@ import env from './utils/env';
 
 // Routes
 import Home from './pages/Home';
-import About from './pages/About';
-import Client from './pages/Client';
-import Clients from './pages/Clients';
-import Admin from './pages/Admin';
-import Corretor from './pages/Corretor';
-import Financeiro from './pages/Financeiro';
-import Imprensa from './pages/Imprensa';
-import Register from './pages/Register';
-import Unidade from './pages/Unidade';
-import Unidades from './pages/Unidades';
-
-// Assets
-import LogoRBV from './assets/logo-res_bella_vista.svg';
-import LogoAKT from './assets/logo-AKT_branco.svg';
-import BgHeaderGreen from './assets/bg_green.jpg';
 
 class User {
   name?: string;
@@ -44,6 +29,8 @@ function App() {
       let user:any = window.localStorage.getItem('user');
       setUser(JSON.parse(user));
       setLogged(true);
+    } else {
+      setUser({});
     }
 
     setShow(false);
@@ -95,16 +82,19 @@ function App() {
       <div className='header'>
         <Container>
           <Row>
-            <Col md={12}>
-              <div className='header-content text-center'>
-                <img src={`/resbellavista/${LogoRBV}`} alt="Residêncial Bella Vista" height='90' style={{cursor: 'pointer'}} onClick={()=>{window.open('/resbellavista','_self')}} />
+            <Col xs={6}>
+              <div className='header-content'>
+                <h1>Top Afiliados</h1>
               </div>
+            </Col>
+            <Col xs={6} className='text-end'>
+              <Button className='btn btn-primary' onClick={()=>{setShow(true)}}>Área restrita</Button>
             </Col>
           </Row>
         </Container>
       </div>
 
-      <div className='header-restrict' style={{backgroundImage: `url(${BgHeaderGreen})`}}>
+      <div className='header-restrict'>
         <Container>
             <Row>
               <Col md={12}>
@@ -142,9 +132,6 @@ function App() {
                             <Nav.Item><Link to='/' onClick={(e)=>{e.preventDefault(); if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar</Link></Nav.Item>
                             </>
                           }
-                          {!logged &&
-                            <Nav.Item><Button onClick={()=>{setShow(true)}}>Área restrita</Button></Nav.Item>
-                          }
                       </Nav>
                     </Navbar.Collapse>
                   </Navbar>
@@ -158,16 +145,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={logged} />}>
           {/* Rotas logadas */}
-          <Route path="/sobre" element={<About />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/cliente/:id_user" element={<Client />} />
-          <Route path="/clientes" element={<Clients />} />
-          <Route path="/corretor/:id_corretor" element={<Corretor />} />
-          <Route path="/financeiro" element={<Financeiro />} />
-          <Route path="/imprensa" element={<Imprensa />} />
-          <Route path="/cadastro" element={<Register />} />
-          <Route path="/unidades" element={<Unidades />} />
-          <Route path="/unidade/:id_unidade" element={<Unidade />} />
+          {/* <Route path="/admin" element={<Admin />} /> */}
         </Route>
       </Routes>
       
@@ -189,17 +167,8 @@ function App() {
       <div className='footer'>
         <Container>
           <Row>
-            <Col md={6}>
-              <ul>
-                <li>
-                  <a href='http://grupoakt.com.br' target='_blank'>
-                    <img src={'.' + LogoAKT} alt="Grupo AKT" height="40" />
-                  </a>
-                </li>
-              </ul>
-            </Col>
-            <Col md={6} className='text-end' style={{alignContent: 'center'}}>
-              Portal desenvolvido por <a href='https://danielhaus.com.br' target='_blank' style={{fontWeight: 'bold'}}>Danielhaus</a>
+            <Col xs={12}>
+              Top Afiliados é um produto de <a href='https://danielhaus.com.br' target='_blank' style={{fontWeight: 'bold'}}>Cilts</a>
             </Col>
           </Row>
         </Container>
