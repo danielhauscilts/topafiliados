@@ -2,3 +2,17 @@
     padding-top: 1rem;
     text-align: center;
 }
+
+.login-container {
+
+    .login-form {
+    
+        .row {
+            margin-bottom: 1rem;
+    
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

@@ -8,15 +8,17 @@ import './Login.scss';
 function Login() {
 
     const [send, setSend] =  useState(false);
-    const [phone, setPhone] =  useState('');
+    const [mail, setMail] =  useState('');
+    const [password, setPassword] =  useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const sendSms = (phone: String) => {
+    const sendOtp = () => {
         axios.post(
-            `${env}api/login`,
+            `${env}/api/login`,
             {
-                "phone": phone,
+                "mail": mail,
+                "password": password
             },
             {
                 headers: {
@@ -25,10 +27,10 @@ function Login() {
             }
         ).then(()=>{
             setSend(true);
-            setPhone(phone.toString());
+            setMail(mail.toString());
         }).catch((error) => {
             if (error.status === 401) {
-                setError('Telefone não encontrado');
+                setError('cadastro não encontrado');
             }
         })
     }
@@ -37,9 +39,9 @@ function Login() {
         // Implement login logic here
 
         axios.post(
-            `${env}api/validate-otp`,
+            `${env}/api/validate-otp`,
             {
-                "phone": phone,
+                "mail": mail,
                 "otp": otp,
             },
             {
@@ -61,59 +63,77 @@ function Login() {
         <div className="login-container">
             <form className="login-form">
                 <Container>
-                    <Row>
-                        {!send && !success &&
-                            <>
-                                <Col md={8}>
-                                    <Form.Control
-                                        type='text'
-                                        placeholder='5511900000000' 
-                                        style={{width: '100%'}} 
-                                        id="phone"
-                                        name='phone' />
-                                </Col>
-                                <Col md={4}>
-                                    <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendSms((document.getElementById('phone') as HTMLInputElement).value)}} className="login-button">Solicitar Senha</Button>
-                                </Col>
-                                { error !== '' && (
-                                <Col md={12}>
-                                    <div className='login-error'>{error}</div>
-                                </Col>
-                                )}
-                            </>
-                        }
-                        {send && !success &&
-                            <>
-                                <Col md={12}>
-                                    <p>Um SMS foi enviado para o número {phone}. Por favor, verifique seu celular.</p>
-                                </Col>
-                                <Col md={8}>
-                                    <Form.Control 
-                                        type="password" 
-                                        style={{width: '100%'}} 
-                                        id="otp" 
-                                        name="otp" 
-                                        placeholder='******' 
-                                        required />
-                                </Col>
-                                <Col md={4}>
-                                    <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</Button>
-                                </Col>
-                                { error !== '' && (
-                                <Col md={12}>
-                                    <div className='login-error'>{error}</div>
-                                </Col>
-                                )}
-                            </>
-                        }
-                        { success && 
-                            <>
+                    {!send && !success &&
+                    <>
+                        <Row>
+                            <Col md={12}>
+                                <Form.Control
+                                    type='text'
+                                    placeholder='seu@email.com' 
+                                    style={{width: '100%'}} 
+                                    id="mail"
+                                    name='mail'
+                                    onChange={(e)=>{setMail(e.target.value)}} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}>
+                                <Form.Control
+                                    type='password'
+                                    placeholder='******' 
+                                    style={{width: '100%'}} 
+                                    id="password"
+                                    name='password'
+                                    onChange={(e)=>{setPassword(e.target.value)}}  />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}>
+                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Solicitar Senha</Button>
+                            </Col>
+                            { error !== '' && (
+                            <Col md={12}>
+                                <div className='login-error'>{error}</div>
+                            </Col>
+                            )}
+                        </Row>
+                    </>
+                    }
+                    {send && !success &&
+                    <>
+                        <Row>
+                            <Col md={12}>
+                                <p>Um código foi enviado para o celular cadastrado.</p>
+                            </Col>
+                            <Col md={8}>
+                                <Form.Control 
+                                    type="password" 
+                                    style={{width: '100%'}} 
+                                    id="otp" 
+                                    name="otp" 
+                                    placeholder='******' 
+                                    required />
+                            </Col>
+                            <Col md={4}>
+                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</Button>
+                            </Col>
+                            { error !== '' && (
+                            <Col md={12}>
+                                <div className='login-error'>{error}</div>
+                            </Col>
+                            )}
+                        </Row>
+                    </>
+                    }
+                    { success && 
+                        <>
+                            <Row>
                                 <Col md={12}>
                                     Usuário logado com sucesso!
                                 </Col>
-                            </>
-                        }
-                    </Row>
+                            </Row>
+                        </>
+                    }
                 </Container>
             </form>
         </div>
