@@ -23,6 +23,17 @@
         .error {
             text-align: center;
             color: #791e1e;
+        }   
+    }
+
+    .password-field {
+        position: relative;
+
+        svg {
+            position: absolute;
+            right: 20px;
+            top: 7px;
+            cursor: pointer;
         }
     }
 }

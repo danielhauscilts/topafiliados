@@ -26,6 +26,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
         ),
+        'M' => 
+        array (
+            'MercadoPago\\' => 12,
+        ),
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
@@ -64,6 +68,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'MercadoPago\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
         ),
         'Firebase\\JWT\\' => 
         array (

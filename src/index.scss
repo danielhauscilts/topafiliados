@@ -1,3 +1,17 @@
+.btn-primary {
+    background-color: orangered;
+    border-color: orangered;
+
+    &:hover {
+        background-color: rgb(190, 50, 0);
+        border-color: rgb(190, 50, 0);
+    }
+}
+
+a {
+    color: orangered;
+}
+
 .glass-box {
     border-radius: 10px;
     box-shadow: 0px 0px 0px rgba(0,0,0,.3);

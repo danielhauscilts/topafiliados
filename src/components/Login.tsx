@@ -2,16 +2,34 @@ import { useState } from 'react';
 import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import axios from 'axios';
 import env from '../utils/env';
+import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
 
-function Login() {
+interface Props {
+    show: boolean;
+    setShow: any;
+}
+
+function Login({show, setShow}: Props) {
+
+    const Navigate = useNavigate();
 
     const [send, setSend] =  useState(false);
     const [mail, setMail] =  useState('');
     const [password, setPassword] =  useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const goToRegister = () => {
+        Navigate('/cadastro');
+    }
+
+    const resetPassword = () => {
+        axios.put(`${env}/api/password`, {
+            "mail": mail
+        }).then(()=>{setError('Foi encaminhada uma nova senha para o celular cadastrado!')})
+    }
 
     const sendOtp = () => {
         axios.post(
@@ -88,8 +106,27 @@ function Login() {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={12}>
-                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Solicitar Senha</Button>
+                            <Col sm={6}>
+                                <span onClick={()=>{
+                                    console.log(mail);
+                                    if(mail === '') {setError('Digite seu e-mail de cadastro!'); return;}
+                                    if(confirm('Deseja enviar uma nova senha para seu celular?')){
+                                        resetPassword();
+                                        setError('Foi enviada uma nova senha para seu celular cadastrado!')}
+                                }} style={{display: 'block', marginBottom: '1rem'}}>Esqueceu sua senha?</span>
+                            </Col>
+                            <Col sm={6}>
+                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Validar login</Button>
+                            </Col>
+                            <Col>
+                                <Row>
+                                    <div style={{borderTop: 'solid 1px #ccc', fontSize: '.75rem', marginTop: '1rem', paddingTop: '1rem', textAlign: 'center'}}>
+                                        <span onClick={()=>{
+                                    goToRegister();
+                                    setShow(!show);   
+                                }}>Ainda não tem cadastro? <strong style={{cursor: 'pointer'}}>Clique aqui!</strong></span>
+                                    </div>
+                                </Row>
                             </Col>
                             { error !== '' && (
                             <Col md={12}>
@@ -105,7 +142,7 @@ function Login() {
                             <Col md={12}>
                                 <p>Um código foi enviado para o celular cadastrado.</p>
                             </Col>
-                            <Col md={8}>
+                            <Col xs={8}>
                                 <Form.Control 
                                     type="password" 
                                     style={{width: '100%'}} 
@@ -114,11 +151,11 @@ function Login() {
                                     placeholder='******' 
                                     required />
                             </Col>
-                            <Col md={4}>
+                            <Col xs={4}>
                                 <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</Button>
                             </Col>
                             { error !== '' && (
-                            <Col md={12}>
+                            <Col sm={12}>
                                 <div className='login-error'>{error}</div>
                             </Col>
                             )}

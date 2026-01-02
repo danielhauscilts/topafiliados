@@ -6,13 +6,17 @@ use Slim\Factory\AppFactory;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+// SDK do Mercado Pago
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Client\Preference\PreferenceClient;
+
 require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
 $mysql_conn = $app->getContainer();
 
-$_ENV = 'development'; // Change to 'production' in production environment
+$_ENV = 'production'; // Change to 'production' in production environment
 
 if ($_ENV == 'development') {
     // DB Local
@@ -22,10 +26,10 @@ if ($_ENV == 'development') {
     $mysql_conn['db'] = 'top_afiliado';
 } else {
     // DB Hostgator
-    $mysql_conn['host'] = 'br676.hostgator.com.br:3306';
-    $mysql_conn['user'] = 'dan87952_admin';
+    $mysql_conn['host'] = 'sh00168.hostgator.com.br:3306';
+    $mysql_conn['user'] = 'dan43856_admin';
     $mysql_conn['pass'] = 'D@n259083';
-    $mysql_conn['db'] = 'dan87952_resbellavista';
+    $mysql_conn['db'] = 'dan43856_afilipro';
 }
 
 function validateToken($headers, $conn) {
@@ -64,7 +68,7 @@ function validateToken($headers, $conn) {
     return 'valid';
 }
 
-function sendSMS($number, $password) {
+function sendSMS($number, $password, $context = null) {
     $ch = curl_init();
     if ($ch === false) {
         // Handle the error, e.g., log it or display a message
@@ -76,7 +80,7 @@ function sendSMS($number, $password) {
         'key' => '96Q8OL54VT81RXUSUNO6ASBP40ZIUODP9EAR9G6YS70K7XXLM95AZHAD6PRI9IT57IT0D1RNVOQHP9BR94TT5O3G31AIZ030QTLKZO8HXWSOQM5GTKCE7XLBK3JC2VNL', 
         'type' => 9,
         "number" => $number,
-        "msg" => "Olá Afiliado - Este é seu senha " . $password,
+        "msg" => ($context == 'senha' ? "Olá Afiliado, sua nova senha é ":"Olá Afiliado - Este é seu código ") . $password,
         "refer" => "Top Afiliados"
     );
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
@@ -201,6 +205,47 @@ $app->post('/api/user', function (Request $request, Response $response, $args) u
 
 });
 
+// Atualiza senha
+$app->put('/api/password', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $args = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    // if (validateToken($request->getHeaders(), $conn) === "invalid") {
+    //     $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+    //     return $response->withStatus(401);
+    // }
+
+    $newPass = rand(100000, 999999);
+
+    $user = mysqli_query($conn, 'SELECT * FROM users WHERE mail = "'.$args['mail'].'"');
+
+    
+    if (mysqli_num_rows($user) < 1) {
+        mysqli_close($conn);
+        $response->getBody()->write(json_encode(["error" => "User not registered"], true) );
+        return $response->withStatus(409);
+    }
+
+    $valid = mysqli_query($conn, 'UPDATE users SET password = "' . md5($newPass) . '" WHERE mail = "'.$args['mail'].'"');
+
+    $phone = '';
+
+    while($row = mysqli_fetch_assoc($user)) {
+        $phone = $row['phone'];
+    }
+
+    if ($phone !== '' && sendSMS($phone, $newPass, 'senha')) {
+        $response->getBody()->write(json_encode(["success" => "Password Updated"], true) );
+        return $response;
+    }
+    
+    $response->getBody()->write(json_encode(["error" => "Fail to send SMS", "phone" => $user['phone']], true) );
+    return $response->withStatus(400);
+
+});
+
 // Realiza o Login
 $app->post('/api/login', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
@@ -263,7 +308,7 @@ $app->post('/api/validate-otp', function (Request $request, Response $response, 
     $payload = [
         'iat' => $now->getTimestamp(), // Issued at
         'exp' => $future->getTimestamp(), // Expiration time
-        'sub' => $args['mail    '], // Subject (e.g., user ID or username)
+        'sub' => $args['mail'], // Subject (e.g., user ID or username)
         // Add any other data you want to include in the token
     ];
 
@@ -283,36 +328,265 @@ $app->post('/api/validate-otp', function (Request $request, Response $response, 
     return $response;
 });
 
-$app->get('/api/client/{id_client}', function (Request $request, Response $response, $args) use ($mysql_conn) {
+// CATEGORIAS
+
+$app->get('/api/categorias', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $userData = mysqli_query($conn, 'SELECT * FROM users WHERE id = "'.$args['id_client'].'"');
-    
-    
-    if ( mysqli_num_rows($userData) === 0 ) {
-        $response->getBody()->write(json_encode(['error'=>'Not clients listed']));
-        return $response->withStatus(404);
-    }
-    
-    $unitsData = mysqli_query($conn, 'SELECT compras.id, compras.unidade, (SELECT users.name FROM users WHERE users.id = compras.id_corretor) as corretor FROM compras WHERE compras.id_cliente = "'.$args['id_client'].'"');
-    
+    $data = mysqli_query($conn, 'SELECT * FROM categorias');
+
     mysqli_close($conn);
 
-    $client = '';
-    $units = array();
-
-    while($unit = mysqli_fetch_assoc($unitsData)) {
-        $units[] = $unit;
-    }
-    
-    while($row = mysqli_fetch_assoc($userData)) {
-        $client = $row;
-        $client['unidades'] = $units;
+    if ( mysqli_num_rows($data) === 0 ) {
+        $response->getBody()->write(json_encode(['error'=>'Not categories listed']));
+        return $response->withStatus(302);
     }
 
-    $response->getBody()->write(json_encode($client));
+    $categorias = array();
+
+    while($row = mysqli_fetch_assoc($data)) {
+        $categorias[] = $row;
+    }
+
+    $response->getBody()->write(json_encode($categorias));
     return $response->withStatus(200);
+});
+
+// Cadastra categoria
+$app->post('/api/categoria', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $args = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    // if (validateToken($request->getHeaders(), $conn) === "invalid") {
+    //     $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+    //     return $response->withStatus(401);
+    // }
+
+    mysqli_query($conn, 'INSERT INTO categorias (categoria) VALUES ( "'.$args['categoria'].'")');
+
+    $response->getBody()->write(json_encode(["success" => "Category registred"], true) );
+    return $response;
+
+});
+
+// PRODUTOS
+
+$app->get('/api/produtos', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+    
+    $queryParams = $request->getQueryParams();
+    $filter = '';
+    $terms = $queryParams['terms'] ?? null;
+    $today = $queryParams['today'] ?? null;
+
+    if ($terms || $today) {
+        $filter = 'WHERE ' . ($terms ? 'titulo LIKE "%'. $terms .'%"': '') . ($terms && $today ? ' AND ': '') . ($today ? 'data = "'. date('Y-m-d') .'"': '');
+    }
+
+    $data = mysqli_query($conn, 'SELECT * FROM produtos ' .$filter. ' ORDER BY data DESC, id DESC');
+
+    mysqli_close($conn);
+
+    if ( mysqli_num_rows($data) === 0 ) {
+        $response->getBody()->write(json_encode(['error'=>'Not products listed']));
+        return $response->withStatus(302);
+    }
+
+    $produtos = array();
+
+    while($row = mysqli_fetch_assoc($data)) {
+        $produtos[] = $row;
+    }
+
+    $response->getBody()->write(json_encode($produtos));
+    return $response->withStatus(200);
+});
+
+$app->get('/api/produtos/{categoria}', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $queryParams = $request->getQueryParams();
+
+    $filter = '';
+    $terms = $queryParams['terms'] ?? null;
+    $today = $queryParams['today'] ?? null;
+
+    if ($terms || $today) {
+        $filter = ' AND ' . ($terms ? 'p.titulo LIKE "%'. $terms .'%"': '') . ($terms && $today ? ' AND ': '') . ($today ? 'p.data = "'. date('Y-m-d') .'"': '');
+    }
+
+    $data = mysqli_query($conn, 'SELECT p.id, p.video, p.titulo, p.capa, p.link, p.texto, p.data FROM produtos p INNER JOIN produtos_categorias c ON p.id = c.id_produto WHERE c.id_categoria = "'.$args['categoria'].'" ' . $filter . ' ORDER BY p.data DESC, p.id DESC ');
+
+    mysqli_close($conn);
+
+    if ( mysqli_num_rows($data) === 0 ) {
+        $response->getBody()->write(json_encode(['error'=>'Not products listed']));
+        return $response->withStatus(302);
+    }
+
+    $produtos = array();
+
+    while($row = mysqli_fetch_assoc($data)) {
+        $produtos[] = $row;
+    }
+
+    $response->getBody()->write(json_encode($produtos));
+    return $response->withStatus(200);
+});
+
+// Cadastra produto
+$app->post('/api/produto', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+    $data = json_decode($data["produto"], true);
+    $uploadedFiles = $request->getUploadedFiles();
+
+    $video = $uploadedFiles['video'];
+
+    if ($video->getError() === UPLOAD_ERR_OK) {
+        $filename = $video->getClientFilename();
+        $pathVideo = 'video/' . $filename;
+        $video->moveTo('./' . $pathVideo);
+    } else {
+        $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
+        return $response->withStatus(500);
+    }
+
+    $capa = $uploadedFiles['capa'];
+
+    if ($capa->getError() === UPLOAD_ERR_OK) {
+        $filename = $capa->getClientFilename();
+        $pathCapa = 'capa/' . $filename;
+        $capa->moveTo('./' . $pathCapa);
+    } else {
+        $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
+        return $response->withStatus(500);
+    }
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    // if (validateToken($request->getHeaders(), $conn) === "invalid") {
+    //     $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+    //     return $response->withStatus(401);
+    // }
+
+    mysqli_query($conn, 'INSERT INTO produtos (
+        titulo, 
+        video, 
+        capa, 
+        link, 
+        data
+        texto,
+        ) VALUES ( 
+        "'.$data['titulo'].'",
+        "'.$pathVideo.'",
+        "'.$pathCapa.'",
+        "'.$data['link'].'",
+        "'.date('Y-m-d').'",
+        "'.$data['texto'].'")');
+    
+    $id_product = mysqli_insert_id($conn);
+
+    mysqli_query($conn, 'INSERT INTO produtos_categorias (id_produto, id_categoria) VALUES ("'.$id_product.'", "'.$data['categoria'].'")');
+
+    $response->getBody()->write(json_encode(["success" => "Product registred"], true) );
+    return $response;
+
+});
+
+// Gera ID de pagamento
+$app->post('/api/pagamento', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+
+    MercadoPagoConfig::setAccessToken("APP_USR-8937348424652122-010215-cfe65c14df58950d87717d56ab7a4831-3107446168");
+
+    $client = new PreferenceClient();
+    $preference = $client->create([
+    "items"=> array(
+            array(
+            "title" => "AfiliPRO",
+            "quantity" => 1,
+            "unit_price" => 20
+            )
+        ),
+        "back_urls"=> array(
+            "success" => "https://afiliapro.com.br/pagamento/sucesso",
+            "failure" => "https://afiliapro.com.br/pagamento/falha",
+            "pending" => "https://afiliapro.com.br/pagamento/pendente"
+        ),
+        "payment_methods" => array(
+            "installments" => 1
+        )
+    ]);
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $date = new DateTime();
+    $endDate = $date->modify("+30 days")->format('Y-m-d');
+
+    mysqli_query($conn, 'INSERT INTO pagamentos (
+        id_user, 
+        id_pagamento, 
+        status, 
+        data, 
+        end_date
+        ) VALUES ( 
+        '.$data['user'].',
+        "'.$preference->id.'",
+        0,
+        "'.date('Y-m-d').'",
+        "'.$endDate.'")');
+
+    $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate], true));
+    return $response;
+
+});
+
+// Notificações de pagamento
+$app->post('/api/notify', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    mysqli_query($conn, 'INSERT INTO notificacoes (
+        id_transaction,
+        type,
+        date_created,
+        user_id,
+        action,
+        id_payment
+        ) VALUES ( 
+        "'.$data['id'].', "
+        "'.$data['date_created'].', "
+        "'.$data['user_id'].', "
+        "'.$data['action'].', "     
+        "'.$data['data']['id'].'")');
+
+    $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate], true));
+    return $response;
+
+});
+
+// Pagamento sucesso
+$app->put('/api/pagamento', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    mysqli_query($conn, 'UPDATE pagamento SET status="1" WHERE id_pagamento = "'.$data['id_pagamento'].'"');
+
+    $response->getBody()->write(json_encode(["success" => true], true));
+    return $response;
+
 });
 
 $app->run();

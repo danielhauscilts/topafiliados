@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Container, Row, Col, Modal, Button, Navbar, Nav } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Button, Nav } from 'react-bootstrap'
 import Login from './components/Login'
 import './App.scss'
 import axios from 'axios';
@@ -9,6 +9,22 @@ import env from './utils/env';
 
 // Routes
 import Home from './pages/Home';
+import Produtos from './pages/Produtos';
+import Register from './components/Register';
+import About from './pages/About';
+import Learn from './pages/Learn';
+import Plain from './pages/Plain';
+import Count from './pages/Count';
+import Sucesso from './pages/Sucesso';
+import Falha from './pages/Falha';
+import Pendente from './pages/Pendente';
+
+// Assets
+import logo from './assets/logo_full.svg';
+
+// Icons
+import { RiLoginBoxFill } from "react-icons/ri";
+import { RiLogoutBoxRFill } from "react-icons/ri";
 
 class User {
   name?: string;
@@ -25,12 +41,15 @@ function App() {
   const [user, setUser] = useState<User>({});
 
   const handleClose = () => {
-    if ( window.localStorage.getItem('user') !== '') {
+    console.log(window.localStorage.getItem('user'));
+    if ( window.localStorage.getItem('user') !== null) {
       let user:any = window.localStorage.getItem('user');
       setUser(JSON.parse(user));
       setLogged(true);
+      window.open('/produtos', '_self')
     } else {
       setUser({});
+      setLogged(false);
     }
 
     setShow(false);
@@ -39,7 +58,7 @@ function App() {
   const signout = () => {
     const token = window.localStorage.getItem('token');
 
-    axios.get(`${env}api/signout`,
+    axios.get(`${env}/api/signout`,
         {
           headers: {
             'Authorization': 'Bearer ' + token
@@ -49,7 +68,7 @@ function App() {
           setLogged(false);
           window.localStorage.removeItem('token');
           window.localStorage.removeItem('user');
-          window.open('/resbellavista/', '_self');
+          window.open('/', '_self');
       })
   }
 
@@ -59,7 +78,7 @@ function App() {
 
     if (token) {
 
-      axios.get(`${env}api/validate-token`,
+      axios.get(`${env}/api/validate-token`,
         {
           headers: {
             'Authorization': 'Bearer ' + token
@@ -78,17 +97,25 @@ function App() {
   }, [])
 
   return (
-    <BrowserRouter basename={window.location.href.indexOf('localhost') > -1 ? '' : '/resbellavista'}>
+    <BrowserRouter>
       <div className='header'>
         <Container>
           <Row>
-            <Col xs={6}>
+            <Col xs={12} md={6}>
               <div className='header-content'>
-                <h1>Top Afiliados</h1>
+                <img src={logo} alt="AfiliPRO" height={50} />
               </div>
             </Col>
-            <Col xs={6} className='text-end'>
-              <Button className='btn btn-primary' onClick={()=>{setShow(true)}}>Área restrita</Button>
+            <Col xs={12} md={6} className='signin'>
+              {!logged && (
+                <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+              )}
+              {logged && (
+                <>
+                  <span style={{color: '#FFF', display: 'block', marginBottom: '.5rem'}}>Olá, {user.name}</span>
+                  <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
+                </>
+              )}
             </Col>
           </Row>
         </Container>
@@ -98,44 +125,38 @@ function App() {
         <Container>
             <Row>
               <Col md={12}>
-                <Navbar expand="lg" className="justify-content-end">
-                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                  <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                      <Nav>
-                          {/* Área Pública */}
-                          {logged && user?.type === 'adm' && 
-                            <>
-                            {/* Área do Admin */}
-                            <Nav.Item><Link to="/admin">Administradores</Link></Nav.Item>
-                            <Nav.Item><Link to="/clientes">Clientes</Link></Nav.Item>
-                            <Nav.Item><Link to="/cadastro">Corretores</Link></Nav.Item>
-                            <Nav.Item><Link to="/unidades">Unidades</Link></Nav.Item>
-                            </>
-                          }
-                          {logged && user?.type === 'crt' && 
-                            <>
-                            {/* Área do Corretor */}
-                            <Nav.Item><Link to="/imprensa">Imprensa</Link></Nav.Item>
-                            <Nav.Item><Link to="/cadastro">Clientes</Link></Nav.Item>
-                            <Nav.Item><Link to="/corretor">Corretor</Link></Nav.Item>
-                            </>
-                          }
-                          {logged && user?.type === 'clt' && 
-                            <>
-                            {/* Área do Cliente */}
-                            <Nav.Item><Link to="/financeiro">Financeiro</Link> |{" "}</Nav.Item>
-                            </>
-                          }
-                          {logged &&
-                            <>
-                            {/* Deslogar */}
-                            <Nav.Item><Link to='/' onClick={(e)=>{e.preventDefault(); if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar</Link></Nav.Item>
-                            </>
-                          }
-                      </Nav>
-                    </Navbar.Collapse>
-                  </Navbar>
-                </Col>
+                    <Nav>
+                      <Nav.Item>
+                        <Link to="/">Início</Link>
+                      </Nav.Item>
+                      {logged && (
+                        <>
+                          <Nav.Item>
+                            <Link to="/produtos">Produtos</Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Link to="/conta">Minha conta</Link>
+                          </Nav.Item>
+                        </>
+                      )}
+                      <Nav.Item>
+                        <Link to="/tutoriais">Tutoriais</Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Link to="/duvidas">Dúvidas?</Link>
+                      </Nav.Item>
+                      {!logged && (
+                        <>
+                        <Nav.Item>
+                          <Link to="/planos">Planos</Link>
+                        </Nav.Item> 
+                       <Nav.Item>
+                        <Link to="/cadastro">Cadastre-se</Link>
+                        </Nav.Item> 
+                        </>
+                      )}
+                    </Nav>
+              </Col>
             </Row>
           </Container>
         </div>
@@ -143,10 +164,18 @@ function App() {
       {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/cadastro" element={<Register />} />
+        <Route path="/planos" element={<Plain />} />
+        <Route path="/duvidas" element={<About />} />
+        <Route path="/tutoriais" element={<Learn />} />
         <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={logged} />}>
           {/* Rotas logadas */}
-          {/* <Route path="/admin" element={<Admin />} /> */}
+          <Route path="/conta" element={<Count />} />
+          <Route path="/produtos" element={<Produtos />} />
         </Route>
+        <Route path="/pagamento/sucesso" element={<Sucesso />} />
+        <Route path="/pagamento/falha" element={<Falha />} />
+        <Route path="/pagamento/pendente" element={<Pendente />} />
       </Routes>
       
 
@@ -155,7 +184,7 @@ function App() {
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Login />
+          <Login show={show} setShow={setShow} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -168,7 +197,7 @@ function App() {
         <Container>
           <Row>
             <Col xs={12}>
-              Top Afiliados é um produto de <a href='https://danielhaus.com.br' target='_blank' style={{fontWeight: 'bold'}}>Cilts</a>
+              AfiliPRO é um produto de <a href='https://danielhaus.com.br' target='_blank' style={{fontWeight: 'bold'}}>Cilts</a>
             </Col>
           </Row>
         </Container>

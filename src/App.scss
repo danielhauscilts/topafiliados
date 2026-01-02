@@ -1,17 +1,64 @@
 .header-restrict {
   background-color: #999 !important;
+
+  .nav {
+    padding: .5rem 0;
+
+    .nav-item {
+      margin-right: 1rem;
+      padding: .5rem 0;
+
+      a {
+        color: orangered;
+        text-decoration: none;
+        padding: .5rem 1rem;
+        background-color: #ededed;
+        border-radius: 5px;
+
+        &:hover {
+          color: rgb(255, 255, 255);
+          background-color: #000;
+        }
+      }
+    }
+
+    @media screen and (max-width: '500px') {
+      .nav-item {
+        width: 100%; 
+        margin-right: 0;
+        
+        a {
+          width: 100%;
+          display: block;
+          text-align: center;
+        }
+      }
+    }
+  }
 }
 
 .header {
-  background-color: #f8f9fa;
+  background-color: #555;
   padding: 20px 0;
 
   .header-content {
     text-align: left;
+  }
 
-    h1 {
-      margin: 0;
+  .signin {
+    text-align: right;
+  }
+
+  @media screen and (max-width: 500px) {
+
+    .header-content{
+      text-align: center;
     }
+
+    .signin {
+      text-align: center;
+      margin-top: 2rem;
+    }  
   }
 }
 
@@ -19,4 +66,8 @@
   background-color: #999;
   color: #FFF;
   padding: 1rem 0;
+
+  @media screen and (max-width: 500px) {
+    text-align: center;
+  }
 }
