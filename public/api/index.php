@@ -517,9 +517,9 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
             )
         ),
         "back_urls"=> array(
-            "success" => "https://afiliapro.com.br/pagamento/sucesso",
-            "failure" => "https://afiliapro.com.br/pagamento/falha",
-            "pending" => "https://afiliapro.com.br/pagamento/pendente"
+            "success" => "https://afilipro.com.br/pagamento/sucesso",
+            "failure" => "https://afilipro.com.br/pagamento/falha",
+            "pending" => "https://afilipro.com.br/pagamento/pendente"
         ),
         "payment_methods" => array(
             "installments" => 1
