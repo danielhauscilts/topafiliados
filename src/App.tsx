@@ -24,6 +24,8 @@ import logo from './assets/logo_full.svg';
 // Icons
 import { RiLoginBoxFill } from "react-icons/ri";
 import { RiLogoutBoxRFill } from "react-icons/ri";
+import { MdEmail } from "react-icons/md";
+import { IoLogoWhatsapp } from "react-icons/io";
 
 class User {
   name?: string;
@@ -188,8 +190,15 @@ function App() {
       <div className='footer'>
         <Container>
           <Row>
+            <Col>
+                  <strong>Contate-nos</strong>
+                  <p>
+                    <a href="mailto:atendimento@afilipro.com.br"><MdEmail /> - atendiento@afilipro.com.br</a><br />
+                    <a href="https://wa.me/5511962601113?text=AfiliPRO"><IoLogoWhatsapp /> - +55 (11) 9 6260.1113</a>
+                  </p>
+            </Col>
             <Col xs={12}>
-              AfiliPRO é um produto de <a href='https://danielhaus.com.br' target='_blank' style={{fontWeight: 'bold'}}>Cilts</a>
+              AfiliPRO é um produto de <strong>Cilts Serviços para Internet</strong> CNPJ: 14.512.150/0001-99
             </Col>
           </Row>
         </Container>

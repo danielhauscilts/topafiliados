@@ -1,4 +1,5 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import "yet-another-react-lightbox/styles.css";
 
 import './Home.scss';
@@ -7,28 +8,35 @@ import "react-image-gallery/styles/css/image-gallery.css";
 
 const Home = () => {
 
+    const Navigate = useNavigate();
+
     return (
         <>
         <div className='home'>
             <Container>
-                <Row>
-                    <Col md={12} className='laser-list'>
-                        <h1>Cansou do Telegram?</h1>
-                        <h3>Aqui é mais fácil!</h3>
-                        <p>Produtos categorizados, disponíveis sempre, com filtro e criação de listas</p>
-                    </Col>
-                </Row>
-            </Container>
-            <Container>
-                <Row>
+                <Row className='call'>
                     <Col md={12}>
-                        <h1>Como funciona?</h1>
-                        <ol>
-                            <li>Cadastre-se</li>
-                            <li>Faça sua assinatura</li>
-                            <li>Escolha entre diversos produtos cadastrados</li>
-                            <li>Poste em seu Shopee Vídeo</li>
-                            <li>Fature $$$$$</li>
+                        <h1>A melhor plataforma para afiliados Shopee vídeos que você já viu!</h1>
+                    </Col>
+                    <Col md={12}>
+                        <p className='text-center' style={{marginTop: '1rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
+                        <p className='text-center' style={{marginBottom: '2rem'}}><strong>Por apenas R$ 20,00/mês!</strong></p>
+                    </Col>
+                    <Col md={6}>
+                        <p style={{textAlign: 'center', margin: '0 0 2rem', fontSize: '1.25rem', backgroundColor: 'yellow', padding: '1rem', borderRadius: '10px', lineHeight: '1.5rem', boxShadow: '1px 2px 2px rgba(0,0,0,.5)'}}><strong>Faça parte de milhares de Afiliados que faturam mais de R$ 2.000,00 por mês, trabalhando de onde quiser e nos horários que quiser.</strong></p>
+                        <h2>Quem somos?</h2>
+                        <p>Uma plataforma que disponibiliza diáriamente packs vídeos de alta qualidade de produtos <strong>Shopee vídeos</strong>, com link e #hashtags, organizados por categoria, facilitando e fortalecendo seu aparecimento nas buscas de produtos.</p>
+                        <h2>Qual nosso diferêncial?</h2>
+                        <p>Além de fornecer <strong>Packs de Vídeos</strong> e <strong>Tutoriais</strong> que te farão faturar, temos a forma mais simples e organizada de busca de vídeos de produtos para sua gestão, diferente dos grupos de mensagens onde a busca dos produtos e metodos de copiar são comples e burocratizados. </p>
+                    </Col>
+                    <Col md={6}>
+                        <h2>Como funciona?</h2>
+                        <ol className='feature-list'>
+                            <li><span onClick={(e)=>{e.preventDefault();Navigate('/cadastro')}}>Cadastre-se aqui!</span></li>
+                            <li><span>Contrate seu plano por R$ 20,00 mensais, pare quando quiser!</span></li>
+                            <li><span>Acesse a área de produtos, filtrando por categorias ou liste os produtos diários e siga o tutorial de postagem na Shopee Vídeo.</span></li>
+                            <li><span>Acompanhe na sua central de Afiliados a performance de suas campanhas</span></li>
+                            <li><span>Fature alto como diversos Afiliados!</span></li>
                         </ol>
                     </Col>
                 </Row>

@@ -69,6 +69,11 @@
   color: #FFF;
   padding: 1rem 0;
 
+  a {
+    color: #FFF;
+    text-decoration: none;
+  }
+
   @media screen and (max-width: 500px) {
     text-align: center;
   }
