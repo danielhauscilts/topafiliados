@@ -192,7 +192,7 @@ const Produtos = () => {
                 </Container>
             </div>
             {admin && (
-                <Container>
+                <Container style={{padding: "0 2rem"}}>
                     <Row>
                         <Col>
                             <div className='form-produto'>
@@ -213,7 +213,7 @@ const Produtos = () => {
                                                 onChange={(e)=>{changedCategoria(e)}}>
                                                     <option value="">Selecione</option>
                                                     {admin && (
-                                                        <option value="new">Nova categoria</option>
+                                                        <option value="new">-- Nova categoria --</option>
                                                     )}
                                                     { categories.length > 0 && categories.map((e, i)=>(
                                                         <option value={e.id} key={i}>{e.categoria}</option>
@@ -248,35 +248,37 @@ const Produtos = () => {
                     </Row>
                 </Container>
             )}
-            <Container style={{paddingBottom: '2rem'}}>
+            <Container style={{padding: '2rem'}}>
                 <Row>
                     {produtos && produtos.length > 0 && produtos.map((e, i) => (
-                        <Col key={i} sm={6} md={6} lg={3}>
+                        <Col key={i} xs={12} sm={6} md={6} lg={3}>
                             <div className='produto'>
-                                <div className='titulo'>{e.titulo}</div>
-                                <div className='text-center' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div>
+                                <div className='text-left' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div>
                                 <div className='midias'>
                                     <div className='capa'>
                                         <img src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} width='100%' alt="Baixar" />
                                         <AiFillPicture />
-                                        <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa}>
-                                            Baixar Capa <FaFileDownload />
-                                        </a>
                                     </div>
                                     <div className='video'>
                                         <video width="100%" controls>
                                             <source src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} type="video/mp4"></source>
                                         </video>
                                         <FaVideo />
-                                        <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} title="ImageName" download={e.video}>
-                                            Baixar Vídeo <FaFileDownload />
-                                        </a>
                                     </div>
+                                </div>
+                                <div className='titulo'>{e.titulo}</div>
+                                <div className='downloads'>
+                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa}>
+                                        Baixar Capa <FaFileDownload />
+                                    </a>
+                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} title="ImageName" download={e.video}>
+                                        Baixar Vídeo <FaFileDownload />
+                                    </a>
                                 </div>
                                 <div className='link' onClick={()=>{
                                         navigator.clipboard.writeText(e.link).then(() => {
                                             // Optional: Provide user feedback
-                                            alert('Link copiado');
+                                            alert('Link copiado com sucesso!');
                                         });
                                     }}>
                                     <p>Copiar link Shopee</p>
@@ -286,7 +288,7 @@ const Produtos = () => {
                                 <div className='texto' onClick={()=>{
                                         navigator.clipboard.writeText(e.texto).then(() => {
                                             // Optional: Provide user feedback
-                                            alert('Texto copiado');
+                                            alert('#Hashtags copiadas com sucesso!');
                                         });
                                     }}>
                                     <p>Copiar #hashtags</p>
