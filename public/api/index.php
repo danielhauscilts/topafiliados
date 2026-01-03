@@ -505,7 +505,7 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
 
     $data = $request->getParsedBody();
 
-    MercadoPagoConfig::setAccessToken("APP_USR-8937348424652122-010215-cfe65c14df58950d87717d56ab7a4831-3107446168");
+    MercadoPagoConfig::setAccessToken("APP_USR-3887967945664963-010215-d64eccfb01703791b2b630537df74c7a-95453539");
 
     $client = new PreferenceClient();
     $preference = $client->create([

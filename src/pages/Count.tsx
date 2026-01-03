@@ -12,7 +12,7 @@ import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import env from '../utils/env';
 
 // Inicialize o Mercado Pago com seu Public Key 
-initMercadoPago('APP_USR-dcb56cc7-c12a-402e-9571-2c772da07096');
+initMercadoPago('APP_USR-0dc798dc-56c5-4274-a39d-8029a47bec99');
 
 const Count = () => {
 
