@@ -595,13 +595,21 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
         "'.$data['user_id'].'",
         "'.$data['action'].'")');
 
-    $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/".$data['id']);
+    $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/".$data['data']['id']);
 
     if($paymentData["status"] === 'approved') {
-        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE mp_pagamento_id = "'.$paymentData["id"].'"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE mp_pagamento_id = "' . $paymentData["id"] . '"');
+        $userData = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE mp_pagamento_id = "' . $paymentData["id"] . '"');
+        if(mysqli_num_rows($userData) > 0) {
+            $user = array();
+            while($row = mysqli_fetch_assoc($userData)) {
+                $user = $row;
+            }
+        }
+        mysqli_query($conn, 'UPDATE users SET type = "u" WHERE id = "' . $user["id_user"] . '"');
     }
 
-    $response->getBody()->write(json_encode(["id" => $data['id']], true));
+    $response->getBody()->write(json_encode(["id" => $data['data']['id']], true));
     return $response;
 
 });
