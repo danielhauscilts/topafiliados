@@ -1,11 +1,18 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
-const ProtectRoute = (props: { children: React.ReactNode, isAuthenticated: boolean }) => {
-    if (!props.isAuthenticated) {
+interface Props {
+    children: React.ReactNode;
+    isAuthenticated: string;
+}
+
+const ProtectRoute = ({ children , isAuthenticated }:Props) => {
+    const userType = JSON.parse(isAuthenticated)?.type === 'u' || JSON.parse(isAuthenticated)?.type === 'a';
+
+    if (!userType) {
         return <Navigate to="/" replace />; 
     }
 
-    return props.children ? props.children : <Outlet />;
+    return children ? children : <Outlet />;
 }
 
 export default ProtectRoute;

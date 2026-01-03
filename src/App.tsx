@@ -13,7 +13,6 @@ import Produtos from './pages/Produtos';
 import Register from './components/Register';
 import About from './pages/About';
 import Learn from './pages/Learn';
-import Plain from './pages/Plain';
 import Count from './pages/Count';
 import Sucesso from './pages/Sucesso';
 import Falha from './pages/Falha';
@@ -37,7 +36,7 @@ class User {
 function App() {
 
   const [show, setShow] = useState(false);
-  const [logged, setLogged] = useState(false);
+  const [logged, setLogged] = useState<boolean>(false);
   const [user, setUser] = useState<User>({});
 
   const handleClose = () => {
@@ -124,10 +123,7 @@ function App() {
                 {logged && user.type === 'p' && (
                   <>
                     <Nav.Item>
-                      <Link to="/planos">Planos</Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Link to="/conta">Minha conta | Contratação</Link>
+                      <Link to="/conta">Minha conta | <strong>Contrate</strong></Link>
                     </Nav.Item>
                   </>
                 )}
@@ -162,17 +158,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cadastro" element={<Register />} />
-        <Route path="/planos" element={<Plain />} />
         <Route path="/duvidas" element={<About />} />
-        <Route path="/tutoriais" element={<Learn />} />
-        <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={logged} />}>
+        <Route path="/conta" element={<Count />} />
+        <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={window.localStorage.getItem('user') || ''} />}>
           {/* Rotas logadas */}
-          <Route path="/conta" element={<Count />} />
+          <Route path="/tutoriais" element={<Learn />} />
           <Route path="/produtos" element={<Produtos />} />
+          <Route path="/pagamento/sucesso" element={<Sucesso />} />
+          <Route path="/pagamento/falha" element={<Falha />} />
+          <Route path="/pagamento/pendente" element={<Pendente />} />
         </Route>
-        <Route path="/pagamento/sucesso" element={<Sucesso />} />
-        <Route path="/pagamento/falha" element={<Falha />} />
-        <Route path="/pagamento/pendente" element={<Pendente />} />
       </Routes>
       
 
