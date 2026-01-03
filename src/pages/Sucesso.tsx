@@ -27,9 +27,10 @@ const Sucesso = () => {
         axios.put(`${env}/api/pagamento`,{
             "preference_id": preference_id,
             "payment_id": payment_id
-        }).then(()=>{
+        }).then((e)=>{
             setSuccess(true);
             setError(false);
+            window.localStorage.setItem('user', JSON.stringify(e.data.user));
         }).catch(()=>{
             setSuccess(true);
             setError(true);
@@ -48,7 +49,7 @@ const Sucesso = () => {
                                 <p style={{fontSize: '5rem', color: 'green'}}><FaCheckCircle /></p>
                                 <h1>Pagamento com sucesso</h1>
                                 <p>Agora você pode aproveitar todos os recursos do AfiliPRO por 30 dias, caso deseje continuar, realize uma nova compra!</p>
-                                <p><Link to="/tutoriais">Conheça como usar!</Link></p>
+                                <p><a href="/tutoriais" target='_self'>Conheça como usar!</a></p>
                             </div>
                         )}
 

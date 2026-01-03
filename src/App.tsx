@@ -163,13 +163,13 @@ function App() {
         <Route path="/duvidas" element={<About />} />
         <Route path="/conta" element={<Count />} />
         <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={window.localStorage.getItem('user') || ''} />}>
-          {/* Rotas logadas */}
-          <Route path="/tutoriais" element={<Learn />} />
-          <Route path="/produtos" element={<Produtos />} />
-          <Route path="/pagamento/sucesso" element={<Sucesso />} />
-          <Route path="/pagamento/falha" element={<Falha />} />
-          <Route path="/pagamento/pendente" element={<Pendente />} />
         </Route>
+        {/* Rotas logadas */}
+        <Route path="/tutoriais" element={<Learn />} />
+        <Route path="/produtos" element={<Produtos />} />
+        <Route path="/pagamento/sucesso" element={<Sucesso />} />
+        <Route path="/pagamento/falha" element={<Falha />} />
+        <Route path="/pagamento/pendente" element={<Pendente />} />
       </Routes>
       
 

@@ -621,8 +621,8 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE id_pagamento = "'.$data['id_pagamento'].'"');
-    $pagamento = '';
+    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE id_pagamento = "'.$data['preference_id'].'"');
+    $pagamento = array();
 
     if(mysqli_num_rows($pagamentos) > 0) {
         while($row = mysqli_fetch_assoc($pagamentos)) {
@@ -630,8 +630,15 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
         }
         mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE id_pagamento = "'.$data['preference_id'].'"');
         mysqli_query($conn, 'UPDATE users SET type="u" WHERE id = "'.$pagamento['id_user'].'"');
+
+        $userData = mysqli_query($conn, 'SELECT * FROM users WHERE id = "'.$pagamento['id_user'].'"');
+        $user = array();
+
+        while($row = mysqli_fetch_assoc($userData)) {
+            $user = $row;
+        }
         
-        $response->getBody()->write(json_encode(["success" => true], true));
+        $response->getBody()->write(json_encode($user, true));
         return $response;
     }
 
