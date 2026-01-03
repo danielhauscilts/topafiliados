@@ -18,13 +18,15 @@ const Sucesso = () => {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
 
-    const transaction_id = searchParams.get('preference_id');
+    const preference_id = searchParams.get('preference_id');
+    const payment_id = searchParams.get('payment_id');
 
     useEffect(()=>{
 
         // Save o sucesso no BD
         axios.put(`${env}/api/pagamento`,{
-            "id_pagamento": transaction_id
+            "preference_id": preference_id,
+            "payment_id": payment_id
         }).then(()=>{
             setSuccess(true);
             setError(false);

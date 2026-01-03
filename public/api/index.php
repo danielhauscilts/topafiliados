@@ -549,6 +549,32 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
 
 });
 
+function GetCurl($url){
+
+    $token = "APP_USR-3887967945664963-010215-d64eccfb01703791b2b630537df74c7a-95453539";
+
+    //open connection
+    $ch = curl_init();
+    
+    //curl options
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer " . $token
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,0);
+        
+    //execute response
+    $response = curl_exec($ch);
+
+    //close connection
+    curl_close($ch);
+
+    return json_decode($response, true);
+}
+
 // Notificações de pagamento
 $app->post('/api/notify', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
@@ -563,11 +589,17 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
         user_id,
         action
         ) VALUES ( 
-        "'.$data['id'].'",
+        "'.$data['data']['id'].'",
         "'.$data['type'].'",
         "'.$data['date_created'].'",
         "'.$data['user_id'].'",
         "'.$data['action'].'")');
+
+    $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/".$data['id']);
+
+    if($paymentData["status"] === 'approved') {
+        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE mp_pagamento_id = "'.$paymentData["id"].'"');
+    }
 
     $response->getBody()->write(json_encode(["id" => $data['id']], true));
     return $response;
@@ -588,7 +620,7 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
         while($row = mysqli_fetch_assoc($pagamentos)) {
             $pagamento = $row;
         }
-        mysqli_query($conn, 'UPDATE pagamentos SET status="1" WHERE id_pagamento = "'.$data['id_pagamento'].'"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE id_pagamento = "'.$data['preference_id'].'"');
         mysqli_query($conn, 'UPDATE users SET type="u" WHERE id = "'.$pagamento['id_user'].'"');
         
         $response->getBody()->write(json_encode(["success" => true], true));
