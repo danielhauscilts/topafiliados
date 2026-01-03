@@ -198,7 +198,7 @@ $app->post('/api/user', function (Request $request, Response $response, $args) u
         return $response->withStatus(409);
     }
 
-    mysqli_query($conn, 'INSERT INTO users (name, phone, type, date, mail, password) VALUES ( "'.$args['name'].'","'.$args['phone'].'","u","'.date('Y-m-d').'", "'.$args['mail'].'", "'.md5($args['password']).'" )');
+    mysqli_query($conn, 'INSERT INTO users (name, phone, type, date, mail, password) VALUES ( "'.$args['name'].'","'.$args['phone'].'","p","'.date('Y-m-d').'", "'.$args['mail'].'", "'.md5($args['password']).'" )');
 
     $response->getBody()->write(json_encode(["success" => "User registred"], true) );
     return $response;
@@ -582,11 +582,45 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    mysqli_query($conn, 'UPDATE pagamento SET status="1" WHERE id_pagamento = "'.$data['id_pagamento'].'"');
+    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE id_pagamento = "'.$data['id_pagamento'].'"');
+    $pagamento = '';
 
-    $response->getBody()->write(json_encode(["success" => true], true));
-    return $response;
+    if(mysqli_num_rows($pagamentos) > 0) {
+        while($row = mysqli_fetch_assoc($pagamentos)) {
+            $pagamento = $row;
+        }
+        mysqli_query($conn, 'UPDATE pagamentos SET status="1" WHERE id_pagamento = "'.$data['id_pagamento'].'"');
+        mysqli_query($conn, 'UPDATE users SET type="u" WHERE id = "'.$pagamento['id_user'].'"');
+        
+        $response->getBody()->write(json_encode(["success" => true], true));
+        return $response;
+    }
 
+    $response->getBody()->write(json_encode(["error" => "Fail to update payment"], true) );
+    return $response->withStatus(500);
+});
+
+// Pagamentos
+$app->get('/api/pagamentos/{user_id}', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE id_user = "'.$args['user_id'].'" and status != "0"');
+    $pagamento = array();
+
+    if(mysqli_num_rows($pagamentos) > 0) {
+        while($row = mysqli_fetch_assoc($pagamentos)) {
+            $pagamento[] = $row;
+        }
+        
+        $response->getBody()->write(json_encode($pagamento, true));
+        return $response;
+    }
+
+    $response->getBody()->write(json_encode(["error" => "No payments"], true) );
+    return $response->withStatus(302);
 });
 
 $app->run();

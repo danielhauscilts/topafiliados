@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Container, Row, Col, Modal, Button, Nav } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Button, Nav, Navbar } from 'react-bootstrap'
 import Login from './components/Login'
 import './App.scss'
 import axios from 'axios';
@@ -98,68 +98,65 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className='header'>
-        <Container>
-          <Row>
-            <Col xs={12} md={6}>
-              <div className='header-content'>
-                <img src={logo} alt="AfiliPRO" height={50} />
-              </div>
-            </Col>
-            <Col xs={12} md={6} className='signin'>
-              {!logged && (
-                <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
-              )}
-              {logged && (
-                <>
-                  <span style={{color: '#FFF', display: 'block', marginBottom: '.5rem'}}>Olá, {user.name}</span>
-                  <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
-                </>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      </div>
-
       <div className='header-restrict'>
-        <Container>
-            <Row>
-              <Col md={12}>
-                    <Nav>
-                      <Nav.Item>
-                        <Link to="/">Início</Link>
-                      </Nav.Item>
-                      {logged && (
-                        <>
-                          <Nav.Item>
-                            <Link to="/produtos">Produtos</Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Link to="/conta">Minha conta</Link>
-                          </Nav.Item>
-                        </>
-                      )}
-                      <Nav.Item>
-                        <Link to="/tutoriais">Tutoriais</Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Link to="/duvidas">Dúvidas?</Link>
-                      </Nav.Item>
-                      {!logged && (
-                        <>
-                        <Nav.Item>
-                          <Link to="/planos">Planos</Link>
-                        </Nav.Item> 
-                       <Nav.Item>
-                        <Link to="/cadastro">Cadastre-se</Link>
-                        </Nav.Item> 
-                        </>
-                      )}
-                    </Nav>
-              </Col>
-            </Row>
+        <Navbar expand="lg" className='navbar-dark'>
+          <Container>
+            <Navbar.Brand href="#home"><img src={logo} alt="AfiliPRO" height={40} /></Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
+              <Nav>
+                <Nav.Item>
+                  <Link to="/">Início</Link>
+                </Nav.Item>
+                {logged && (user.type === 'u' || user.type === 'a') && (
+                  <>
+                    <Nav.Item>
+                      <Link to="/produtos">Compartilhar produtos</Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Link to="/conta">Minha conta | Contratação</Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Link to="/tutoriais">Tutoriais</Link>
+                    </Nav.Item>
+                  </>
+                )}
+                {logged && user.type === 'p' && (
+                  <>
+                    <Nav.Item>
+                      <Link to="/planos">Planos</Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Link to="/conta">Minha conta | Contratação</Link>
+                    </Nav.Item>
+                  </>
+                )}
+                {!logged && (
+                  <>
+                    <Nav.Item>
+                      <Link to="/cadastro">Cadastre-se</Link>
+                    </Nav.Item> 
+                  </>
+                )}
+                <Nav.Item>
+                  <Link to="/duvidas">Dúvidas?</Link>
+                </Nav.Item>
+                <Nav.Item className='text-end'>
+                  {!logged && (
+                    <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+                  )}
+                  {logged && (
+                    <>
+                      <span style={{color: '#FFF', display: 'block', marginBottom: '.5rem'}}>Olá, {user.name}</span>
+                      <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
+                    </>
+                  )}
+                </Nav.Item>
+              </Nav>
+            </Navbar.Collapse>
           </Container>
-        </div>
+        </Navbar>
+      </div>
 
       {/* Routes */}
       <Routes>

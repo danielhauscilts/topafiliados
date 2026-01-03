@@ -17,8 +17,8 @@ const Falha = () => {
                         <div className='titulo text-center' style={{padding: '2rem 0'}}>
                             <p style={{fontSize: '5rem', color: 'green'}}><BiSolidErrorAlt /></p>
                             <h1>Houve uma falha em seu pagamento!</h1>
-                            <p>tente novamente ou contate sua instituição financeira</p>
-                            <p><Link to="/">Ir para o início!</Link></p>
+                            <p>Tente novamente ou contate sua instituição financeira</p>
+                            <p><Link to="/conta">Ir para o <strong>Minha conta!</strong></Link></p>
                         </div>
                     </Col>
                 </Row>

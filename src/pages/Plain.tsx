@@ -9,11 +9,11 @@ const Plain = () => {
 
     return (
         <>
-        <div className='plain'>
+        <div className='plain content'>
             <Container>
                 <Row>
                     <Col md={12} className='laser-list'>
-                        Planos
+                        <h1>Planos</h1>
                     </Col>
                 </Row>
             </Container>

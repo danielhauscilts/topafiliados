@@ -9,11 +9,11 @@ const About = () => {
 
     return (
         <>
-        <div className='about'>
+        <div className='about content'>
             <Container>
                 <Row>
                     <Col md={12} className='laser-list'>
-                        Dúvidas
+                        <h1>Dúvidas</h1>
                     </Col>
                 </Row>
             </Container>
