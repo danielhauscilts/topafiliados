@@ -121,7 +121,7 @@ const Count = () => {
                 )}
             </Container>
             <Container>
-                {pagamentos.length && (
+                {pagamentos.length > 0 && (
                     <Row>
                         <Col>
                             <h3 style={{margin: '1rem 0'}}>Faturas</h3>
