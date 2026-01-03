@@ -561,16 +561,15 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
         type,
         date_created,
         user_id,
-        action,
-        id_payment
+        action
         ) VALUES ( 
-        "'.$data['id'].', "
-        "'.$data['date_created'].', "
-        "'.$data['user_id'].', "
-        "'.$data['action'].', "     
-        "'.$data['data']['id'].'")');
+        "'.$data['id'].'",
+        "'.$data['type'].'",
+        "'.$data['date_created'].'",
+        "'.$data['user_id'].'",
+        "'.$data['action'].'")');
 
-    $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate], true));
+    $response->getBody()->write(json_encode(["id" => $data['id']], true));
     return $response;
 
 });
