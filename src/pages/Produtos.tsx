@@ -28,6 +28,8 @@ const Produtos = () => {
     const [admin, setAdmin] = useState<boolean>(false);
     const [terms, setTerms] = useState<any>(null);
     const [today, setToday] = useState<any>(false);
+    const [sucesso, setSucesso] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
 
     useEffect(() => {
         getProdutos();
@@ -148,8 +150,15 @@ const Produtos = () => {
             }
         ).then(()=>{
             getProdutos();
-        }).catch((err)=>{
-            console.log(err);
+            setSucesso(true);
+            setTimeout(()=>{
+                setSucesso(false);
+            }, 5000);
+        }).catch(()=>{
+            setError(true);
+            setTimeout(()=>{
+                setError(false);
+            }, 5000);
         })
     };
 
@@ -244,6 +253,20 @@ const Produtos = () => {
                                             <Button onClick={(e)=>{e.preventDefault; cadastrar()}}>Cadastrar</Button>
                                         </Col>
                                     </Row>
+                                    {sucesso && (
+                                        <Row>
+                                        <Col style={{marginTop: '1rem'}}>
+                                            Produto cadastrado com sucesso!
+                                        </Col>
+                                    </Row>
+                                    )}
+                                    {error && (
+                                        <Row>
+                                        <Col style={{marginTop: '1rem'}}>
+                                            houve uma falha ao cadastrar produto, contate o administrador
+                                        </Col>
+                                    </Row>
+                                    )}
                                 </Container>
                             </div>
                         </Col>

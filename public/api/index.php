@@ -481,8 +481,8 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
         video, 
         capa, 
         link, 
-        data
-        texto,
+        data,
+        texto
         ) VALUES ( 
         "'.$data['titulo'].'",
         "'.$pathVideo.'",
