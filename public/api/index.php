@@ -458,16 +458,16 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
         return $response->withStatus(500);
     }
 
-    $capa = $uploadedFiles['capa'];
+    // $capa = $uploadedFiles['capa'];
 
-    if ($capa->getError() === UPLOAD_ERR_OK) {
-        $filename = $capa->getClientFilename();
-        $pathCapa = 'capa/' . uniqid() . "_" . $filename;
-        $capa->moveTo('./' . $pathCapa);
-    } else {
-        $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
-        return $response->withStatus(500);
-    }
+    // if ($capa->getError() === UPLOAD_ERR_OK) {
+    //     $filename = $capa->getClientFilename();
+    //     $pathCapa = 'capa/' . uniqid() . "_" . $filename;
+    //     $capa->moveTo('./' . $pathCapa);
+    // } else {
+    //     $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
+    //     return $response->withStatus(500);
+    // }
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
@@ -481,6 +481,8 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
         video, 
         capa, 
         link, 
+        link_2,
+        link_3,
         data,
         texto
         ) VALUES ( 
@@ -488,6 +490,8 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
         "'.$pathVideo.'",
         "'.$pathCapa.'",
         "'.$data['link'].'",
+        "'.$data['linkDois'].'",
+        "'.$data['linkTres'].'",
         "'.date('Y-m-d').'",
         "'.$data['texto'].'")');
     
@@ -504,7 +508,7 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
 $app->post('/api/pagamento', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
     $data = $request->getParsedBody();
-    $order = "ORD" . rand(10000000, 99999999);
+    $order = rand(10000000, 99999999);
 
     MercadoPagoConfig::setAccessToken("APP_USR-3887967945664963-010215-d64eccfb01703791b2b630537df74c7a-95453539");
 
@@ -538,17 +542,17 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
         id_pagamento, 
         status, 
         data, 
-        end_date,
-        order
+        external_reference,
+        end_date
         ) VALUES ( 
-        '.$data['user'].',
+        "'.$data['user'].'",
         "'.$preference->id.'",
-        0,
+        "0",
         "'.date('Y-m-d').'",
-        "'.$endDate.'", 
-        "'.$order.'")');
+        "'.$order.'",
+        "'.$endDate.'")');
 
-    $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate], true));
+    $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate, "external_reference"=>$order], true));
     return $response;
 
 });
@@ -602,8 +606,8 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
     $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/".$data['data']['id']);
 
     if($paymentData["status"] === 'approved') {
-        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE order = "' . $paymentData["external_reference"] . '"');
-        $userData = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE order = "' . $paymentData["external_reference"] . '"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE external_reference = "' . $paymentData["external_reference"] . '"');
+        $userData = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE external_reference = "' . $paymentData["external_reference"] . '"');
         if(mysqli_num_rows($userData) > 0) {
             $user = array();
             while($row = mysqli_fetch_assoc($userData)) {
@@ -625,14 +629,14 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE order = "'.$data['external_reference'].'"');
+    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE external_reference = "'.$data['external_reference'].'"');
     $pagamento = array();
 
     if(mysqli_num_rows($pagamentos) > 0) {
         while($row = mysqli_fetch_assoc($pagamentos)) {
             $pagamento = $row;
         }
-        mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE order = "'.$data['external_reference'].'"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE external_reference = "'.$data['external_reference'].'"');
         mysqli_query($conn, 'UPDATE users SET type="u" WHERE id = "'.$pagamento['id_user'].'"');
 
         $userData = mysqli_query($conn, 'SELECT * FROM users WHERE id = "'.$pagamento['id_user'].'"');
