@@ -313,7 +313,7 @@ const Produtos = () => {
                                 <div className='link' onClick={()=>{
                                         window.open(e.link, '_blank');
                                     }}>
-                                    <p>Ir para a Shopee Vídeo</p>
+                                    <p>Link do produto</p>
                                     <span>{e.link}</span>
                                     <IoIosOpen />
                                 </div>
