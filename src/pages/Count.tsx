@@ -20,6 +20,7 @@ const Count = () => {
 
     const [user] = useState<any>(JSON.parse(userStorage));
     const [pId, setPId] = useState<any>(null);
+    const [eId, setEId] = useState<any>(null);
     const [pagamentos, setPagamentos] = useState<any[]>([]);
     const [payment, setPayment] = useState(false);
 
@@ -30,6 +31,7 @@ const Count = () => {
             }
         ).then((e:any)=>{
             setPId(e.data.id);
+            setEId(e.data.external_reference);
         })
     }
 
@@ -128,40 +130,43 @@ const Count = () => {
                         </Col>
                     </Row>
                 )}
-                {pagamentos.length > 0 && pagamentos.map((e) => (
-                    <>
-                        <Row style={{borderBottom: 'solid 1px #CCC', margin: '.5rem .25rem', padding: '0 0 .5rem'}}>
-                            <Col xs={6}>{e.data.split('-')[2]}/{e.data.split('-')[1]}/{e.data.split('-')[0]}</Col>
-                            <Col xs={6}>
-                                <span className='status-payment'>
-                                    {e.status === '1' ? 'Pago' : 'Cancelado'}
-                                </span>
-                            </Col>
-                        </Row>
-                    </>
+                {pagamentos.length > 0 && pagamentos.map((e, i) => (
+                    <Row key={i} style={{borderBottom: 'solid 1px #CCC', margin: '.5rem .25rem', padding: '0 0 .5rem'}}>
+                        <Col xs={6}>{e.data.split('-')[2]}/{e.data.split('-')[1]}/{e.data.split('-')[0]}</Col>
+                        <Col xs={6}>
+                            <span className='status-payment'>
+                                {e.status === '1' ? 'Pago' : 'Cancelado'}
+                            </span>
+                        </Col>
+                    </Row>
                 ))}
                 {pagamentos.length === 0 && (
                     <Row>
                         <Col className='text-center' style={{margin: '2rem 0 0', color: '#999'}}>Ainda não foram contratados planos!</Col>
                     </Row>
                 )}
-                <Row style={{marginTop: '1rem'}}>
-                    <Col className='text-center' style={{marginBottom: '2rem'}}>
-                        <p style={{fontSize: '1.5rem'}}>
-                            Contrate 30 dias,<br /><strong>por apenas R$ 20,00</strong>!
-                        </p>
-                        <Button style={{padding: '1rem 3rem', margin: '1rem 0', fontSize: '1.5rem'}} onClick={()=>{activePayment()}}>clicando aqui</Button>
-                        <br /><small>* 30 dias contados à partir da confirmação do pagamento</small>
-                    </Col>
-                </Row>
-                {payment && (
+                {!pId && (
+                    <Row style={{marginTop: '1rem'}}>
+                        <Col className='text-center' style={{marginBottom: '2rem'}}>
+                            <p style={{fontSize: '1.5rem'}}>
+                                Contrate 30 dias,<br /><strong>por apenas R$ 20,00</strong>!
+                            </p>
+                            <Button style={{padding: '1rem 3rem', margin: '1rem 0', fontSize: '1.5rem'}} onClick={()=>{activePayment()}}>clicando aqui</Button>
+                            <br /><small>* 30 dias contados à partir da confirmação do pagamento</small>
+                        </Col>
+                    </Row>
+                )}
+                {pId && (
                     <Row>
-                        <Col md={12} className='laser-list text-center' style={{margin: '2rem 0'}}>
+                        <Col md={12} className='laser-list text-right' style={{margin: '2rem 0'}}>
                             {pId && (
                                 <>
-                                    <strong>Ativar 30 dias pagando com: </strong>
-                                    <p><img src="/images/payment.jpg?1" alt="Pague com:" /></p>
+                                    <p className='text-center'>
+                                        <strong>Pedido {eId}</strong><br />
+                                        <small>Clique abaixo e pague com</small>
+                                    </p>
                                     <Wallet initialization={{ preferenceId: pId }} />
+                                    <p style={{fontSize: '.75rem', marginTop: '2rem'}}>Pagamentos aceitos:<br /><img src="/images/payment.jpg?1" alt="Pague com:" /></p>
                                 </>
                             )}
                         </Col>

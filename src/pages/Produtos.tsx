@@ -10,7 +10,7 @@ import '../assets/zoom-styles.min.css';
 import "react-image-gallery/styles/css/image-gallery.css";
 
 import { FaCopy } from "react-icons/fa6";
-import { AiFillPicture } from "react-icons/ai";
+// import { AiFillPicture } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
 import { IoIosOpen } from "react-icons/io";
@@ -22,6 +22,8 @@ const Produtos = () => {
     const [produtos, setProdutos] = useState<any[]>([]);
     const [titulo, setTitulo] = useState<any>(null);
     const [link, setLink] = useState<any>(null);
+    const [linkDois, setLinkDois] = useState<any>(null);
+    const [linkTres, setLinktres] = useState<any>(null);
     const [texto, setTexto] = useState<any>(null);
     const [categoria, setCategoria] = useState<any>(null);
     const [categories, setCategories] = useState<any[]>([]);
@@ -103,15 +105,15 @@ const Produtos = () => {
 
     // Upload File
     const [selectedVideo, setSelectedVideo] = useState([]);
-    const [selectedCapa, setSelectedCapa] = useState([]);
+    // const [selectedCapa, setSelectedCapa] = useState([]);
 
     const handleVideoChange = (event:any) => {
       setSelectedVideo(Array.from(event.target.files));
     };
 
-    const handleCapaChange = (event:any) => {
-      setSelectedCapa(Array.from(event.target.files));
-    };
+    // const handleCapaChange = (event:any) => {
+    //   setSelectedCapa(Array.from(event.target.files));
+    // };
 
     const cadastrar = async () => {
       if (selectedVideo.length === 0) {
@@ -119,23 +121,25 @@ const Produtos = () => {
         return;
       }
 
-      if (selectedCapa.length === 0) {
-        alert("Please select capa to upload.");
-        return;
-      }
+    //   if (selectedCapa.length === 0) {
+    //     alert("Please select capa to upload.");
+    //     return;
+    //   }
 
       const formData = new FormData();
       selectedVideo.forEach((file) => {
         formData.append("video", file); // "files" is the key your backend expects
       });
 
-      selectedCapa.forEach((file) => {
-        formData.append("capa", file); // "files" is the key your backend expects
-      });
+    //   selectedCapa.forEach((file) => {
+    //     formData.append("capa", file); // "files" is the key your backend expects
+    //   });
 
       formData.append("produto", JSON.stringify({
                 titulo: titulo,
                 link: link,
+                linkDois: linkDois,
+                linkTres: linkTres,
                 texto: texto,
                 categoria: categoria
             }));
@@ -236,6 +240,14 @@ const Produtos = () => {
                                             <input type="text" id='link' placeholder='Link' onChange={(e)=>{setLink(e.target.value)}} />
                                         </Col>
                                         <Col md={12}>
+                                            <p className='form-title'>Link 2</p>
+                                            <input type="text" id='link_2' placeholder='Link' onChange={(e)=>{setLinkDois(e.target.value)}} />
+                                        </Col>
+                                        <Col md={12}>
+                                            <p className='form-title'>Link 3</p>
+                                            <input type="text" id='link_3' placeholder='Link' onChange={(e)=>{setLinktres(e.target.value)}} />
+                                        </Col>
+                                        <Col md={12}>
                                             <p className='form-title'>texto</p>
                                             <textarea rows={5} id='texto' placeholder='Texto' onChange={(e)=>{setTexto(e.target.value)}}></textarea>
                                         </Col>
@@ -243,10 +255,12 @@ const Produtos = () => {
                                             <p className='form-title'>Video</p>
                                             <input type="file" id='video' onChange={handleVideoChange} multiple />
                                         </Col>
+                                        {/*
                                         <Col md={6}>
                                             <p className='form-title'>Capa</p>
                                             <input type="file" id='capa' onChange={handleCapaChange} multiple />
                                         </Col>
+                                        */}
                                     </Row>
                                     <Row>
                                         <Col style={{marginTop: '1rem'}}>
@@ -275,23 +289,28 @@ const Produtos = () => {
             )}
             <Container style={{padding: '2rem'}}>
                 <Row>
+                    {produtos && (
+                        <Col md={12}><h1 style={{color: '#FFF'}}>Produtos</h1></Col>    
+                    )}
                     {produtos && produtos.length > 0 && produtos.map((e, i) => (
                         <Col key={i} xs={12} sm={6} md={6} lg={3}>
                             <div className='produto'>
+                                <div className='titulo'>{e.titulo}</div>
                                 <div className='text-left' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div>
                                 <div className='midias'>
+                                    {/* 
                                     <div className='capa'>
                                         <img src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} width='100%' alt="Baixar" />
                                         <AiFillPicture />
                                     </div>
+                                    */}
                                     <div className='video'>
-                                        <video width="100%" controls>
+                                        <video width="100%" height="280" controls>
                                             <source src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} type="video/mp4"></source>
                                         </video>
                                         <FaVideo />
                                     </div>
                                 </div>
-                                <div className='titulo'>{e.titulo}</div>
                                 <div className='downloads'>
                                     <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa}>
                                         Baixar Capa <FaFileDownload />
@@ -317,6 +336,24 @@ const Produtos = () => {
                                     <span>{e.link}</span>
                                     <IoIosOpen />
                                 </div>
+                                {e.link_2 && (
+                                    <div className='link' onClick={()=>{
+                                        window.open(e.link_2, '_blank');
+                                    }}>
+                                    <p>Segundo link do produto</p>
+                                    <span>{e.link_2}</span>
+                                    <IoIosOpen />
+                                </div>
+                                )}
+                                {e.link_3 && (
+                                    <div className='link' onClick={()=>{
+                                        window.open(e.link_3, '_blank');
+                                    }}>
+                                    <p>Terceiro link do produto</p>
+                                    <span>{e.link_3}</span>
+                                    <IoIosOpen />
+                                </div>
+                                )}
                             </div>
                         </Col>
                         )

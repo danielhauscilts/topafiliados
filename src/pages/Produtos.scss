@@ -26,8 +26,8 @@
             border-radius: 5px;
             padding: .5rem 0;
             display: flex;
-            min-height: 90px;
-            align-items: center;
+            min-height: 70px;
+            align-items: start;
         }
 
         .midias {
@@ -39,9 +39,10 @@
             align-items: start;
             background-color: orangered;
             border-bottom: solid 3px orangered;
+            margin-bottom: 1.5rem;
 
             .video {
-                width: 50%;
+                width: 100%;
                 position: relative;
                 border: none;
                 padding: 0;
