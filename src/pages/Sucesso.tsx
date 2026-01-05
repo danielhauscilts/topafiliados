@@ -19,6 +19,7 @@ const Sucesso = () => {
     const [error, setError] = useState(false);
 
     const preference_id = searchParams.get('preference_id');
+    const external_reference = searchParams.get('external_reference');
     const payment_id = searchParams.get('payment_id');
 
     useEffect(()=>{
@@ -26,7 +27,8 @@ const Sucesso = () => {
         // Save o sucesso no BD
         axios.put(`${env}/api/pagamento`,{
             "preference_id": preference_id,
-            "payment_id": payment_id
+            "payment_id": payment_id,
+            "external_reference": external_reference
         }).then((e)=>{
             setSuccess(true);
             setError(false);

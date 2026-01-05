@@ -504,12 +504,13 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
 $app->post('/api/pagamento', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
     $data = $request->getParsedBody();
+    $order = "ORD" . rand(10000000, 99999999);
 
     MercadoPagoConfig::setAccessToken("APP_USR-3887967945664963-010215-d64eccfb01703791b2b630537df74c7a-95453539");
 
     $client = new PreferenceClient();
     $preference = $client->create([
-    "items"=> array(
+        "items"=> array(
             array(
             "title" => "AfiliPRO",
             "quantity" => 1,
@@ -523,7 +524,8 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
         ),
         "payment_methods" => array(
             "installments" => 1
-        )
+        ),
+        "external_reference" => $order
     ]);
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
@@ -536,13 +538,15 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
         id_pagamento, 
         status, 
         data, 
-        end_date
+        end_date,
+        order
         ) VALUES ( 
         '.$data['user'].',
         "'.$preference->id.'",
         0,
         "'.date('Y-m-d').'",
-        "'.$endDate.'")');
+        "'.$endDate.'", 
+        "'.$order.'")');
 
     $response->getBody()->write(json_encode(["id" => $preference->id, "user"=>$data['user'], "data"=>date('Y-m-d'), "endDate"=>$endDate], true));
     return $response;
@@ -598,8 +602,8 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
     $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/".$data['data']['id']);
 
     if($paymentData["status"] === 'approved') {
-        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE mp_pagamento_id = "' . $paymentData["id"] . '"');
-        $userData = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE mp_pagamento_id = "' . $paymentData["id"] . '"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status = "1" WHERE order = "' . $paymentData["external_reference"] . '"');
+        $userData = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE order = "' . $paymentData["external_reference"] . '"');
         if(mysqli_num_rows($userData) > 0) {
             $user = array();
             while($row = mysqli_fetch_assoc($userData)) {
@@ -621,14 +625,14 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE id_pagamento = "'.$data['preference_id'].'"');
+    $pagamentos = mysqli_query($conn, 'SELECT * FROM pagamentos WHERE order = "'.$data['external_reference'].'"');
     $pagamento = array();
 
     if(mysqli_num_rows($pagamentos) > 0) {
         while($row = mysqli_fetch_assoc($pagamentos)) {
             $pagamento = $row;
         }
-        mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE id_pagamento = "'.$data['preference_id'].'"');
+        mysqli_query($conn, 'UPDATE pagamentos SET status="1", mp_pagamento_id = "'.$data['payment_id'].'" WHERE order = "'.$data['external_reference'].'"');
         mysqli_query($conn, 'UPDATE users SET type="u" WHERE id = "'.$pagamento['id_user'].'"');
 
         $userData = mysqli_query($conn, 'SELECT * FROM users WHERE id = "'.$pagamento['id_user'].'"');
