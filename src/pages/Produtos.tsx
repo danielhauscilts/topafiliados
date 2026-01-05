@@ -155,6 +155,12 @@ const Produtos = () => {
         ).then(()=>{
             getProdutos();
             setSucesso(true);
+            setTitulo(null);
+            setTexto(null);
+            setLink(null);
+            setLinkDois(null);
+            setLinktres(null);
+            setTitulo(null);
             setTimeout(()=>{
                 setSucesso(false);
             }, 5000);
@@ -264,7 +270,7 @@ const Produtos = () => {
                                     </Row>
                                     <Row>
                                         <Col style={{marginTop: '1rem'}}>
-                                            <Button onClick={(e)=>{e.preventDefault; cadastrar()}}>Cadastrar</Button>
+                                            <Button disabled={!titulo || !link || !texto} onClick={(e)=>{e.preventDefault; cadastrar()}}>Cadastrar</Button>
                                         </Col>
                                     </Row>
                                     {sucesso && (
@@ -277,7 +283,7 @@ const Produtos = () => {
                                     {error && (
                                         <Row>
                                         <Col style={{marginTop: '1rem'}}>
-                                            houve uma falha ao cadastrar produto, contate o administrador
+                                            Houve uma falha ao cadastrar produto, contate o administrador
                                         </Col>
                                     </Row>
                                     )}
