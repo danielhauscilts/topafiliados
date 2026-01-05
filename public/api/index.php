@@ -451,7 +451,7 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
 
     if ($video->getError() === UPLOAD_ERR_OK) {
         $filename = $video->getClientFilename();
-        $pathVideo = 'video/' . $filename;
+        $pathVideo = 'video/' . uniqid() . "_". $filename;
         $video->moveTo('./' . $pathVideo);
     } else {
         $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
@@ -462,7 +462,7 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
 
     if ($capa->getError() === UPLOAD_ERR_OK) {
         $filename = $capa->getClientFilename();
-        $pathCapa = 'capa/' . $filename;
+        $pathCapa = 'capa/' . uniqid() . "_" . $filename;
         $capa->moveTo('./' . $pathCapa);
     } else {
         $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
