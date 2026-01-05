@@ -13,6 +13,8 @@ import { FaCopy } from "react-icons/fa6";
 import { AiFillPicture } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
+import { IoIosOpen } from "react-icons/io";
+
 
 
 const Produtos = () => {
@@ -275,16 +277,6 @@ const Produtos = () => {
                                         Baixar Vídeo <FaFileDownload />
                                     </a>
                                 </div>
-                                <div className='link' onClick={()=>{
-                                        navigator.clipboard.writeText(e.link).then(() => {
-                                            // Optional: Provide user feedback
-                                            alert('Link copiado com sucesso!');
-                                        });
-                                    }}>
-                                    <p>Copiar link Shopee</p>
-                                    <span>{e.link}</span>
-                                    <FaCopy />
-                                </div>
                                 <div className='texto' onClick={()=>{
                                         navigator.clipboard.writeText(e.texto).then(() => {
                                             // Optional: Provide user feedback
@@ -294,6 +286,13 @@ const Produtos = () => {
                                     <p>Copiar #hashtags</p>
                                     <span>{e.texto}</span>
                                     <FaCopy />
+                                </div>
+                                <div className='link' onClick={()=>{
+                                        window.open(e.link, '_blank');
+                                    }}>
+                                    <p>Ir para a Shopee Vídeo</p>
+                                    <span>{e.link}</span>
+                                    <IoIosOpen />
                                 </div>
                             </div>
                         </Col>

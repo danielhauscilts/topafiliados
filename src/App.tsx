@@ -197,7 +197,7 @@ function App() {
               <strong>Contate-nos</strong>
               <p>
                 <a href="mailto:atendimento@afilipro.com.br"><MdEmail /> atendimento@afilipro.com.br</a><br />
-                <a href="https://wa.me/5511962601113?text=AfiliPRO"><IoLogoWhatsapp /> +55 (11) 9 6260.1113</a>
+                <a href="https://wa.me/5511937751045?text=AfiliPRO"><IoLogoWhatsapp /> +55 (11) 9 3775.1045</a>
               </p>
             </Col>
           </Row>

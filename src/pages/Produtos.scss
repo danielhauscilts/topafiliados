@@ -4,7 +4,6 @@
 
     .row {
 
-        
         .form-title {
             margin: .5rem 0;
             font-weight: bold;
@@ -94,8 +93,9 @@
             margin: .5rem 0;
             position: relative;
             padding: 10px;
-            background-color: #ededed;
+            background-color: #FFF;
             border-radius: 5px;
+            cursor: pointer;
 
             p {
                 margin: 0 0 .25rem;
@@ -103,13 +103,10 @@
             }
 
             span {
-                background-color: #000;
-                color: #FFF;
-                padding: .25rem;
+                color: #999;
                 display: block;
-                overflow: hidden;
-                text-wrap: nowrap;
                 font-size: .75rem;
+                overflow-wrap: break-word;
             }
 
             svg {
@@ -124,6 +121,7 @@
             padding: 10px;
             background-color: #ededed;
             border-radius: 5px;
+            cursor: pointer;
 
             p {
                 margin: 0 0 .25rem;
