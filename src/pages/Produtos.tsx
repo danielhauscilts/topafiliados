@@ -326,13 +326,13 @@ const Produtos = () => {
                                     </a>
                                 </div>
                                 <div className='texto' onClick={()=>{
-                                        navigator.clipboard.writeText(e.texto).then(() => {
+                                        navigator.clipboard.writeText(e.titulo + " " + e.texto).then(() => {
                                             // Optional: Provide user feedback
                                             alert('#Hashtags copiadas com sucesso!');
                                         });
                                     }}>
-                                    <p>Copiar #hashtags</p>
-                                    <span>{e.texto}</span>
+                                    <p>Copiar Título e #hashtags</p>
+                                    <span>{e.titulo} {e.texto}</span>
                                     <FaCopy />
                                 </div>
                                 <div className='link' onClick={()=>{
