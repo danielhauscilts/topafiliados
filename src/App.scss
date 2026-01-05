@@ -68,6 +68,7 @@
   background-color: #555;
   color: #FFF;
   padding: 1rem 0;
+  font-size: .75rem;
 
   a {
     color: #FFF;
@@ -76,5 +77,26 @@
 
   @media screen and (max-width: 500px) {
     text-align: center;
+  }
+
+  .social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    svg {
+      font-size: 1.5rem;
+    }
+
+    li {
+      margin-bottom: .5rem;
+      text-align: center;
+    }
+
+    @media  screen and (min-width: 500px) {
+      li {
+        text-align: right;
+      }
+    }
   }
 }

@@ -26,6 +26,10 @@ import { RiLoginBoxFill } from "react-icons/ri";
 import { RiLogoutBoxRFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
 import { IoLogoWhatsapp } from "react-icons/io";
+import { AiFillInstagram } from "react-icons/ai";
+import { FaYoutube } from "react-icons/fa";
+import { AiFillTikTok } from "react-icons/ai";
+
 
 class User {
   name?: string;
@@ -190,15 +194,36 @@ function App() {
       <div className='footer'>
         <Container>
           <Row>
-            <Col md={6}>
+            <Col md={4}>
               AfiliPRO é um produto de <strong>Cilts Serviços para Internet</strong> CNPJ: 14.512.150/0001-99
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <strong>Contate-nos</strong>
               <p>
                 <a href="mailto:atendimento@afilipro.com.br"><MdEmail /> atendimento@afilipro.com.br</a><br />
                 <a href="https://wa.me/5511937751045?text=AfiliPRO"><IoLogoWhatsapp /> +55 (11) 9 3775.1045</a>
               </p>
+            </Col>
+            <Col md={4}>
+                  <Row>
+                    <ul className='social'>
+                      <li>
+                        <a href="https://www.instagram.com/afilipro_oficial" target='_blank'>
+                          <AiFillInstagram /> @afilipro_ocifial
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://tiktok.com/@afilipro_oficial" target='_blank'>
+                          <AiFillTikTok /> @afilipro_ocifial
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://youtube.com/@afilipro_oficial" target='_blank'>
+                          <FaYoutube /> @afilipro_ocifial
+                        </a>
+                      </li>
+                    </ul>
+                  </Row>
             </Col>
           </Row>
         </Container>
