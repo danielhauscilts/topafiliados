@@ -2,13 +2,13 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 interface Props {
     children: React.ReactNode;
-    isAuthenticated: string;
 }
 
-const ProtectRoute = ({ children , isAuthenticated }:Props) => {
-    const userType = JSON.parse(isAuthenticated)?.type === 'u' || JSON.parse(isAuthenticated)?.type === 'a';
+const ProtectRoute = ({ children }:Props) => {
+    const user:any = window.localStorage.getItem('user');
+    const userType = JSON.parse(user).type;
 
-    if (!userType) {
+    if (!userType && userType !== 'u'  && userType !== 'a') {
         return <Navigate to="/" replace />; 
     }
 

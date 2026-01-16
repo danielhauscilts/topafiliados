@@ -35,8 +35,6 @@
             width: 100%;
             justify-content:space-between;
             align-items: start;
-            background-color: orangered;
-            border-bottom: solid 3px orangered;
             margin-bottom: 1.5rem;
 
             .video {
@@ -45,6 +43,7 @@
                 border: none;
                 padding: 0;
                 margin: 0;
+                text-align: center;
             }
     
             .capa {
@@ -74,16 +73,16 @@
 
         .downloads {
             margin: 0 0 1rem;
-            display: flex;
-            justify-content: space-between;
 
             a {
-                display: inline-block;
+                display: block;
+                width: 100%;
                 background-color: orangered;
                 color: #FFF;
                 border-radius: 5px;
                 padding: .25rem .5rem;
                 text-decoration: none;
+                text-align: center;
             }
         }
 
@@ -144,22 +143,25 @@
         }
     }
 
-    .form-produto {
-        padding: 1rem .5rem;
-        border: solid 1px #ccc;
+    .register-product {
         background-color: #ededed;
-        border-radius: 10px;
         margin: 1rem 0;
 
-        input, textarea, button, select {
-            width: 100%;
+        .form-produto {
+            padding: 1rem 0;
+    
+            input, textarea, button, select {
+                width: 100%;
+            }
         }
     }
+
 
     .category {
         padding: 1rem 0;
         margin: 1rem 0 0;
-        color: #FFF;
+        color: #555;
+        background-color: #ededed;
 
         select {
             padding: .5rem;

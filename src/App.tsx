@@ -17,6 +17,7 @@ import Count from './pages/Count';
 import Sucesso from './pages/Sucesso';
 import Falha from './pages/Falha';
 import Pendente from './pages/Pendente';
+import Users from './pages/Users';
 
 // Assets
 import logo from './assets/logo_full.svg';
@@ -51,7 +52,7 @@ function App() {
       let user:any = window.localStorage.getItem('user');
       setUser(JSON.parse(user));
       setLogged(true);
-      window.open('/produtos', '_self')
+      window.open('/conta', '_self')
     } else {
       setUser({});
       setLogged(false);
@@ -106,7 +107,7 @@ function App() {
       <div className='header-restrict'>
         <Navbar expand="lg" className='navbar-dark'>
           <Container>
-            <Navbar.Brand href="#home"><img src={logo} alt="AfiliPRO" height={40} /></Navbar.Brand>
+            <Navbar.Brand href="/"><img src={logo} alt="AfiliPRO" height={40} /></Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
               <Nav>
@@ -116,20 +117,24 @@ function App() {
                 {logged && (user.type === 'u' || user.type === 'a') && (
                   <>
                     <Nav.Item>
-                      <Link to="/produtos">Compartilhar produtos</Link>
+                      <Link to="/produtos">Produtos</Link>
                     </Nav.Item>
                     <Nav.Item>
-                      <Link to="/conta">Minha conta | Contratação</Link>
+                      <Link to="/conta">Minha conta</Link>
                     </Nav.Item>
+                  </>
+                )}
+                {logged && user.type === 'a' && (
+                  <>
                     <Nav.Item>
-                      <Link to="/tutoriais">Tutoriais</Link>
+                      <Link to="/usuarios">Usuários</Link>
                     </Nav.Item>
                   </>
                 )}
                 {logged && user.type === 'p' && (
                   <>
                     <Nav.Item>
-                      <Link to="/conta">Minha conta | <strong>Contrate</strong></Link>
+                      <Link to="/conta">Minha conta</Link>
                     </Nav.Item>
                   </>
                 )}
@@ -140,9 +145,16 @@ function App() {
                     </Nav.Item> 
                   </>
                 )}
-                <Nav.Item>
-                  <Link to="/duvidas">Dúvidas?</Link>
-                </Nav.Item>
+                {user?.type !== 'a' && (
+                  <>
+                    <Nav.Item>
+                          <Link to="/tutoriais">Tutorial</Link>
+                        </Nav.Item>
+                    <Nav.Item>
+                      <Link to="/duvidas">Dúvidas?</Link>
+                    </Nav.Item>
+                  </>
+                )}
                 <Nav.Item className='text-end'>
                   {!logged && (
                     <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
@@ -166,14 +178,15 @@ function App() {
         <Route path="/cadastro" element={<Register />} />
         <Route path="/duvidas" element={<About />} />
         <Route path="/conta" element={<Count />} />
-        <Route element={<ProtectRoute children={<Outlet />} isAuthenticated={window.localStorage.getItem('user') || ''} />}>
+        <Route element={<ProtectRoute children={<Outlet />} />}>
+          <Route path="/produtos" element={<Produtos />} />
         </Route>
         {/* Rotas logadas */}
         <Route path="/tutoriais" element={<Learn />} />
-        <Route path="/produtos" element={<Produtos />} />
         <Route path="/pagamento/sucesso" element={<Sucesso />} />
         <Route path="/pagamento/falha" element={<Falha />} />
         <Route path="/pagamento/pendente" element={<Pendente />} />
+        <Route path="/usuarios" element={<Users />} />
       </Routes>
       
 

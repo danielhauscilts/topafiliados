@@ -24,8 +24,8 @@ const About = () => {
                             <Accordion.Item eventKey="1">
                                 <Accordion.Header>Como contratar?</Accordion.Header>
                                 <Accordion.Body>
-                                Após o login, acesse <strong>Minha Conta | Contratação</strong> para revisar seus dados e fazer a contratação, o pagamento é através do Mercado Pago aceitando pagamentos por Pix, Boleto, Cartôes de Crédito e Débito em um ambiente seguro!<br />
-                                Após o pagamento você será redirecionado ao site, onde estará habilitado os botões <strong>Produtos</strong> e <strong>Tutoriais</strong> para uso durante 30 dias.<br />
+                                Após o login, acesse <strong>Minha Conta | Contratação</strong> para revisar seus dados e fazer a contratação, o pagamento é através do Mercado Pago aceitando pagamentos por Pix, Boleto, Cartões de Crédito e Débito em um ambiente seguro!<br />
+                                Após o pagamento você será redirecionado ao site, onde estará habilitado os botões <strong>Compartilhar Produtos</strong> e <strong>Tutoriais</strong> para uso durante 30 dias.<br />
                                 Em Minha Conte é informado a data de vigência do plano para contratar mais dias, realize uma nova compra após essa data.  
                                 </Accordion.Body>
                             </Accordion.Item>
@@ -39,6 +39,18 @@ const About = () => {
                                 <Accordion.Header>Tive um problema com meu pagamento?</Accordion.Header>
                                 <Accordion.Body>
                                 Entre em contato através do e-mail <a href="mailto:pagamento@afilipro.com.br">pagamento@afilipro.com.br</a>, no assunto informar "Problema de pagamento - seu@email", no corpo do e-mail notificar o problema, espondemos em até 24h. 
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="4">
+                                <Accordion.Header>Como ser um Afiliado na Shopee?</Accordion.Header>
+                                <Accordion.Body>
+                                Acesse o portal de Afiliados da Shopee e cadastre-se <a href="https://shopee.com.br/m/afiliados" target='_blank'>Afiliados Shopee</a>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="5">
+                                <Accordion.Header>Preciso ter CNPJ?</Accordion.Header>
+                                <Accordion.Body>
+                                Não, o cadastro de Afiliado pode ser feito por qualquer pessoa Física ou Jurídica.
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>

@@ -71,65 +71,76 @@ function Register() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={3}>Nome</Col>
-                    <Col xs={9}>
-                        <input 
-                            type='text' 
-                            id='name'
-                            placeholder='Nome'
-                            onChange={(e)=>{setName(e.target.value)}} />
+                    <Col md={6}>
+                        <div className='call-register'>
+                            Faça parte de milhares de Afiliados que otimizaram seu tempo com a <strong>AfiliPRO</strong>
+                        </div>
+                    </Col>
+                    <Col md={6}>
+                        <Container>
+                            <Row>
+                                <Col xs={3}>Nome</Col>
+                                <Col xs={9}>
+                                    <input 
+                                        type='text' 
+                                        id='name'
+                                        placeholder='Nome'
+                                        onChange={(e)=>{setName(e.target.value)}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={3}>E-mail</Col>
+                                <Col xs={9}>
+                                    <input 
+                                        type='text' 
+                                        id='mail'
+                                        placeholder='seu@email.com'
+                                        onChange={(e)=>{setMail(e.target.value)}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={3}>Celular</Col>
+                                <Col xs={9}>
+                                    <input 
+                                        type='text' 
+                                        id='phone'
+                                        placeholder='(**) 9****-****'
+                                        onChange={(e)=>{setPhone(e.target.value)}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={3}>Senha</Col>
+                                <Col xs={9} className='password-field'>
+                                    <input 
+                                        type='password' 
+                                        id='password'
+                                        placeholder='******'
+                                        onChange={(e)=>{setPassword(e.target.value)}} />
+                                        <FaEye onClick={()=>{showPassword('password')}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={3}>Confirme a Senha</Col>
+                                <Col xs={9} className='password-field'>
+                                    <input 
+                                        type='password' 
+                                        id='confPassword'
+                                        placeholder='******'
+                                        onChange={(e)=>{setConfPassword(e.target.value)}} />
+                                        <FaEye  onClick={()=>{showPassword('confPassword')}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12}>
+                                    <Button style={{width: '100%'}} onClick={(e)=>{e.preventDefault(); register()}}>Cadastre-se</Button>
+                                </Col>
+                            </Row>
+                            {error && (
+                                <Row className='error'><Col>{error}</Col></Row>
+                            )}
+                        </Container>
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={3}>E-mail</Col>
-                    <Col xs={9}>
-                        <input 
-                            type='text' 
-                            id='mail'
-                            placeholder='seu@email.com'
-                            onChange={(e)=>{setMail(e.target.value)}} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={3}>Celular</Col>
-                    <Col xs={9}>
-                        <input 
-                            type='text' 
-                            id='phone'
-                            placeholder='(**) 9****-****'
-                            onChange={(e)=>{setPhone(e.target.value)}} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={3}>Senha</Col>
-                    <Col xs={9} className='password-field'>
-                        <input 
-                            type='password' 
-                            id='password'
-                            placeholder='******'
-                            onChange={(e)=>{setPassword(e.target.value)}} />
-                            <FaEye onClick={()=>{showPassword('password')}} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={3}>Confirme a Senha</Col>
-                    <Col xs={9} className='password-field'>
-                        <input 
-                            type='password' 
-                            id='confPassword'
-                            placeholder='******'
-                            onChange={(e)=>{setConfPassword(e.target.value)}} />
-                            <FaEye  onClick={()=>{showPassword('confPassword')}} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                        <Button style={{width: '100%'}} onClick={(e)=>{e.preventDefault(); register()}}>Cadastre-se</Button>
-                    </Col>
-                </Row>
-                {error && (
-                    <Row className='error'><Col>{error}</Col></Row>
-                )}
             </Container>
         </div>
     )

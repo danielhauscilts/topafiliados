@@ -32,6 +32,29 @@ if ($_ENV == 'development') {
     $mysql_conn['db'] = 'dan43856_afilipro';
 }
 
+function authAdmin($headers, $conn) {
+
+    $authHeader = $headers['Authorization'][0];
+    list($type, $token) = explode(" ", $authHeader, 2);
+
+    if ($type !== 'Bearer') {
+        // Haven´t token
+        return 'Invalid';
+    }
+
+    $adminData = mysqli_query($conn, 'SELECT * FROM users WHERE token = "'.$token.'"');
+    if(mysqli_num_rows($adminData) > 0) {
+        $admin = array();
+        while($row = mysqli_fetch_assoc($adminData)) {
+            $admin = $row;
+        }
+        if($admin['type'] == 'a') {
+            return "valid";
+        }
+    }
+    return "invalid";
+}
+
 function validateToken($headers, $conn) {
     $authHeader = $headers['Authorization'][0];
     list($type, $token) = explode(" ", $authHeader, 2);
@@ -144,10 +167,17 @@ $app->get('/api/users', function (Request $request, Response $response, $args) u
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $userData = mysqli_query($conn, 'SELECT Users.id, Users.name, Users.phone, Users.type, Imobiliarias.nome as imobiliaria FROM users as Users 
-	INNER JOIN imobiliaria as Imobiliarias 
-    ON Users.id_imobiliaria = Imobiliarias.id 
-    WHERE Users.type != "clt"');
+    if(authAdmin($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
+    if (validateToken($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
+    $userData = mysqli_query($conn, 'SELECT * FROM users ORDER BY id DESC');
 
     mysqli_close($conn);
 
@@ -360,10 +390,15 @@ $app->post('/api/categoria', function (Request $request, Response $response, $ar
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    // if (validateToken($request->getHeaders(), $conn) === "invalid") {
-    //     $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
-    //     return $response->withStatus(401);
-    // }
+    if(authAdmin($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
+    if (validateToken($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
 
     mysqli_query($conn, 'INSERT INTO categorias (categoria) VALUES ( "'.$args['categoria'].'")');
 
@@ -380,6 +415,7 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
     
     $queryParams = $request->getQueryParams();
+    $page = 0;
     $filter = '';
     $terms = $queryParams['terms'] ?? null;
     $today = $queryParams['today'] ?? null;
@@ -388,7 +424,7 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
         $filter = 'WHERE ' . ($terms ? 'titulo LIKE "%'. $terms .'%"': '') . ($terms && $today ? ' AND ': '') . ($today ? 'data = "'. date('Y-m-d') .'"': '');
     }
 
-    $data = mysqli_query($conn, 'SELECT * FROM produtos ' .$filter. ' ORDER BY data DESC, id DESC');
+    $data = mysqli_query($conn, 'SELECT * FROM produtos ' .$filter. ' ORDER BY data DESC, id DESC LIMIT ' . $page . ', 10');
 
     mysqli_close($conn);
 
@@ -458,23 +494,28 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
         return $response->withStatus(500);
     }
 
-    // $capa = $uploadedFiles['capa'];
+    $capa = $uploadedFiles['capa'];
 
-    // if ($capa->getError() === UPLOAD_ERR_OK) {
-    //     $filename = $capa->getClientFilename();
-    //     $pathCapa = 'capa/' . uniqid() . "_" . $filename;
-    //     $capa->moveTo('./' . $pathCapa);
-    // } else {
-    //     $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
-    //     return $response->withStatus(500);
-    // }
+    if ($capa->getError() === UPLOAD_ERR_OK) {
+        $filename = $capa->getClientFilename();
+        $pathCapa = 'capa/' . uniqid() . "_" . $filename;
+        $capa->moveTo('./' . $pathCapa);
+    } else {
+        $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension"], true) );
+        return $response->withStatus(500);
+    }
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    // if (validateToken($request->getHeaders(), $conn) === "invalid") {
-    //     $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
-    //     return $response->withStatus(401);
-    // }
+    if(authAdmin($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
+    if (validateToken($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
 
     mysqli_query($conn, 'INSERT INTO produtos (
         titulo, 

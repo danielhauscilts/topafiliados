@@ -10,7 +10,11 @@
             font-weight: bold;
             margin: 1rem 0 2rem;
             text-align: center;
-            color: orangered;
+            color: #555;
+
+            strong {
+                color: orangered;
+            }
         }
 
         button {
