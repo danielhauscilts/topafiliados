@@ -108,8 +108,13 @@ function App() {
       <div className='header-restrict'>
         <Navbar expand="lg" className='navbar-dark'>
           <Container>
-            <Navbar.Brand href="/"><img src={logo} alt="AfiliPRO" height={40} /></Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="AfiliPRO" height={30} /></Navbar.Brand>
+            {!logged && (
+              <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+            )}
+            {logged && (
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            )}
             <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
               <Nav>
                 {logged && (
@@ -162,9 +167,6 @@ function App() {
                   </>
                 )}
                 <Nav.Item className='text-end'>
-                  {!logged && (
-                    <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
-                  )}
                   {logged && (
                     <>
                       <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>

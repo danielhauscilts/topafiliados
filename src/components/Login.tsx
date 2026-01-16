@@ -107,6 +107,9 @@ function Login({show, setShow}: Props) {
                         </Row>
                         <Row>
                             <Col sm={6}>
+                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Validar login</Button>
+                            </Col>
+                            <Col sm={12} style={{marginTop: '2rem'}}>
                                 <span onClick={()=>{
                                     console.log(mail);
                                     if(mail === '') {setError('Digite seu e-mail de cadastro!'); return;}
@@ -115,18 +118,13 @@ function Login({show, setShow}: Props) {
                                         setError('Foi enviada uma nova senha para seu celular cadastrado!')}
                                 }} style={{display: 'block', marginBottom: '1rem'}}>Esqueceu sua senha?</span>
                             </Col>
-                            <Col sm={6}>
-                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Validar login</Button>
-                            </Col>
-                            <Col>
-                                <Row>
-                                    <div style={{borderTop: 'solid 1px #ccc', fontSize: '.75rem', marginTop: '1rem', paddingTop: '1rem', textAlign: 'center'}}>
-                                        <span onClick={()=>{
-                                    goToRegister();
-                                    setShow(!show);   
-                                }}>Ainda não tem cadastro? <strong style={{cursor: 'pointer'}}>Clique aqui!</strong></span>
-                                    </div>
-                                </Row>
+                            <Col sm={12}>
+                                <div style={{borderTop: 'solid 1px #ccc', fontSize: '.75rem', marginTop: '1rem', paddingTop: '1rem', textAlign: 'center'}}>
+                                    <span onClick={()=>{
+                                        goToRegister();
+                                        setShow(!show);   
+                                        }}>Ainda não tem cadastro? <strong style={{cursor: 'pointer'}}>Clique aqui!</strong></span>
+                                </div>
                             </Col>
                             { error !== '' && (
                             <Col md={12}>

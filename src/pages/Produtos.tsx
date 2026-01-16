@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import "yet-another-react-lightbox/styles.css";
 
@@ -18,6 +19,8 @@ import { IoIosOpen } from "react-icons/io";
 
 
 const Produtos = () => {
+
+    const [searchParams] = useSearchParams();
 
     const [produtos, setProdutos] = useState<any[]>([]);
     const [titulo, setTitulo] = useState<any>(null);
@@ -60,9 +63,7 @@ const Produtos = () => {
 
         if(categoryName !== null && categoryName !== '') {
             axios.post(`${env}/api/categoria`,
-                {
-                    categoria: categoryName
-                },
+                { categoria: categoryName },
                 {
                     headers: {
                         'Authorization': 'Bearer ' + window.localStorage.getItem('token')
@@ -82,10 +83,12 @@ const Produtos = () => {
             setCategoria(null);
         }
 
-        axios.get(`${env}/api/produtos` + (id !== '' ? '/' + id : '') + (terms || today ? '?' : '') + (terms ? 'terms=' + terms : '') +  (terms && today ? '&' : '') + (today ? 'today=' + today : ''))
+        axios.get(`${env}/api/produtos` + (id !== '' ? '/' + id : '') + (terms || today ? '?' : '') + (terms ? 'terms=' + terms : '') +  (terms && today ? '&' : '') + (today ? 'today=' + today : '') + (!terms && !today ? '?' : '&'))
             .then((e)=>{
-                setProdutos(e.data);
+                setTotal(e.data.total);
+                setProdutos(e.data.items);
             }).catch(()=>{
+                setTotal(0);
                 setProdutos([]);
             })
     }
@@ -97,12 +100,18 @@ const Produtos = () => {
         })
     }
 
+    const [total, setTotal] = useState<number>(0);
+
+    let page = Number(searchParams.get('p'));
+
     const getProdutos = () => {
 
-        axios.get(`${env}/api/produtos` + (categoria ? `/${categoria}` : '') + (terms || today ? '?' : '') + (terms ? `terms=${terms}`: '') + (terms && today ? '&' : '') + (today ? `today=${today}` : ''))
+        axios.get(`${env}/api/produtos` + (categoria ? `/${categoria}` : '') + (terms || today ? '?' : '') + (terms ? `terms=${terms}`: '') + (terms && today ? '&' : '') + (today ? `today=${today}` : '') + (!terms && !today ? '?' : '&') + `page=${page}`)
             .then((e)=>{
-                setProdutos(e.data);
+                setTotal(e.data.total);
+                setProdutos(e.data.items);
             }).catch(()=>{
+                setTotal(0);
                 setProdutos([]);
             })
     }
@@ -303,7 +312,21 @@ const Produtos = () => {
                     </Container>
                 </div>
             )}
-            <Container style={{padding: '2rem'}}>
+            {total > 10 && (
+                <Container className='pagination' style={{paddingTop: '2rem'}}>
+                    <Row>
+                        <Col>
+                            <ul>
+                                {Array.from({length: (total/10)+1}, (_, i) => (
+                                    <li key={i} className={page === i ? 'active' : ''}><a href={(window.location.href.split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</a></li>
+                                ))
+                                }
+                            </ul>
+                        </Col>
+                    </Row>
+                </Container>
+            )}
+            <Container style={{padding: '1rem'}}>
                 <Row>
                     {produtos && produtos.length > 0 && produtos.map((e, i) => (
                         <Col key={i} xs={12} sm={6} md={6} lg={4}>
@@ -378,6 +401,20 @@ const Produtos = () => {
                     )}
                 </Row>
             </Container>
+            {total > 10 && (
+                <Container className='pagination' style={{paddingBottom: '2rem'}}>
+                    <Row>
+                        <Col>
+                            <ul>
+                                {Array.from({length: (total/10)+1}, (_, i) => (
+                                    <li key={i} className={page === i ? 'active' : ''}><a href={(window.location.href.split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</a></li>
+                                ))
+                                }
+                            </ul>
+                        </Col>
+                    </Row>
+                </Container>
+            )}
         </div>
         </>
     )

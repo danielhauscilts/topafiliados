@@ -410,12 +410,11 @@ $app->post('/api/categoria', function (Request $request, Response $response, $ar
 // PRODUTOS
 
 $app->get('/api/produtos', function (Request $request, Response $response, $args) use ($mysql_conn) {
-
     
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
     
     $queryParams = $request->getQueryParams();
-    $page = 0;
+    $page = $queryParams['page'] ?? 0;
     $filter = '';
     $terms = $queryParams['terms'] ?? null;
     $today = $queryParams['today'] ?? null;
@@ -424,7 +423,8 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
         $filter = 'WHERE ' . ($terms ? 'titulo LIKE "%'. $terms .'%"': '') . ($terms && $today ? ' AND ': '') . ($today ? 'data = "'. date('Y-m-d') .'"': '');
     }
 
-    $data = mysqli_query($conn, 'SELECT * FROM produtos ' .$filter. ' ORDER BY data DESC, id DESC LIMIT ' . $page . ', 10');
+    $data = mysqli_query($conn, 'SELECT * FROM produtos ' .$filter. ' ORDER BY data DESC, id DESC LIMIT ' . ($page === 0 ? 0 : (int)($page*10)) . ', 10');
+    $totalData = mysqli_query($conn, 'SELECT * FROM produtos ' . $filter);
 
     mysqli_close($conn);
 
@@ -434,10 +434,13 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
     }
 
     $produtos = array();
+    $produtos['items'] = array();
 
     while($row = mysqli_fetch_assoc($data)) {
-        $produtos[] = $row;
+        $produtos['items'][] = $row;
     }
+
+    $produtos['total'] = mysqli_num_rows($totalData);
 
     $response->getBody()->write(json_encode($produtos));
     return $response->withStatus(200);
@@ -448,7 +451,7 @@ $app->get('/api/produtos/{categoria}', function (Request $request, Response $res
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
     $queryParams = $request->getQueryParams();
-
+    $page = $queryParams['page'] ?? 0;
     $filter = '';
     $terms = $queryParams['terms'] ?? null;
     $today = $queryParams['today'] ?? null;
@@ -457,7 +460,8 @@ $app->get('/api/produtos/{categoria}', function (Request $request, Response $res
         $filter = ' AND ' . ($terms ? 'p.titulo LIKE "%'. $terms .'%"': '') . ($terms && $today ? ' AND ': '') . ($today ? 'p.data = "'. date('Y-m-d') .'"': '');
     }
 
-    $data = mysqli_query($conn, 'SELECT p.id, p.video, p.titulo, p.capa, p.link, p.texto, p.data FROM produtos p INNER JOIN produtos_categorias c ON p.id = c.id_produto WHERE c.id_categoria = "'.$args['categoria'].'" ' . $filter . ' ORDER BY p.data DESC, p.id DESC ');
+    $data = mysqli_query($conn, 'SELECT p.id, p.video, p.titulo, p.capa, p.link, p.texto, p.data FROM produtos p INNER JOIN produtos_categorias c ON p.id = c.id_produto WHERE c.id_categoria = "'.$args['categoria'].'" ' . $filter . ' ORDER BY p.data DESC, p.id DESC LIMIT ' . ($page === 0 ? 0 : (int)($page*10)) . ', 10');
+    $totalData = mysqli_query($conn, 'SELECT p.id, p.video, p.titulo, p.capa, p.link, p.texto, p.data FROM produtos p INNER JOIN produtos_categorias c ON p.id = c.id_produto WHERE c.id_categoria = "'.$args['categoria'].'" ');
 
     mysqli_close($conn);
 
@@ -467,10 +471,13 @@ $app->get('/api/produtos/{categoria}', function (Request $request, Response $res
     }
 
     $produtos = array();
+    $produtos['items'] = array();
 
     while($row = mysqli_fetch_assoc($data)) {
-        $produtos[] = $row;
+        $produtos['items'][] = $row;
     }
+
+    $produtos['total'] = mysqli_num_rows($totalData);
 
     $response->getBody()->write(json_encode($produtos));
     return $response->withStatus(200);
