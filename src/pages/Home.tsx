@@ -21,13 +21,9 @@ const Home = () => {
         <div className='home'>
             <Container>
                 <Row className='call'>
-                    <Col md={12}>
-                        <h1>Torne-se um AFILIADO gastando apenas <strong>30 minutos</strong> por dia!</h1>
-                    </Col>
                     <Col md={6} style={{alignContent: 'center'}}>
                         <p><img src={call} alt="A melhior plataforma para Afiliados Shopee Vídeo" width='100%' /></p>
                         <p className='text-center' style={{marginTop: '1rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
-                        <p style={{textAlign: 'center', margin: '2rem 0', fontSize: '1.25rem', backgroundColor: 'yellow', padding: '1rem', borderRadius: '10px', lineHeight: '1.5rem', boxShadow: '1px 2px 2px rgba(0,0,0,.5)'}}><strong>Faça parte de milhares de Afiliados que faturam mais de R$ 2.000,00 por mês, trabalhando de onde quiser e nos horários que quiser.</strong></p>
                     </Col>
                     <Col md={6} className='text-center'>
                         <p style={{fontSize: '1rem'}} className='text-left'>Assista como cadastrar produtos em<br />menos de <strong>1 minuto</strong>.</p>
@@ -44,9 +40,8 @@ const Home = () => {
                         <ol className='feature-list'>
                             <li><span onClick={(e)=>{e.preventDefault();Navigate('/cadastro')}}>Cadastre-se <strong style={{color: 'orangered'}}>aqui!</strong></span></li>
                             <li><span>Contrate seu plano por R$ 20,00 mensais e pare quando quiser!</span></li>
-                            <li><span>Acesse a área de produtos, filtrando por categorias ou liste os produtos diários e siga o tutorial de postagem na Shopee Vídeo.</span></li>
-                            <li><span>Acompanhe na sua central de Afiliados a performance de suas campanhas</span></li>
-                            <li><span>Fature com os melhores produtos de Afiliados Shopee Vídeo!</span></li>
+                            <li><span>Transforme seu canal Shopee Vídeos em uma vitrine de vendas. Nossos consultores experientes publicam produtos diariamente para você anunciar com facilidade, em poucos passos.</span></li>
+                            <li><span>Acompanhe a performance de suas vendas na sua central de Afiliados</span></li>
                         </ol>
                     </Col>
                 </Row>

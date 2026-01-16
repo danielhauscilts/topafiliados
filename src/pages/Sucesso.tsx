@@ -29,10 +29,9 @@ const Sucesso = () => {
             "preference_id": preference_id,
             "payment_id": payment_id,
             "external_reference": external_reference
-        }).then((e)=>{
+        }).then(()=>{
             setSuccess(true);
             setError(false);
-            window.localStorage.setItem('user', JSON.stringify(e.data.user));
         }).catch(()=>{
             setSuccess(true);
             setError(true);

@@ -180,6 +180,26 @@ const Produtos = () => {
     return (
         <>
         <div className='produtos'>
+            <div className="category" style={{backgroundColor: 'orangered'}}>
+                <Container>
+                    <Row>
+                        <Col xs={3} className='text-right' style={{marginTop: '.5rem', color: '#FFF', fontWeight: 'bold'}}>
+                            Categorias
+                        </Col>
+                        <Col xs={9}>
+                            <select 
+                                style={{width: '100%', borderRadius: '5px', border: 'none'}}
+                                id="categories"
+                                onChange={(e)=>{changeCategory(e.target.value)}}>
+                                <option value="">Mostrar todas</option>
+                                {categories.length > 0 && categories.map((e, i) => (
+                                    <option value={e.id} key={i}>{e.categoria}</option>
+                                ))}
+                            </select>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
             <div className="filters">
                 <Container>
                     <Row>
@@ -190,7 +210,7 @@ const Produtos = () => {
                         <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} onChange={(e)=>{e.preventDefault();setTerms(e.target.value)}} /></Col>
                     </Row>
                     <Row>
-                        <Col xs={10}>Somente produtos de hoje?</Col>
+                        <Col xs={10}><strong>Somente produtos de hoje?</strong></Col>
                         <Col xs={2}><input type="checkbox" onChange={(e)=>{e.preventDefault;setToday(e.target.checked)}} checked={today} /></Col>
                     </Row>
                     <Row>
@@ -283,31 +303,8 @@ const Produtos = () => {
                     </Container>
                 </div>
             )}
-            <div className="category">
-                <Container>
-                    <Row>
-                        <Col xs={3} className='text-right'>
-                            Categorias
-                        </Col>
-                        <Col xs={9}>
-                            <select 
-                                style={{width: '100%'}}
-                                id="categories"
-                                onChange={(e)=>{changeCategory(e.target.value)}}>
-                                <option value="">Mostrar todas</option>
-                                {categories.length > 0 && categories.map((e, i) => (
-                                    <option value={e.id} key={i}>{e.categoria}</option>
-                                ))}
-                            </select>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
             <Container style={{padding: '2rem'}}>
                 <Row>
-                    {produtos && (
-                        <Col md={12}><h1 style={{color: '#FFF'}}>Produtos</h1></Col>    
-                    )}
                     {produtos && produtos.length > 0 && produtos.map((e, i) => (
                         <Col key={i} xs={12} sm={6} md={6} lg={4}>
                             <div className='produto'>

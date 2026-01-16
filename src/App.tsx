@@ -18,6 +18,7 @@ import Sucesso from './pages/Sucesso';
 import Falha from './pages/Falha';
 import Pendente from './pages/Pendente';
 import Users from './pages/Users';
+import Plain from './pages/Plain';
 
 // Assets
 import logo from './assets/logo_full.svg';
@@ -111,6 +112,11 @@ function App() {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
               <Nav>
+                {logged && (
+                    <>
+                      <span style={{color: '#FFF', display: 'block', margin: '1rem 0 .5rem'}}>Olá, {user.name}</span>
+                    </>
+                  )}
                 <Nav.Item>
                   <Link to="/">Início</Link>
                 </Nav.Item>
@@ -148,7 +154,7 @@ function App() {
                 {user?.type !== 'a' && (
                   <>
                     <Nav.Item>
-                          <Link to="/tutoriais">Tutorial</Link>
+                          <Link to="/tutoriais">Como cadastrar os produtos?</Link>
                         </Nav.Item>
                     <Nav.Item>
                       <Link to="/duvidas">Dúvidas?</Link>
@@ -161,7 +167,6 @@ function App() {
                   )}
                   {logged && (
                     <>
-                      <span style={{color: '#FFF', display: 'block', marginBottom: '.5rem'}}>Olá, {user.name}</span>
                       <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
                     </>
                   )}
@@ -178,6 +183,7 @@ function App() {
         <Route path="/cadastro" element={<Register />} />
         <Route path="/duvidas" element={<About />} />
         <Route path="/conta" element={<Count />} />
+        <Route path="/plano" element={<Plain />} />
         <Route element={<ProtectRoute children={<Outlet />} />}>
           <Route path="/produtos" element={<Produtos />} />
         </Route>

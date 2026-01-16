@@ -333,7 +333,7 @@ $app->post('/api/validate-otp', function (Request $request, Response $response, 
     $algorithm = 'HS256';
 
     $now = new DateTimeImmutable();
-    $future = $now->modify('+12 hour'); // Token valid for 1 hour
+    $future = $now->modify('+160 hour'); // Token valid for 160 hour
 
     $payload = [
         'iat' => $now->getTimestamp(), // Issued at
@@ -623,6 +623,14 @@ function GetCurl($url){
 
     return json_decode($response, true);
 }
+
+$app->get('/api/pagamento/{pid}', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $paymentData = GetCurl("https://api.mercadopago.com/v1/payments/" . $args['pid'] ) ;
+
+    $response->getBody()->write(json_encode(["status" => $paymentData["status"]], true));
+    return $response;
+});
 
 // Notificações de pagamento
 $app->post('/api/notify', function (Request $request, Response $response, $args) use ($mysql_conn) {

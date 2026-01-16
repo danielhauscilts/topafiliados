@@ -12,7 +12,7 @@ const Learn = () => {
             <Container>
                 <Row>
                     <Col md={12} className='laser-list'>
-                        <h1>Tutorial</h1>
+                        <h1>Como cadastrar os produtos na Shopee Vídeo?</h1>
                     </Col>
                 </Row>
             </Container>

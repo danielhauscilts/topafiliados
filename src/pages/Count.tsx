@@ -149,7 +149,7 @@ const Count = () => {
                     <Row style={{marginTop: '1rem'}}>
                         <Col className='text-center' style={{marginBottom: '2rem'}}>
                             <p style={{fontSize: '1.5rem'}}>
-                                Contrate 30 dias,<br /><strong>por apenas R$ 20,00</strong>!
+                                Contrate por mais 30 dias,<br /><strong>apenas R$ 20,00</strong>!
                             </p>
                             <Button style={{padding: '1rem 3rem', margin: '1rem 0', fontSize: '1.5rem'}} onClick={()=>{activePayment()}}>clicando aqui</Button>
                             <br /><small>* 30 dias contados à partir da confirmação do pagamento</small>
