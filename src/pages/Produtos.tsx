@@ -95,7 +95,7 @@ const Produtos = () => {
 
     useEffect(()=>{
         getProdutos();
-    }, [categoria])
+    }, [categoria, today])
 
     const getCategories = () => {
         axios.get(`${env}/api/categorias`)
@@ -243,10 +243,10 @@ const Produtos = () => {
                         <Col xs={10}><strong>Somente produtos de hoje?</strong></Col>
                         <Col xs={2}>
                                 {today && (
-                                    <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{setToday(false);setTimeout(()=>{getProdutos()}, 200)}} />
+                                    <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{setToday(false);}} />
                                 )}
                                 {!today && (
-                                    <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{setToday(true);setTimeout(()=>{getProdutos()}, 200)}} />
+                                    <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{setToday(true);}} />
                                 )}
                             {/* <input type="checkbox" onChange={(e)=>{e.preventDefault;setToday(e.target.checked)}} checked={today} /> */}
                         </Col>
@@ -439,12 +439,12 @@ const Produtos = () => {
                 </Row>
             </Container>
             {total > 10 && (
-                <Container className='pagination' style={{paddingBottom: '2rem'}}>
+                <Container className='pagination' style={{paddingTop: '2rem'}}>
                     <Row>
                         <Col>
                             <ul>
                                 {Array.from({length: (total/10)+1}, (_, i) => (
-                                    <li key={i} className={page === i ? 'active' : ''}><a href={(window.location.href.split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</a></li>
+                                    <li key={i} className={page === i ? 'active' : ''}><Link to={'/produtos'+(window.location.href.split('/produtos')[1].split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</Link></li>
                                 ))
                                 }
                             </ul>
