@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import "yet-another-react-lightbox/styles.css";
 
@@ -15,6 +15,8 @@ import { FaCopy } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
 import { IoIosOpen } from "react-icons/io";
+import { FaToggleOn } from "react-icons/fa";
+import { FaToggleOff } from "react-icons/fa6";
 
 
 
@@ -49,6 +51,13 @@ const Produtos = () => {
         }
     }, [])
 
+    useEffect(()=>{
+        let pg:any = 0;
+        console.log('today', today)
+        if(window.location.href.indexOf('p=') > -1) {pg = window.location.href.split('p=')[1]}
+        getProdutos(pg);
+    }, [window.location.href]);
+
     const changedCategoria = (e:any) => {
         if (e.target.value == 'new') {
             novaCategoria();
@@ -82,16 +91,11 @@ const Produtos = () => {
         } else {
             setCategoria(null);
         }
-
-        axios.get(`${env}/api/produtos` + (id !== '' ? '/' + id : '') + (terms || today ? '?' : '') + (terms ? 'terms=' + terms : '') +  (terms && today ? '&' : '') + (today ? 'today=' + today : '') + (!terms && !today ? '?' : '&'))
-            .then((e)=>{
-                setTotal(e.data.total);
-                setProdutos(e.data.items);
-            }).catch(()=>{
-                setTotal(0);
-                setProdutos([]);
-            })
     }
+
+    useEffect(()=>{
+        getProdutos();
+    }, [categoria])
 
     const getCategories = () => {
         axios.get(`${env}/api/categorias`)
@@ -104,9 +108,9 @@ const Produtos = () => {
 
     let page = Number(searchParams.get('p'));
 
-    const getProdutos = () => {
+    const getProdutos = (pg:number = 0) => {
 
-        axios.get(`${env}/api/produtos` + (categoria ? `/${categoria}` : '') + (terms || today ? '?' : '') + (terms ? `terms=${terms}`: '') + (terms && today ? '&' : '') + (today ? `today=${today}` : '') + (!terms && !today ? '?' : '&') + `page=${page}`)
+        axios.get(`${env}/api/produtos` + (categoria ? `/${categoria}` : '') + (terms || today ? '?' : '') + (terms ? `terms=${terms}`: '') + (terms && today ? '&' : '') + (today ? `today=${today}` : '') + (pg > 0 ? ((!terms && !today ? '?' : '&') + `page=${page}`) : ''))
             .then((e)=>{
                 setTotal(e.data.total);
                 setProdutos(e.data.items);
@@ -186,6 +190,18 @@ const Produtos = () => {
         })
     };
 
+    const setPosted = (id:any) => {
+        let posted = JSON.parse(window.localStorage.getItem('posted') || "[]");
+        const posIndex = posted.indexOf(id);
+        if(posIndex === -1) {
+            posted.push(id)
+        } else {
+            delete posted[posIndex];
+        }
+        window.localStorage.setItem('posted', JSON.stringify(posted));
+        getProdutos();
+    }
+
     return (
         <>
         <div className='produtos'>
@@ -219,19 +235,27 @@ const Produtos = () => {
                         <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} onChange={(e)=>{e.preventDefault();setTerms(e.target.value)}} /></Col>
                     </Row>
                     <Row>
-                        <Col xs={10}><strong>Somente produtos de hoje?</strong></Col>
-                        <Col xs={2}><input type="checkbox" onChange={(e)=>{e.preventDefault;setToday(e.target.checked)}} checked={today} /></Col>
-                    </Row>
-                    <Row>
                         <Col>
                             <Button onClick={(e)=>{e.preventDefault(); getProdutos()}} style={{width: '100%'}}>Buscar</Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={10}><strong>Somente produtos de hoje?</strong></Col>
+                        <Col xs={2}>
+                                {today && (
+                                    <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{setToday(false);setTimeout(()=>{getProdutos()}, 200)}} />
+                                )}
+                                {!today && (
+                                    <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{setToday(true);setTimeout(()=>{getProdutos()}, 200)}} />
+                                )}
+                            {/* <input type="checkbox" onChange={(e)=>{e.preventDefault;setToday(e.target.checked)}} checked={today} /> */}
                         </Col>
                     </Row>
                 </Container>
             </div>
             {admin && (
                 <div className='register-product'>
-                    <Container style={{padding: "0 2rem"}}>
+                    <Container style={{padding: "0 1rem"}}>
                         <Row>
                             <Col>
                                 <div className='form-produto'>
@@ -286,7 +310,7 @@ const Produtos = () => {
                                         </Row>
                                         <Row>
                                             <Col style={{marginTop: '1rem'}}>
-                                                <Button disabled={!titulo || !link || !texto || loading} onClick={(e)=>{e.preventDefault; cadastrar()}}>
+                                                <Button className='btn-primary' disabled={!titulo || !link || !texto || loading} onClick={(e)=>{e.preventDefault; cadastrar()}}>
                                                     {!loading ? 'Cadastrar': 'Cadastrando...'}
                                                 </Button>
                                             </Col>
@@ -312,13 +336,16 @@ const Produtos = () => {
                     </Container>
                 </div>
             )}
+            {total > 0 && (
+                <p style={{color: '#FFF', textAlign: 'center', margin: '2rem 0 0', fontWeight: 'bold'}}>{total>10?'Mostrando 10 de ':''}{total} produto(s)</p>
+            )}
             {total > 10 && (
                 <Container className='pagination' style={{paddingTop: '2rem'}}>
                     <Row>
                         <Col>
                             <ul>
                                 {Array.from({length: (total/10)+1}, (_, i) => (
-                                    <li key={i} className={page === i ? 'active' : ''}><a href={(window.location.href.split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</a></li>
+                                    <li key={i} className={page === i ? 'active' : ''}><Link to={'/produtos'+(window.location.href.split('/produtos')[1].split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</Link></li>
                                 ))
                                 }
                             </ul>
@@ -330,7 +357,7 @@ const Produtos = () => {
                 <Row>
                     {produtos && produtos.length > 0 && produtos.map((e, i) => (
                         <Col key={i} xs={12} sm={6} md={6} lg={4}>
-                            <div className='produto'>
+                            <div className={JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) > -1 ? 'produto posted' : 'produto'}>
                                 <div className='titulo'>{e.titulo}</div>
                                 <div className='text-left' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div>
                                 <div className='midias'>
@@ -368,7 +395,7 @@ const Produtos = () => {
                                 <div className='link' onClick={()=>{
                                         window.open(e.link, '_blank');
                                     }}>
-                                    <p>Link do produto</p>
+                                    <p>Link 1</p>
                                     <span>{e.link}</span>
                                     <IoIosOpen />
                                 </div>
@@ -376,7 +403,7 @@ const Produtos = () => {
                                     <div className='link' onClick={()=>{
                                         window.open(e.link_2, '_blank');
                                     }}>
-                                    <p>Segundo link do produto</p>
+                                    <p>Link 2</p>
                                     <span>{e.link_2}</span>
                                     <IoIosOpen />
                                 </div>
@@ -385,11 +412,21 @@ const Produtos = () => {
                                     <div className='link' onClick={()=>{
                                         window.open(e.link_3, '_blank');
                                     }}>
-                                    <p>Terceiro link do produto</p>
+                                    <p>Link 3</p>
                                     <span>{e.link_3}</span>
                                     <IoIosOpen />
                                 </div>
                                 )}
+                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) === -1 && 
+                                    <div  onClick={()=>{setPosted(e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', padding:'.5rem 0 0', color: 'orangered', fontWeight: 'bold', borderTop: 'solid 1px #CCC'}}>
+                                        <span>Marcar como postado</span>
+                                    </div>
+                                }
+                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) > -1 && 
+                                    <div onClick={()=>{setPosted(e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
+                                        <span>Desfazer marcação</span>
+                                    </div>
+                                }
                             </div>
                         </Col>
                         )

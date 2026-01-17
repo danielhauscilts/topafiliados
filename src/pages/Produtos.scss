@@ -141,6 +141,40 @@
                 top: 7px;
             }
         }
+
+        &.posted {
+            background-color: #777;
+            cursor: none;
+            border: none;
+            opacity: .5;
+
+            .video {
+
+                svg {
+                    color: #555;
+                }
+            }
+
+            .downloads a {
+                background-color: #555;
+                border-color: #555;
+                color: #000;
+            }
+
+            .titulo {
+                color: #555;
+            }
+
+            .texto, .link {
+                background-color: #666;
+
+                span {
+                    color: #999;
+                    background-color: #555;
+                    border: none;
+                }
+            }
+        }
     }
 
     .register-product {
@@ -152,6 +186,9 @@
     
             input, textarea, button, select {
                 width: 100%;
+                padding: 1rem;
+                border: solid 1px #CCC;
+                border-radius: 5px;
             }
         }
     }
@@ -194,23 +231,25 @@
     ul {
         list-style: none;
         margin: 0;
-        padding: 0;
+        padding: 0 10px;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: left;
+        flex-wrap: wrap;
 
         li {
             display: block;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             text-align: center;
-            line-height: 40px;
+            line-height: 42px;
             border-radius: 5px;
-            margin-right: 5px;
+            margin: 0 5px;
             background-color: orangered;
             color: #FFF;
             font-weight: bold;
             cursor: pointer;
+            margin-bottom: 10px;
 
             a {
                 color: #FFF;

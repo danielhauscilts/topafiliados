@@ -23,7 +23,8 @@ const Home = () => {
                 <Row className='call'>
                     <Col md={6} style={{alignContent: 'center'}}>
                         <p><img src={call} alt="A melhior plataforma para Afiliados Shopee Vídeo" width='100%' /></p>
-                        <p className='text-center' style={{marginTop: '1rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
+                        <p className='text-center' style={{marginTop: '2rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
+                        <p style={{margin: '2rem 0', textAlign: 'center', fontWeight: 'bold'}}>Chega de pacotes com milhares de produtos ou grupos intermináveis, aqui você é guiado para as melhores vendas e ainda pode criar o segmento de seu interesse através de nossas categorias!</p>
                     </Col>
                     <Col md={6} className='text-center'>
                         <p style={{fontSize: '1rem'}} className='text-left'>Assista como cadastrar produtos em<br />menos de <strong>1 minuto</strong>.</p>
@@ -33,14 +34,15 @@ const Home = () => {
                     </Col>
                     <Col md={12}>
                         <h2 style={{marginTop: '1rem'}}>Quem somos?</h2>
-                        <p>Nossos consultores buscam diariamente os melhors produtos para postar na Shopee Vídeo para você postar e não se preocupar com edições complexas ou escolha de hashtags, você apenas baixa o vídeo, copia as informações e em 3 passos seu anúncio está pronto, economizando horas do AFILIADO.</p>
+                        <p>Economize horas do seu dia, contando com nossos <strong>consultores especialistas</strong> que buscam diariamente os melhores produtos para você postar na <strong>Shopee Vídeo</strong> e não se preocupar com edições complexas ou escolha de hashtags, tudo para que <strong>você</strong> copie as informações e em poucos passos ter seu anúncio publicado!</p>
                         <h2>Qual nosso diferêncial?</h2>
-                        <p>Além de fornecer <strong>VÍDEOS</strong> dos melhores produtos, editados e narrados com forte possibilidade de venda, disponibilizamos <strong>TUTORIAIS</strong> que vão te ajudar a ser um afiliado, cadastrando produtos no seu canal <strong>Shopee Vídeo</strong> em menos de <strong>1 minutos</strong> por produto.</p>
+                        <p>Packs de milhares de produtos perdem sua validade de venda em poucos dias, assim nossas indicações estão sempre fresquinhas, seguido o método de ondas, isso significa, produtos que estão se destacando mas com poucos Afiliados, colocando você na frente!</p>
+                        <p><strong>Te auxiliamos de A a Z para transformar seu canal Shopee Vídeo em uma vitrine de vendas</strong></p>
                         <h2>Como funciona?</h2>
                         <ol className='feature-list'>
                             <li><span onClick={(e)=>{e.preventDefault();Navigate('/cadastro')}}>Cadastre-se <strong style={{color: 'orangered'}}>aqui!</strong></span></li>
-                            <li><span>Contrate seu plano por R$ 20,00 mensais e pare quando quiser!</span></li>
-                            <li><span>Transforme seu canal Shopee Vídeos em uma vitrine de vendas. Nossos consultores experientes publicam produtos diariamente para você anunciar com facilidade, em poucos passos.</span></li>
+                            <li><span>Contrate seu plano por R$ 20,00 para usar a plataforma por 30 dias, depois renove se quiser!</span></li>
+                            <li><span>Nossos consultores experientes publicam produtos diariamente para você anunciar com facilidade, em poucos passos.</span></li>
                             <li><span>Acompanhe a performance de suas vendas na sua central de Afiliados</span></li>
                         </ol>
                     </Col>
