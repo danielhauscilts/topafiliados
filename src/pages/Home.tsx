@@ -9,6 +9,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 //images
 // import phone from '../assets/phone-image.webp';
 import call from '../assets/call.png';
+import whats from '../assets/whats.png';
 
 import tutorial_video from "../assets/video/tutorial-video.mp4";
 
@@ -22,12 +23,12 @@ const Home = () => {
             <Container>
                 <Row className='call'>
                     <Col md={6} style={{alignContent: 'center'}}>
-                        <p><img src={call} alt="A melhior plataforma para Afiliados Shopee Vídeo" width='100%' /></p>
-                        <p className='text-center' style={{marginTop: '2rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
-                        <p style={{margin: '2rem 0', textAlign: 'center', fontWeight: 'bold'}}>Chega de pacotes com milhares de produtos ou grupos intermináveis, aqui você é guiado para as melhores vendas e ainda pode criar o segmento de seu interesse através de nossas categorias!</p>
+                        <p><img src={call} alt="A melhor plataforma para Afiliados Shopee Vídeo" width='100%' /></p>
+                        <p className='text-center' style={{marginTop: '1rem'}}><Button onClick={(e)=>{e.preventDefault(); Navigate('/cadastro')}}>Cadastre-se agora!</Button></p>
+                        <p style={{margin: '2rem 0'}}><img src={whats} alt="Tire suas dúvidas!" width='100%' /></p>
                     </Col>
                     <Col md={6} className='text-center'>
-                        <p style={{fontSize: '1rem'}} className='text-left'>Assista como cadastrar produtos em<br />menos de <strong>1 minuto</strong>.</p>
+                        <p style={{fontSize: '1rem'}} className='text-left'>Assista como cadastrar produtos em<br />menos de <strong>1 minuto</strong> com <strong>AfiliPRO</strong>.</p>
                         <video height="720" controls style={{border: 'solid 10px #555', borderRadius: '10px'}}>
                             <source src={tutorial_video} type="video/mp4"></source>
                         </video>

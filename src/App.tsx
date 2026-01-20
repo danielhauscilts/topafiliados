@@ -215,7 +215,7 @@ function App() {
       <div className='footer'>
         <Container>
           <Row>            
-            <Col md={4}>
+            <Col md={3}>
               <p style={{margin: '1rem 0', fontSize: '1.25rem', color: 'orangered'}}><strong>Ficou com alguma dúvida?</strong><br /> Teremos o prazer em te atender
               </p>
               <p style={{fontSize: '1rem'}}>
@@ -223,7 +223,7 @@ function App() {
                 <a href="https://wa.me/5511937751045?text=AfiliPRO"><IoLogoWhatsapp style={{color: 'orangered'}} /> +55 (11) 9 3775.1045</a>
               </p>
             </Col>
-            <Col md={4}>
+            <Col md={5}>
               <ul className='social'>
                 <li><strong>Siga-nos nas redes</strong></li>
                 <li>
