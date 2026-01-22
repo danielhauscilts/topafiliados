@@ -69,7 +69,7 @@ const Plain = () => {
                                         <strong>Pedido {eId} gerado</strong><br />
                                         <small>Clique abaixo e seja direcionado a um ambiente seguro</small>
                                     </p>
-                                    <Wallet initialization={{ preferenceId: pId }} />
+                                    <Wallet initialization={{ preferenceId: pId, redirectMode: 'self'}} />
                                     <p style={{fontSize: '.75rem', marginTop: '2rem'}}>Pagamentos aceitos:<br /><img src="/images/payment.jpg?1" alt="Pague com:" /></p>
                                     <p className='text-center'>Você poderá verificar seus extratos de pagamento e vigência de contratação, acessando <a href='/conta' target='_self'><strong>Minha Conta</strong></a> a qualquer momento.</p>
                                 </>

@@ -18,7 +18,7 @@ function Register() {
     const [confPassword, setConfPassword] = useState<any>(null);
     const [error, setError] = useState<any>(null);
 
-     const showPassword = (e:any) => {
+    const showPassword = (e:any) => {
         const attr = document.getElementById(e)?.getAttribute('type');
 
         if(attr=='password') {

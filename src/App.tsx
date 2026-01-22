@@ -8,7 +8,7 @@ import ProtectRoute from './utils/ProtectedRoute';
 import env from './utils/env';
 
 // Routes
-import Home from './pages/Home';
+import Home from './pages/Home_fast';
 import Produtos from './pages/Produtos';
 import Register from './components/Register';
 import About from './pages/About';
@@ -110,18 +110,13 @@ function App() {
           <Container>
             <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="AfiliPRO" height={30} /></Navbar.Brand>
             {!logged && (
-              <Button className='btn btn-primary' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+              <Button className='btn btn-primary d-md-none' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
             )}
             {logged && (
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
             )}
             <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
               <Nav>
-                {logged && (
-                    <>
-                      <span style={{color: '#FFF', display: 'block', margin: '1rem 0 .5rem'}}>Olá, {user.name}</span>
-                    </>
-                  )}
                 <Nav.Item>
                   <Link to="/">Início</Link>
                 </Nav.Item>
@@ -171,6 +166,9 @@ function App() {
                     <>
                       <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
                     </>
+                  )}
+                  {!logged && (
+                    <Button className='btn btn-primary d-xs-none d-md-block' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
                   )}
                 </Nav.Item>
               </Nav>

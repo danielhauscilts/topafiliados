@@ -1,0 +1,156 @@
+.home {
+    color: #FFF;
+    padding: 1rem;
+    background-color: #999;
+
+    &-register {
+        margin-bottom: 1rem;
+
+        button.next {
+            color: #FFF;
+            font-size: 1rem !important;
+            width: 100%;
+            padding: .7rem 0;
+        }
+    }
+
+    .call {
+
+        font-size: 1.25rem;
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 0 1rem;
+            text-align: left;
+            color: #555;
+
+            strong {
+                color: orangered;
+            }
+        }
+
+        button {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+    }
+
+    h2 {
+        color: orangered;
+        font-size: 1.5rem;
+    }
+
+    .feature-list {
+        counter-reset: section;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-top: 1rem;
+        color: #555;
+
+        li {
+            background-color: #ededed;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-radius: 10px;
+
+            span {
+                font-weight: bold;
+            }
+
+            &::before {
+                counter-increment: section 1;
+                content: counter(section);
+                display: block;
+                width: 30px;
+                height: 30px;
+                text-align: center;
+                border-radius: 30px;
+                margin-right: 1rem;
+                color: orangered;
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.steps {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    border-top: dashed 1px #CCC;
+    padding: 1rem  0 1rem;
+    margin: 1rem 0 0;
+
+    li {
+        display: block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 20px;
+        background-color: #CCC;
+        color: #999;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: bold;
+
+        &.active {
+            background-color: orangered;
+            color: #FFF;
+        }
+
+        &.done {
+            background-color: #efefef;
+            color: #FFF;
+        }
+    }
+}
+
+.otp-code {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 2rem 0;
+    padding: 0;
+    width: 100%;
+
+    li {
+        display: block;
+        width: 50px;
+
+        input {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+    }
+}
+
+.extrato {
+    background-color: #ededed;
+    font-size: .75rem;
+    border-radius: 5px;
+    border: solid 1px #999;
+    margin-bottom: 1rem;
+    padding: .5rem 0;
+
+    .title {
+        font-weight: bold;
+        border-bottom: solid 1px #999;
+        font-size: 1rem;
+        padding: .25rem 0;
+    }
+
+    .total {
+        font-weight: bold;
+        border-top: solid 1px #999;
+        font-size: 1rem;
+        padding: .25rem 0;
+    }
+}
