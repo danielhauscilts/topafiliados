@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
 import env from '../utils/env';
 
@@ -9,14 +11,20 @@ import './Register.scss';
 //icon
 import { FaEye } from "react-icons/fa";
 
+initMercadoPago('APP_USR-0dc798dc-56c5-4274-a39d-8029a47bec99');
+
 function Register() {
+
+    const { pathname } = useLocation();
+
+
+    const { plainId } = useParams();
 
     const [name, setName] = useState<any>(null);
     const [mail, setMail] = useState<any>(null);
-    const [phone, setPhone] = useState<any>(null);
     const [password, setPassword] = useState<any>(null);
     const [confPassword, setConfPassword] = useState<any>(null);
-    const [error, setError] = useState<any>(null);
+    const [error, setError] = useState<any>(false);
 
     const showPassword = (e:any) => {
         const attr = document.getElementById(e)?.getAttribute('type');
@@ -28,193 +36,162 @@ function Register() {
         }
     }
 
-    const[sucesso, setSucesso] = useState<boolean>(false);
-
-    const sendOtp = () => {
-        axios.post(
-            `${env}/api/login`,
-            {
-                "mail": mail,
-                "password": password
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        ).then(()=>{
-            setSucesso(true);
-        }).catch((error) => {
-            if (error.status === 401) {
-                setError('cadastro não encontrado');
-            }
-        })
-    }
-
-    const login = () => {
-        // Implement login logic here
-
-        axios.post(
-            `${env}/api/validate-otp`,
-            {
-                "mail": mail,
-                "otp": otp,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        ).then((e)=>{
-            window.localStorage.setItem('user', JSON.stringify(e.data.user));
-            window.localStorage.setItem('token', e.data.token);
-            window.open('/plano', '_self');
-        }).catch((error) => {
-            console.log('Falha na validação do OTP', error.response.data);
-            setError('Erro na validação, tente novamente!');
-        })
-    }
+    // PAGAMENTO
 
     const register = () => {
 
-        if (password !== confPassword) {
-            alert('As senhas não conferem!');
-            return;
-        }
+        return new Promise((resolve, reject) => {
 
-        let cleanPhone = '';
-        
-        if (phone.indexOf('55') === -1) {
-            cleanPhone = '55' + phone.replace(/\D/g, '');
-        } else {
-            cleanPhone = phone.replace(/\D/g, '');
-        }
-
-        axios.post(`${env}/api/user`,
-            {
-                'name': name,
-                'mail': mail,
-                'phone': cleanPhone,
-                'password': password
+            if (password !== confPassword) {
+                alert('As senhas não conferem!');
+                reject();
             }
-        ).then(()=>{
-            sendOtp();
-        }).catch((err)=>{
-            setError(err.response.data.error);
 
-            setTimeout(()=>{
-                setError(null);
-            }, 5000)
+            axios.post(`${env}/api/user`,
+                {
+                    'name': name,
+                    'mail': mail,
+                    'password': password
+                }
+            ).then((e)=>{
+                window.localStorage.setItem('user', JSON.stringify(e.data.user));
+                window.localStorage.setItem('token', e.data.token);
+                
+                axios.post(`${env}/api/pagamento`,
+                        {
+                            "plain": plainId,
+                            "user_id": e.data.user.id
+                        }
+                    ).then((e:any)=>{
+                        resolve(e.data.id);
+                    }).catch(()=>{
+                        reject();
+                    })
+
+            }).catch(() => {
+                setError('Usuário já registrado');
+                setTimeout(()=>{
+                    setError(false);
+                }, 5000);
+                reject();
+            })
         })
     }
 
-    const [otp, setOtp] = useState<any>(null);
+    useEffect(()=>{
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        })
+    }, [pathname])
 
     return (
         <div className='Register'>
-            {!sucesso && (
-                <Container className='home-register'>
-                    <Row>
-                        <Col>
-                            <h1>Cadastre-se</h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <Container>
-                                <Row>
-                                    <Col xs={3}>Nome</Col>
-                                    <Col xs={9}>
-                                        <input 
-                                            type='text' 
-                                            id='name'
-                                            placeholder='Nome'
-                                            onChange={(e)=>{setName(e.target.value)}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={3}>E-mail</Col>
-                                    <Col xs={9}>
-                                        <input 
-                                            type='text' 
-                                            id='mail'
-                                            placeholder='seu@email.com'
-                                            onChange={(e)=>{setMail(e.target.value)}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={3}>Celular</Col>
-                                    <Col xs={9}>
-                                        <input 
-                                            type='text' 
-                                            id='phone'
-                                            placeholder='(**) 9****-****'
-                                            onChange={(e)=>{setPhone(e.target.value)}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={3}>Senha</Col>
-                                    <Col xs={9} className='password-field'>
-                                        <input 
-                                            type='password' 
-                                            id='password'
-                                            placeholder='******'
-                                            onChange={(e)=>{setPassword(e.target.value)}} />
-                                            <FaEye onClick={()=>{showPassword('password')}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={3}>Confirme a Senha</Col>
-                                    <Col xs={9} className='password-field'>
-                                        <input 
-                                            type='password' 
-                                            id='confPassword'
-                                            placeholder='******'
-                                            onChange={(e)=>{setConfPassword(e.target.value)}} />
-                                            <FaEye  onClick={()=>{showPassword('confPassword')}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={12}>
-                                        <Button style={{width: '100%'}} onClick={(e)=>{e.preventDefault(); register()}}>Cadastre-se</Button>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <div className='regulamento text-center'>
-                                            Ao se cadastrar você fará parte de milhares de pessoas que fazem renda extra todos os meses sem disperdiçar seu tempo e não se preocupe, seus dados são protegidos e não serão compartilhados com ninguém, a Afilipro, zela pela <strong>privacidade</strong> de todos os nossos usuários.
-                                        </div>
-                                    </Col>
-                                </Row>
-                                {error && (
-                                    <Row className='error'><Col>{error}</Col></Row>
-                                )}
-                            </Container>
-                        </Col>
-                    </Row>
-                </Container>
-            )}
-            {sucesso && (
-                <Container style={{marginBottom: '2rem'}}>
-                    <Row>
-                        <Col style={{textAlign: 'center', margin: '1rem 0', fontWeight: 'bold', fontSize: '1.25rem'}}>Falta apenas um passo, agora vamos validar seu cadastro!</Col>
-                    </Row>
-                    <Row>
-                        <Col className='text-center' style={{marginBottom: '1rem'}}>Digite no campo abaixo o código de 6 digitos enviado para o celular informado</Col>
-                    </Row>
-                    <Row className='otp-form'>
-                        <Col xs={6}>
-                            <input type="text" onChange={(e)=>{setOtp(e.target.value)}} placeholder='******' />
-                        </Col>
-                        <Col xs={6}>
-                            <Button onClick={(e)=>{e.preventDefault(); login()}}>Validar</Button>
-                        </Col>
-                    </Row>
-                    {error && (
-                        <Row className='error'><Col>{error}</Col></Row>
-                    )}
-                </Container>
-            )}
+            <Container className='register'>
+                <Row>
+                    <Col md={12}>
+                        {plainId === '20' && (
+                            <>
+                                <h1 style={{fontSize: '2rem', textAlign: 'center', color: 'rgb(97, 160, 255)'}}>Plano Mensal<br /><small><strong>R$ 29,90</strong></small></h1>
+                                <p style={{margin: '1rem 0 .5rem 1rem'}}><strong>Você terá:</strong></p>
+                                <ul>
+                                    <li>Acesso imediato</li>
+                                    <li>1 mês de utilização</li>
+                                    <li>Vídeos validados todos os dias</li>
+                                    <li>Suporte por Whatsapp</li>
+                                    <li>Renove somente quando quiser</li>
+                                </ul>
+                            </>
+                        )}
+                        {plainId === '120' && (
+                            <>
+                                <h1 style={{fontSize: '2rem', textAlign: 'center', color: 'rgb(255, 174, 43)'}}>Plano Anual<br /><small><strong>R$ 197,90</strong> <span style={{fontSize: '1rem'}}></span></small></h1>
+                                <p style={{margin: '1rem 0 .5rem 1rem'}}><strong>Você terá:</strong></p>
+                                <ul>
+                                    <li>Acesso imediato</li>
+                                    <li>1 ano de utilização</li>
+                                    <li>Vídeos validados todos os dias</li>
+                                    <li>Suporte por Whatsapp</li>
+                                    <li>Renove somente quando quiser</li>
+                                </ul>
+                            </>
+                        )}
+                        <p style={{color: '#000', fontSize: '1rem'}} className='text-center'><strong>Insira as informações abaixo</strong></p>
+                    </Col>
+                    <Col md={12}>
+                        <Container>
+                            <Row>
+                                <Col xs={12}>
+                                    <input 
+                                        type='text' 
+                                        id='name'
+                                        placeholder='Nome: ex. João da Silva'
+                                        onChange={(e)=>{setName(e.target.value)}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12}>
+                                    <input 
+                                        type='text' 
+                                        id='mail'
+                                        placeholder='E-mail: ex. seu@email.com'
+                                        onChange={(e)=>{setMail(e.target.value)}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12} className='password-field'>
+                                    <input 
+                                        type='password' 
+                                        id='password'
+                                        placeholder='Senha'
+                                        onChange={(e)=>{setPassword(e.target.value)}} />
+                                        <FaEye onClick={()=>{showPassword('password')}} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12} className='password-field'>
+                                    <input 
+                                        type='password' 
+                                        id='confPassword'
+                                        placeholder='Confirme a senha'
+                                        onChange={(e)=>{setConfPassword(e.target.value)}} />
+                                        <FaEye  onClick={()=>{showPassword('confPassword')}} />
+                                </Col>
+                            </Row>
+                            {error && (
+                                <Row className='error'><Col>{error}</Col></Row>
+                            )}
+                            <Row>
+                                <Col xs={12}>
+                                    {name && mail && password && confPassword && (password === confPassword) && (
+                                        <Wallet initialization={{ redirectMode: 'self'}} onSubmit={register} onReady={()=>{console.log('ready')}} onError={()=>{setError('Ocorreu um erro ao gerar pagamento, tente novamente!')}} />
+                                    )}
+                                    {(password === '' || password !== confPassword) && (
+                                        <Button disabled={true} style={{width: '100%', color: '#999', padding: '.5rem 0', fontWeight: 'bold', backgroundColor: '#CCC', border: 'none'}}>mercado pago</Button>
+                                    )}
+                                    {/*<Button style={{width: '100%', fontSize: '1.5rem', fontWeight: 'bold', padding: '.5rem 1rem', margin: '1rem 0'}} onClick={(e)=>{e.preventDefault(); register()}}>Cadastrar</Button>*/}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={12}>
+                                    <div className='regulamento text-center'>
+                                        Ao se cadastrar você fará parte de milhares de pessoas que fazem renda extra todos os meses sem disperdiçar seu tempo e não se preocupe, seus dados são protegidos e não serão compartilhados com ninguém, a Afilipro, zela pela <strong>privacidade</strong> de todos os nossos usuários.
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Col>
+                </Row>
+            </Container>
+            <Container>
+                <Row>
+                    <Col md={12}>
+                        <p style={{fontSize: '.75rem', marginTop: '2rem'}} className='text-center'>Formas de pagamentos aceitos:<br /><img src="/images/payment.jpg?1" alt="Pague com:" /></p>
+                        <p className='text-center'>Você poderá verificar seus extratos de pagamento e vigência de contratação, acessando <a href='/conta' target='_self'><strong>Minha Conta</strong></a> a qualquer momento.</p>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     )
 }

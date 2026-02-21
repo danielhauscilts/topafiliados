@@ -15,23 +15,29 @@ function Login({show, setShow}: Props) {
 
     const Navigate = useNavigate();
 
-    const [send, setSend] =  useState(false);
     const [mail, setMail] =  useState('');
     const [password, setPassword] =  useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
     const goToRegister = () => {
-        Navigate('/cadastro');
+        Navigate('/#plains');
     }
 
     const resetPassword = () => {
         axios.put(`${env}/api/password`, {
             "mail": mail
-        }).then(()=>{setError('Foi encaminhada uma nova senha para o celular cadastrado!')})
+        }).then(()=>{
+            setError('Foi encaminhada uma nova senha para seu e-mail!');
+        }).catch((err)=>{
+            setError('Não foi possível encaminhar o e-mail');
+            console.log(err);
+        })
     }
 
-    const sendOtp = () => {
+    const login = () => {
+        // Implement login logic here
+
         axios.post(
             `${env}/api/login`,
             {
@@ -41,31 +47,7 @@ function Login({show, setShow}: Props) {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-            }
-        ).then(()=>{
-            setSend(true);
-            setMail(mail.toString());
-        }).catch((error) => {
-            if (error.status === 401) {
-                setError('cadastro não encontrado');
-            }
-        })
-    }
-
-    const login = (otp: String) => {
-        // Implement login logic here
-
-        axios.post(
-            `${env}/api/validate-otp`,
-            {
-                "mail": mail,
-                "otp": otp,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                }
             }
         ).then((e)=>{
             window.localStorage.setItem('user', JSON.stringify(e.data.user));
@@ -81,7 +63,7 @@ function Login({show, setShow}: Props) {
         <div className="login-container">
             <form className="login-form">
                 <Container>
-                    {!send && !success &&
+                    {!success &&
                     <>
                         <Row>
                             <Col md={12}>
@@ -107,15 +89,15 @@ function Login({show, setShow}: Props) {
                         </Row>
                         <Row>
                             <Col sm={6}>
-                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); sendOtp()}} className="login-button">Validar login</Button>
+                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login()}} className="login-button">Validar login</Button>
                             </Col>
                             <Col sm={12} style={{marginTop: '2rem'}}>
                                 <span onClick={()=>{
                                     console.log(mail);
                                     if(mail === '') {setError('Digite seu e-mail de cadastro!'); return;}
-                                    if(confirm('Deseja enviar uma nova senha para seu celular?')){
+                                    if(confirm('Deseja enviar uma nova senha para seu e-mail?')){
                                         resetPassword();
-                                        setError('Foi enviada uma nova senha para seu celular cadastrado!')}
+                                    }
                                 }} style={{display: 'block', marginBottom: '1rem'}}>Esqueceu sua senha?</span>
                             </Col>
                             <Col sm={12}>
@@ -128,32 +110,6 @@ function Login({show, setShow}: Props) {
                             </Col>
                             { error !== '' && (
                             <Col md={12}>
-                                <div className='login-error'>{error}</div>
-                            </Col>
-                            )}
-                        </Row>
-                    </>
-                    }
-                    {send && !success &&
-                    <>
-                        <Row>
-                            <Col md={12}>
-                                <p>Um código foi enviado para o celular cadastrado.</p>
-                            </Col>
-                            <Col xs={8}>
-                                <Form.Control 
-                                    type="password" 
-                                    style={{width: '100%'}} 
-                                    id="otp" 
-                                    name="otp" 
-                                    placeholder='******' 
-                                    required />
-                            </Col>
-                            <Col xs={4}>
-                                <Button type="submit" style={{width: '100%'}} onClick={(e) => {e.preventDefault(); login((document.getElementById('otp') as HTMLInputElement).value)}} className="login-button">Logar</Button>
-                            </Col>
-                            { error !== '' && (
-                            <Col sm={12}>
                                 <div className='login-error'>{error}</div>
                             </Col>
                             )}

@@ -1,0 +1,87 @@
+.bio-page {
+    background-color: #f9e4ff;
+
+    .title {
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+        color: #834a94;
+        font-size: 2rem;
+        font-weight: bold;
+        background-color: #FFF;
+        border-radius: 5px;
+        padding: .5rem;
+        margin: 2rem 0;
+        border: solid 3px #e9b9f8;
+        background: linear-gradient(to bottom, #f9e4ff, #e9b9f8);
+        background: -webkit-linear-gradient(to bottom, #f9e4ff, #e9b9f8);
+        box-shadow: 1px 1px 4px rgba(0,0,0,.5);
+
+        h1 {
+            font-weight: bolder;
+        }
+
+        .descricao {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+    }
+
+    
+    .produto_detail {
+
+        a {
+
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            padding: .5rem;
+            background-color: #f9e4ff;
+            border-radius: 5px;
+            align-items: center;
+            border: solid 1px #e9b9f8;
+            background: linear-gradient(to bottom, #f9e4ff, #f7dcff);
+            background: -webkit-linear-gradient(to bottom, #f9e4ff, #f7dcff);
+            border: solid 1px #e9b9f8;
+            margin-bottom: 1.25rem;
+            cursor: pointer;
+            transition: all .2s;
+            color: inherit;
+            box-shadow: 1px 1px 4px rgba(0,0,0,.2);
+        
+            .img {
+                position: relative;
+
+                .img-title {
+                    position: absolute;
+                    left: 10px;
+                    bottom: 10px;
+                    padding-right: 20px;
+                    width: 100%;
+                    color: #FFF;
+                    font-weight: bold;
+                    text-shadow: 1px 1px 4px rgba(0,0,0,1);
+                    font-size: 2rem;
+                    line-height: 2.25rem;
+                }
+
+                @media screen and (max-width: 500px) {
+                    .img-title {
+                        font-size: 1.25rem;
+                        line-height: 1.5rem;
+                    }
+                }
+            }
+        
+            svg {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.bio-footer {
+    text-align: center;
+    padding: 1rem 0;
+    background-color: #555;
+    color: #FFF;
+}

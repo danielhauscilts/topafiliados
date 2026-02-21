@@ -196,7 +196,8 @@
 
     .category {
         padding: 1rem 0;
-        color: #555;
+        background: linear-gradient(to right, #ea580c, #db2777);
+        background: -webkit-linear-gradient(to right, #ea580c, #db2777);
         background-color: #ededed;
 
         select {
@@ -238,27 +239,36 @@
         flex-wrap: wrap;
 
         li {
-            display: block;
-            width: 42px;
-            height: 42px;
-            text-align: center;
-            line-height: 42px;
-            border-radius: 5px;
             margin: 0 5px;
-            background-color: orangered;
-            color: #FFF;
-            font-weight: bold;
-            cursor: pointer;
             margin-bottom: 10px;
 
             a {
+                display: block;
+                width: 42px;
+                height: 42px;
+                text-align: center;
+                line-height: 42px;
+                border-radius: 5px;
+                background-color: orangered;
+                color: #FFF;
+                font-weight: bold;
+                cursor: pointer;
                 color: #FFF;
                 text-decoration: none;
             }
 
             &.active {
-                background-color: #000;
+
+                a {
+                    background-color: #000;
+                }
             }
         }
     }
+}
+
+.ce {
+    position: absolute;
+    top: 16px;
+    right: 12px;
 }

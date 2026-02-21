@@ -2,10 +2,31 @@
     color: #555;
     padding: 1rem;
 
-    .home-register {
+    .register {
 
-        background-color: #FFF;
+        background-color: #fff3dd;
+        border: solid 1px #ffce74;
         border-radius: 10px;
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: orangered;
+            background-color: #FFF;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+            margin: 1rem 0;
+
+            small {
+                color: #000;
+                font-weight: normal;
+            }
+        }
+
+        ul {
+            margin-bottom: 2rem;
+        }
 
         .row {
             margin-bottom: 1rem;
@@ -17,6 +38,9 @@
 
         input {
             width: 100%;
+            padding: .5rem .75rem;
+            border-radius: 5px;
+            border: solid 1px #ccc;
         }
 
         .error {
@@ -45,15 +69,8 @@
         svg {
             position: absolute;
             right: 20px;
-            top: 7px;
+            top: 15px;
             cursor: pointer;
-        }
-    }
-
-    @media screen and (max-width: 500px) {
-        
-        .regulamento {
-            margin: 2rem 0;
         }
     }
 
@@ -69,5 +86,71 @@
         button {
             width: 100%;
         }
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(to right, #ea580c, #db2777);
+    background: -webkit-linear-gradient(to right, #ea580c, #db2777);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.regulamento {
+    font-size: 1rem;
+    margin: 0 0 2rem;
+}
+
+.otp-code {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 2rem 0;
+    padding: 0;
+    width: 100%;
+
+    li {
+        display: block;
+        width: 50px;
+
+        input {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #000;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type=number] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+    }
+}
+
+.plain {
+
+    h1 {
+        font-size: 3rem;
+        color: orangered;
+        font-weight: bold;
+        text-shadow: 1px 1px 1px rgba(0,0,0,.5);
+    }
+
+    .status-payment{
+        display: block;
+        background-color: orangered;
+        border-radius: 5px;
+        padding: .25rem;
+        text-align: center;
+        width: 100%;
+        color: #FFF;
+        font-weight: bold;
     }
 }

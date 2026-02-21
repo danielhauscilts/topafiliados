@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "yet-another-react-lightbox/styles.css";
 
@@ -10,6 +10,8 @@ import './Produtos.scss';
 import '../assets/zoom-styles.min.css';
 import "react-image-gallery/styles/css/image-gallery.css";
 
+import coex from '../assets/ce.png';
+
 import { FaCopy } from "react-icons/fa6";
 // import { AiFillPicture } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa";
@@ -18,11 +20,12 @@ import { IoIosOpen } from "react-icons/io";
 import { FaToggleOn } from "react-icons/fa";
 import { FaToggleOff } from "react-icons/fa6";
 
-
-
 const Produtos = () => {
 
-    const [searchParams] = useSearchParams();
+    const [ searchParams ] = useSearchParams();
+
+    const params:any = useParams();
+    params.page = params.page || 1;
 
     const [produtos, setProdutos] = useState<any[]>([]);
     const [titulo, setTitulo] = useState<any>(null);
@@ -30,18 +33,35 @@ const Produtos = () => {
     const [linkDois, setLinkDois] = useState<any>(null);
     const [linkTres, setLinktres] = useState<any>(null);
     const [texto, setTexto] = useState<any>(null);
+    const [ce, setCe] = useState<any>(false);
     const [categoria, setCategoria] = useState<any>(null);
     const [categories, setCategories] = useState<any[]>([]);
+    const [categoriesAll, setCategoriesAll] = useState<any[]>([]);
     const [admin, setAdmin] = useState<boolean>(false);
     const [terms, setTerms] = useState<any>(null);
-    const [today, setToday] = useState<any>(false);
     const [sucesso, setSucesso] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [loadingProducts, setLoadingProducts] = useState<boolean>(false);
+    const [bio, setBio] = useState<any>(null);
+
+    const getBio = () => {
+        const user = JSON.parse(window.localStorage.getItem('user') || '');
+        axios(`${env}/api/bio/${user.id}`)
+        .then(()=>{
+            setBio(true);
+        }).catch(()=>{
+            setBio(false);
+        })
+    }
 
     useEffect(() => {
-        getProdutos();
         getCategories();
+        getProdutos();
+        getCategoriesAll();
+        getBio();
+
+        setCategoria(params.categoria);
 
         const user:any = window.localStorage.getItem('user');
         const typeUser = JSON.parse(user).type;
@@ -51,12 +71,9 @@ const Produtos = () => {
         }
     }, [])
 
-    useEffect(()=>{
-        let pg:any = 0;
-        console.log('today', today)
-        if(window.location.href.indexOf('p=') > -1) {pg = window.location.href.split('p=')[1]}
-        getProdutos(pg);
-    }, [window.location.href]);
+    useEffect(() => {
+        getProdutos();
+    }, [window.location.href])
 
     const changedCategoria = (e:any) => {
         if (e.target.value == 'new') {
@@ -79,23 +96,21 @@ const Produtos = () => {
                     }
                 }
             ).then(()=>{
-                getCategories();
+                getCategoriesAll();
             })
         }
     }
 
+    const navigate = useNavigate();
+
     const changeCategory = (id:any) => {
 
         if (id) {
-            setCategoria(id);
+            navigate(`/produtos/${id}/1`);
         } else {
-            setCategoria(null);
+            navigate(`/produtos`);
         }
     }
-
-    useEffect(()=>{
-        getProdutos();
-    }, [categoria, today])
 
     const getCategories = () => {
         axios.get(`${env}/api/categorias`)
@@ -104,19 +119,29 @@ const Produtos = () => {
         })
     }
 
+    const getCategoriesAll = () => {
+        axios.get(`${env}/api/categorias/all`)
+        .then((e)=> {
+            setCategoriesAll(e.data);
+        })
+    }
+
     const [total, setTotal] = useState<number>(0);
 
-    let page = Number(searchParams.get('p'));
+    const getProdutos = () => {
 
-    const getProdutos = (pg:number = 0) => {
+        setLoadingProducts(true);
 
-        axios.get(`${env}/api/produtos` + (categoria ? `/${categoria}` : '') + (terms || today ? '?' : '') + (terms ? `terms=${terms}`: '') + (terms && today ? '&' : '') + (today ? `today=${today}` : '') + (pg > 0 ? ((!terms && !today ? '?' : '&') + `page=${page}`) : ''))
+        axios.get(`${env}/api/produtos` + (params.categoria ? `/${params.categoria}` : '') + (searchParams.get('terms') || searchParams.get('ce') ? '?' : '') + (searchParams.get('terms') ? `terms=${searchParams.get('terms')}`: '') + (searchParams.get('terms') && searchParams.get('ce') ? '&' : '') + (searchParams.get('ce') ? `ce=${searchParams.get('ce')}` : '') + (params.page ? ((!searchParams.get('terms') && !searchParams.get('ce') ? '?' : '&') + `page=${(params.page-1)}`) : ''))
             .then((e)=>{
+                console.log('total: ', e.data.total);
                 setTotal(e.data.total);
                 setProdutos(e.data.items);
+                setLoadingProducts(false);
             }).catch(()=>{
                 setTotal(0);
                 setProdutos([]);
+                setLoadingProducts(false);
             })
     }
 
@@ -157,7 +182,8 @@ const Produtos = () => {
                 linkDois: linkDois,
                 linkTres: linkTres,
                 texto: texto,
-                categoria: categoria
+                categoria: categoria,
+                ce: ce ? '1' : '0'
             }));
 
       await axios.post(`${env}/api/produto`,
@@ -202,6 +228,27 @@ const Produtos = () => {
         getProdutos();
     }
 
+    const showBio = (id: any, link: any) => {
+
+        if(confirm('Deseja incluir esse produto na Bio?')) {
+
+            const user = JSON.parse(window.localStorage.getItem('user') || '');
+    
+            axios.post(`${env}/api/bio-produtos`,
+                {
+                    id_user: user?.id,
+                    id_produto: id,
+                    link: link
+                }
+            ).then(()=>{
+                alert('Produto inserido na Bio');
+            }).catch(()=>{
+                alert('Houve um erro ao inserir produto');
+            })
+        }
+
+    }
+
     return (
         <>
         <div className='produtos'>
@@ -218,7 +265,7 @@ const Produtos = () => {
                                 onChange={(e)=>{changeCategory(e.target.value)}}>
                                 <option value="">Mostrar todas</option>
                                 {categories.length > 0 && categories.map((e, i) => (
-                                    <option value={e.id} key={i}>{e.categoria}</option>
+                                    <option value={e.id} key={i} selected={e.id === params.categoria}>{e.categoria}</option>
                                 ))}
                             </select>
                         </Col>
@@ -232,23 +279,22 @@ const Produtos = () => {
                     </Row>
                     <Row>
                         <Col xs={2}>Palavra:</Col>
-                        <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} onChange={(e)=>{e.preventDefault();setTerms(e.target.value)}} /></Col>
+                        <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} value={terms} onChange={(e)=>{setTerms(e.target.value)}} /></Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Button onClick={(e)=>{e.preventDefault(); getProdutos()}} style={{width: '100%'}}>Buscar</Button>
+                            <Button onClick={(e)=>{e.preventDefault(); navigate('/produtos' + (params.categoria ? '/' + params.categoria : '')  + (params.page ? '/' + params.page : '') + (terms ? '?terms=' + terms + (searchParams.get('ce') ? '&ce=true' : '') : searchParams.get('ce') ? '?ce=true' : ''))}} style={{width: '100%'}}>Buscar</Button>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={10}><strong>Somente produtos de hoje?</strong></Col>
-                        <Col xs={2}>
-                                {today && (
-                                    <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{setToday(false);}} />
-                                )}
-                                {!today && (
-                                    <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{setToday(true);}} />
-                                )}
-                            {/* <input type="checkbox" onChange={(e)=>{e.preventDefault;setToday(e.target.checked)}} checked={today} /> */}
+                        <Col xs={12}>
+                            <strong style={{display: 'inline-block', marginRight: '1rem'}}>Comissão Extra?</strong>
+                            {searchParams.get('ce') && (
+                                <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{navigate('/produtos' + (params.categoria ? '/' + params.categoria : '')  + (params.page ? '/' + params.page : '') + (searchParams.get('terms') ? '?terms=' + searchParams.get('terms') : ''))}} />
+                            )}
+                            {!searchParams.get('ce') && (
+                                <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{navigate('/produtos' + (params.categoria ? '/' + params.categoria : '')  + (params.page ? '/' + params.page : '') + (searchParams.get('terms') ? '?terms=' + searchParams.get('terms') + '&ce=true' : '?ce=true'))}} />
+                            )}
                         </Col>
                     </Row>
                 </Container>
@@ -278,10 +324,19 @@ const Produtos = () => {
                                                         {admin && (
                                                             <option value="new">-- Nova categoria --</option>
                                                         )}
-                                                        { categories.length > 0 && categories.map((e, i)=>(
+                                                        { categoriesAll.length > 0 && categoriesAll.map((e, i)=>(
                                                             <option value={e.id} key={i}>{e.categoria}</option>
                                                         ))}
                                                 </select>
+                                            </Col>
+                                            <Col md={12}>
+                                                <p className='form-title'><span style={{display: 'inline-block', marginRight: '1rem', marginTop: '1rem'}}>Comissão Extra?</span>
+                                                {ce && (
+                                                    <FaToggleOn style={{fontSize: '2rem', color: 'orangered'}} onClick={()=>{setCe(false)}} />
+                                                )}
+                                                {!ce && (
+                                                    <FaToggleOff style={{fontSize: '2rem', color: '#555'}} onClick={()=>{setCe(true)}} />
+                                                )}</p>
                                             </Col>
                                             <Col md={12}>
                                                 <p className='form-title'>Link</p>
@@ -345,7 +400,9 @@ const Produtos = () => {
                         <Col>
                             <ul>
                                 {Array.from({length: (total/10)+1}, (_, i) => (
-                                    <li key={i} className={page === i ? 'active' : ''}><Link to={'/produtos'+(window.location.href.split('/produtos')[1].split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</Link></li>
+                                    <li key={i} className={params.page == (i+1) ? 'active' : ''}>
+                                        <Link to={'/produtos' + (params.categoria ? '/' + params.categoria : '') + '/' + (i+1) + (terms ? '?terms=' + terms : '')} target='_self'>{i+1}</Link>
+                                    </li>
                                 ))
                                 }
                             </ul>
@@ -355,29 +412,28 @@ const Produtos = () => {
             )}
             <Container style={{padding: '1rem'}}>
                 <Row>
-                    {produtos && produtos.length > 0 && produtos.map((e, i) => (
-                        <Col key={i} xs={12} sm={6} md={6} lg={4}>
+                    {produtos && produtos.length > 0 && !loadingProducts && produtos.map((e, i) => (
+                        <Col key={i} xs={12} sm={6} md={6} lg={4} id={`${i}_${e.id}`} style={{position: 'relative'}}>
                             <div className={JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) > -1 ? 'produto posted' : 'produto'}>
                                 <div className='titulo'>{e.titulo}</div>
-                                <div className='text-left' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div>
+                                {/* <div className='text-left' style={{marginBottom: '1rem', fontSize: '.75rem'}}>Postado em {e.data ? e.data.split('-')[2]+'/'+e.data.split('-')[1]+'/'+e.data.split('-')[0]:''}</div> */}
                                 <div className='midias'>
-                                    {/* 
-                                    <div className='capa'>
+                                    {/* <div className='capa'>
                                         <img src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} width='100%' alt="Baixar" />
                                         <AiFillPicture />
                                     </div>
                                     */}
                                     <div className='video'>
-                                        <video width="100%" controls  poster={e.capa ? `${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}` : ''}>
-                                            <source src={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} type="video/mp4"></source>
+                                        <video width="100%" controls  poster={e.capa ? `${env}/api/${e.capa}` : ''}>
+                                            <source src={`${env}/api/${e.video}`} type="video/mp4"></source>
                                         </video>
                                         <FaVideo />
                                     </div>
                                 </div>
                                 <div className='downloads'>
-                                    {/* <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa}>
+                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa} style={{marginBottom: '1rem'}}>
                                         Baixar Capa <FaFileDownload />
-                                    </a> */}
+                                    </a>
                                     <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} title="ImageName" download={e.video}>
                                         Baixar Vídeo <FaFileDownload />
                                     </a>
@@ -393,7 +449,7 @@ const Produtos = () => {
                                     <FaCopy />
                                 </div>
                                 <div className='link' onClick={()=>{
-                                        window.open(e.link, '_blank');
+                                        window.open(e.link, '_self');
                                     }}>
                                     <p>Link 1</p>
                                     <span>{e.link}</span>
@@ -401,7 +457,7 @@ const Produtos = () => {
                                 </div>
                                 {e.link_2 && (
                                     <div className='link' onClick={()=>{
-                                        window.open(e.link_2, '_blank');
+                                        window.open(e.link_2, '_self');
                                     }}>
                                     <p>Link 2</p>
                                     <span>{e.link_2}</span>
@@ -410,7 +466,7 @@ const Produtos = () => {
                                 )}
                                 {e.link_3 && (
                                     <div className='link' onClick={()=>{
-                                        window.open(e.link_3, '_blank');
+                                        window.open(e.link_3, '_self');
                                     }}>
                                     <p>Link 3</p>
                                     <span>{e.link_3}</span>
@@ -427,31 +483,35 @@ const Produtos = () => {
                                         <span>Desfazer marcação</span>
                                     </div>
                                 }
+                                {bio && (
+                                    <div onClick={()=>{showBio(e.id, e.link)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
+                                        <span>Incluir na Bio</span>
+                                    </div>
+                                )}
+                                {!bio && (
+                                    <div onClick={()=>{navigate('/bio')}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
+                                        <span>Registrar bio</span>
+                                    </div>
+                                )}
                             </div>
+                            {e.ce === '1' && (
+                                <img src={coex} alt="Comissão Extra" className='ce' />
+                            )}
                         </Col>
                         )
                     )}
-                    {produtos && produtos.length === 0 && (
+                    {produtos && produtos.length === 0 && !loadingProducts && (
                         <Col className='text-center'>
                             <span style={{color:'#FFF'}}>Não existem produtos para essa pesquisa.</span>
                         </Col>
                     )}
+                    {loadingProducts && (
+                        <Col className='text-center'>
+                            <span style={{color:'#FFF'}}>Carregando produtos.</span>
+                        </Col>
+                    )}
                 </Row>
             </Container>
-            {total > 10 && (
-                <Container className='pagination' style={{paddingTop: '2rem'}}>
-                    <Row>
-                        <Col>
-                            <ul>
-                                {Array.from({length: (total/10)+1}, (_, i) => (
-                                    <li key={i} className={page === i ? 'active' : ''}><Link to={'/produtos'+(window.location.href.split('/produtos')[1].split('p=')[0] + (window.location.href.indexOf('?') === -1 ? '?' : '&') + `p=${i}`).replace('&&', '&').replace('?&', '?')} target='_self'>{i+1}</Link></li>
-                                ))
-                                }
-                            </ul>
-                        </Col>
-                    </Row>
-                </Container>
-            )}
         </div>
         </>
     )

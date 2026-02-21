@@ -154,9 +154,9 @@ const Home = () => {
                             {step === 0 && (
                                 <Row>
                                     <Col className='text-center' style={{padding: '1rem'}}>
-                                        <h1 className='text-center'><strong style={{textShadow: '1px 1px 1px rgb(0,0,0)'}}>PARABÉNS!</strong></h1>
+                                        <h1 className='text-center'><strong style={{textShadow: '1px 1px 1px rgb(0,0,0)'}}>BEM VINDO!</strong></h1>
                                         <p style={{fontSize: '1rem', fontWeight: '1rem'}}><strong>Se você chegou até aqui, sabemos que você está buscando uma renda a mais e podemos te ajudar!</strong></p>
-                                        <p style={{fontSize: '1rem'}}><strong>IMPORTANTE!</strong> Não somos um curso, somos uma plataforma que diariamente te guiará a ser um Afiliado de <span style={{color: 'orangered'}}>SUCESSO!</span></p>
+                                        <p style={{fontSize: '1rem'}}><strong>IMPORTANTE!</strong> Não somos um curso, somos uma plataforma que diariamente te guiará a ser um Afiliado de <strong style={{color: 'orangered'}}>SUCESSO!</strong></p>
                                         <p><Button onClick={()=>setStep(1)}>Vamos começar <FaArrowAltCircleRight /></Button></p>
                                     </Col>
                                 </Row>
@@ -324,20 +324,6 @@ const Home = () => {
                         </Col>
                     )}
                 </Row>
-                {step === 0 && (
-                    <Row>
-                        <Col xs={12}>
-                            <p style={{borderBottom: 'dashed 1px #555', margin: '2rem 0 1em', paddingBottom: '.5rem', color: '#555'}}><strong>Informações legais</strong></p>
-                            <p style={{fontSize: '1rem'}}>
-                                <ul style={{listStyle: 'none', margin: '0', padding: '0'}}>
-                                    <li className='glass-box' style={{marginBottom: '1rem'}}>A <strong>AfiliPRO</strong> garante privacidade e segurança de seus dados, assim todos as informações e cookies informados neste portal são de uso restrito à plataforma;</li>
-                                    <li className='glass-box' style={{marginBottom: '1rem'}}>A <strong>AfiliPRO</strong> cobra um valor simbólico de R$ 20,00 pelo uso de 30 dias e renove seu acesso sempre que quiser sem nenhuma fidelidade.</li>
-                                    <li className='glass-box' style={{marginBottom: '1rem'}}>A <strong>AfiliPRO</strong> substitui toda complexidade do afiliado em ter que editar videos, buscar pacotes, acompanhar Telegram ou outros meios, apenas siga nosso guia e promova no seu canal Shopee Vídeo, os produtos que disponibilizamos diariamente em poucos passos, gastando menos de 30 minutos do seu dia!</li>
-                                </ul>
-                            </p>
-                        </Col>
-                    </Row>
-                )}
             </Container>
         </div>
         </>

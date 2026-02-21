@@ -1,0 +1,48 @@
+.header-restrict {
+  background-image: linear-gradient(to right, #555, #444);
+  background-image: -webkit-linear-gradient(to right, #555, #444);
+
+  &::after {
+    display: block;
+    content: '';
+    height: 5px;
+    background: linear-gradient(to right, #ea580c, #db2777);
+    background: -webkit-linear-gradient(to right, #ea580c, #db2777);
+  }
+
+  .navbar-nav {
+    padding: .5rem 0;
+
+    .nav-item {
+      margin-right: 1rem;
+      padding: .5rem 0;
+
+      a {
+        display: block;
+        color: orangered;
+        text-decoration: none;
+        padding: .5rem 1rem;
+        background-color: #ededed;
+        border-radius: 5px;
+
+        &:hover {
+          color: rgb(255, 255, 255);
+          background-color: #000;
+        }
+      }
+    }
+
+    @media screen and (max-width: '500px') {
+      .nav-item {
+        width: 100%; 
+        margin-right: 0;
+        
+        a {
+          width: 100%;
+          display: block;
+          text-align: center;
+        }
+      }
+    }
+  }
+}

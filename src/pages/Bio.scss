@@ -1,0 +1,50 @@
+.bio {
+    margin-bottom: 2rem;
+
+    .register {
+
+        input, textarea {
+            width: 100%;
+            padding: .5rem 1rem;
+            border-radius: 5px;
+            border: solid 1px #ccc;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: .5rem 1rem;
+        }
+    }
+
+    .produto_detail {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #ededed;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+
+        svg {
+            cursor: pointer;
+        }
+    }
+}
+
+.link-page {
+    background-color: #ededed;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    color: #999;
+
+    @media screen and (max-width: 500px) {
+        
+        a {
+            display: block;
+            font-size: 1rem;
+        }
+    }
+}
