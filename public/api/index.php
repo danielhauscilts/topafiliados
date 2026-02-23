@@ -1014,6 +1014,26 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
 
 });
 
+$app->post('/api/access', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $data = $request->getParsedBody();
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    mysqli_query($conn, 'INSERT INTO access (
+        button,
+        page,
+        date
+        ) VALUES ( 
+        "'.$data['button'].'",
+        "'.$data['page'].'",
+        "'.date('Y-m-d H:i:s').'")');
+
+    $response->getBody()->write(json_encode(["success" => "true"], true));
+    return $response;
+
+});
+
 $app->put('/api/bio', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
     $data = $request->getParsedBody();

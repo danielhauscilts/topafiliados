@@ -1,23 +1,18 @@
 .bio-page {
-    background-color: #f9e4ff;
+    background-color: #fff;
 
     .title {
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         text-align: center;
-        color: #834a94;
+        color: #92739c;
         font-size: 2rem;
         font-weight: bold;
-        background-color: #FFF;
         border-radius: 5px;
-        padding: .5rem;
         margin: 2rem 0;
-        border: solid 3px #e9b9f8;
-        background: linear-gradient(to bottom, #f9e4ff, #e9b9f8);
-        background: -webkit-linear-gradient(to bottom, #f9e4ff, #e9b9f8);
-        box-shadow: 1px 1px 4px rgba(0,0,0,.5);
 
         h1 {
             font-weight: bolder;
+            color: #92739c;
         }
 
         .descricao {
@@ -30,18 +25,17 @@
     .produto_detail {
 
         a {
-
             display: flex;
             flex-direction: column;
             justify-content: start;
             padding: .5rem;
-            background-color: #f9e4ff;
+            background-color: #fff;
             border-radius: 5px;
             align-items: center;
-            border: solid 1px #e9b9f8;
-            background: linear-gradient(to bottom, #f9e4ff, #f7dcff);
-            background: -webkit-linear-gradient(to bottom, #f9e4ff, #f7dcff);
-            border: solid 1px #e9b9f8;
+            border: solid 1px #b4a2ba;
+            background: linear-gradient(to bottom, #cfb9d6, #b4a2ba);
+            background: -webkit-linear-gradient(to bottom, #cfb9d6, #b4a2ba);
+            border: solid 1px #ccc;
             margin-bottom: 1.25rem;
             cursor: pointer;
             transition: all .2s;
