@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import env from '../utils/env';
 
@@ -14,7 +15,12 @@ import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
 import { IoIosOpen } from "react-icons/io";
 
+// icons
+import { FaArrowRight } from "react-icons/fa";
+
 const Learn = () => {
+
+    const Navigate = useNavigate();
 
     const [produtos, setProdutos] = useState<any[]>([]);
     const [loadingProducts, setLoadingProducts] = useState<boolean>(false);
@@ -46,7 +52,8 @@ const Learn = () => {
 
     useEffect(() => {
         getProdutos();
-    }, [])
+        access('pg_tutorial', 'tutoriais');
+    }, []);
 
     return (
         <>
@@ -54,16 +61,39 @@ const Learn = () => {
             <Container>
                 <Row>
                     <Col md={6} className='laser-list text-center text-md-end'>
-                        <h1 style={{ fontSize: '2em', lineHeight: '2.25rem'}}>Como cadastrar<br /> os <strong style={{color: 'orangered'}}>VÍDEOS</strong> usando <strong style={{color: 'orangered'}}>AfiliPRO</strong>?</h1>
-                        <p style={{fontWeight: 'bold', fontSize: '1.25rem', color: '#999', marginBottom: '2rem'}}>A forma de cadastrar na Shopee Vídeos em menos de 1 minuto?</p>
+                        <h1 style={{ fontSize: '2em', lineHeight: '2.25rem'}}>Tente entender como você ficou sem <strong style={{color: 'orangered'}}>AfiliPRO</strong> até hoje?</h1>
+                        <p style={{fontWeight: 'bold', fontSize: '1.25rem', color: '#999', marginBottom: '2rem'}}>Nunca foi tão fácil ser Afiliado gastando tão pouco!</p>
                     </Col>
                     <Col md={6} className='text-center'>
-                        <video height="720" controls autoPlay loop style={{border: 'solid 2px #999', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)'}}>
+                        <video height="720" controls={true} autoPlay={true} style={{border: 'solid 2px #999', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)'}}>
                             <source src={tutorial_video} type="video/mp4"></source>
                         </video>
                     </Col>
                 </Row>
             </Container>
+            <div>
+                <Container>
+                    <Row>
+                        <Col style={{padding: '0 2rem'}}>
+                            <div className='plains'>
+                                <h1 id='plains' style={{ width: '100%', margin: '0 0 2rem', color: '#000', fontWeight: 'bold', fontSize: '1.75rem', paddingTop: '0'}}>Não perca tempo e garanta seu acesso agora mesmo!</h1>
+                                <div className='price one' style={{marginBottom: '0'}}>
+                                    <p style={{alignContent: 'start', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold', lineHeight: '2rem', color: 'rgb(97, 160, 255)', marginBottom: '0'}}>Acesso mensal</p>
+                                    <p style={{fontSize: '1.25rem', fontWeight: 'bold'}}>R$ 29<small>,90</small></p>
+                                    <p><Button onClick={()=>{access('plain20', 'home'); Navigate('/plano/20')}} style={{backgroundColor: 'orangered', borderColor: 'orangered', fontSize: '1rem'}}>Contratar <FaArrowRight style={{color:"#FFF"}} /></Button></p>
+                                </div>
+                                <p style={{margin: '1rem 0', fontSize: '1.5rem'}}>ou</p>
+                                <div className='price two'>
+                                    <p style={{alignContent: 'start', textAlign: 'center', fontSize: '1.5em', fontWeight: 'bold', lineHeight: '2rem', color: 'rgb(255, 174, 43)', marginBottom: '0'}}>Acesso anual</p>
+                                    <p style={{fontSize: '1.25rem', fontWeight: 'bold'}}>R$ 197<small>,90 (45% off)</small></p>
+                                    <p><Button onClick={()=>{access('plain120', 'home'); Navigate('/plano/120')}} style={{backgroundColor: 'orangered', borderColor: 'orangered', fontSize: '1rem'}}>Contratar <FaArrowRight style={{color:"#FFF"}} /></Button></p>
+                                    <div className='melhor'>melhor escolha</div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
             <div style={{ marginTop: '2rem', padding: '1rem 1rem 2rem', backgroundColor: '#ededed'}}>
                 <p style={{margin: '2rem 0', fontWeight: 'bold', textAlign: 'center', fontSize: '2rem'}}>Agora cadastre um produto você mesmo!</p>
                 <Container style={{marginBottom: '2rem', backgroundColor: '#FFF', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)', overflow: 'hidden'}}>
@@ -170,8 +200,8 @@ const Learn = () => {
                         </Col>
                     </Row>
                 </Container>
-                <p style={{textAlign: 'center'}}>
-                    <a href="/" target='_self'>Voltar para home</a>
+                <p style={{textAlign: 'center', fontWeight: 'bold'}}>
+                    <a href="javascript:history.back()" target='_self'>Voltar para home</a>
                 </p>
             </div>
         </div>

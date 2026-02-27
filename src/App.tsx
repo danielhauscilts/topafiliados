@@ -9,6 +9,7 @@ import env from './utils/env';
 
 // Routes
 import Home from './pages/Home';
+import Mae from './pages/Home_mae';
 import Produtos from './pages/Produtos';
 import Register from './components/Register';
 import About from './pages/About';
@@ -22,6 +23,7 @@ import Plain from './pages/Plain';
 import Bio from './pages/Bio';
 import Validate from './pages/Validate';
 import BioPage from './pages/BioPage';
+import Review from './pages/Review';
 import Footer from './components/Footer';
 
 // Components
@@ -105,9 +107,11 @@ function App() {
       {/* Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/mae" element={<Mae />} />
         <Route path="/link" element={<Validate />} />
         <Route path="/duvidas" element={<About />} />
         <Route path="/plano" element={<Plain />} />
+        <Route path="/review" element={<Review />} />
         <Route path="/b/:nick" element={<BioPage />} />
         <Route path="/plano/:plainId" element={<Register />} />
         <Route element={<ProtectRoute children={<Outlet />} />}>

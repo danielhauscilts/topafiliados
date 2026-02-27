@@ -1,3 +1,277 @@
 .learn {
 
+    .produto {
+            padding: 0 10px 10px;
+            border: solid 1px #ccc;
+            border-radius: 5px;
+            margin: 0 0 1rem;
+            background-color: #FFF;
+
+            .titulo {
+                font-size: 1.25rem;
+                font-weight: bold;
+                margin-bottom: 10px;
+                text-align: left;
+                color: #000;
+                border-radius: 5px;
+                display: flex;
+                align-items: start;
+            }
+
+            .midias {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                width: 100%;
+                justify-content:space-between;
+                align-items: start;
+                margin-bottom: 1.5rem;
+
+                .video {
+                    width: 100%;
+                    position: relative;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    text-align: center;
+                }
+        
+                .capa {
+                    width: 50%;
+                    position: relative;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                .capa, .video {
+                    > svg {
+                        position: absolute;
+                        top: 5px;
+                        left: 5px;
+                        color: orangered;    
+                    }
+
+                    a {
+                        display: block;
+                        text-align: center;
+                        text-decoration: none;
+                        padding: .5rem 0;
+                    }
+                }
+            }
+
+            .downloads {
+                margin: 0 0 1rem;
+
+                a {
+                    display: block;
+                    width: 100%;
+                    background-color: orangered;
+                    color: #FFF;
+                    border-radius: 5px;
+                    padding: .25rem .5rem;
+                    text-decoration: none;
+                    text-align: center;
+                }
+            }
+
+
+            .link {
+                margin: .5rem 0;
+                position: relative;
+                padding: 10px;
+                background-color: #FFF;
+                border-radius: 5px;
+                cursor: pointer;
+
+                p {
+                    margin: 0 0 .25rem;
+                    font-weight: bold;
+                }
+
+                span {
+                    color: #999;
+                    display: block;
+                    font-size: .75rem;
+                    overflow-wrap: break-word;
+                }
+
+                svg {
+                    position: absolute;
+                    right: 7px;
+                    top: 7px;
+                }
+            }
+
+            .texto {
+                position: relative;
+                padding: 10px;
+                background-color: #ededed;
+                border-radius: 5px;
+                cursor: pointer;
+
+                p {
+                    margin: 0 0 .25rem;
+                    font-weight: bold;
+                }
+
+                span {
+                    display: block;
+                    padding: .25rem;
+                    border: solid 1px #ccc;
+                    background-color: #000;
+                    color: #fff;
+                    font-size: .75rem;
+                }
+
+                svg {
+                    position: absolute;
+                    right: 7px;
+                    top: 7px;
+                }
+            }
+
+            &.posted {
+                background-color: #777;
+                cursor: none;
+                border: none;
+                opacity: .5;
+
+                .video {
+
+                    svg {
+                        color: #555;
+                    }
+                }
+
+                .downloads a {
+                    background-color: #555;
+                    border-color: #555;
+                    color: #000;
+                }
+
+                .titulo {
+                    color: #555;
+                }
+
+                .texto, .link {
+                    background-color: #666;
+
+                    span {
+                        color: #999;
+                        background-color: #555;
+                        border: none;
+                    }
+                }
+            }
+        }
+
+    .how {
+        margin: 0;
+        padding: 0 1rem;
+        counter-reset: listing;
+        list-style: none;
+        text-align: left;
+
+        li {
+            text-align: left;
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            margin-bottom: 0;
+            align-items: start;
+            margin-bottom: 1rem;
+
+            &::before {
+                counter-increment: listing;
+                content: counter(listing);
+                display: inline-block;
+                font-weight: bold;
+                text-align: left;
+                width: 10%;
+                background-color: orangered;
+                color: #FFF;
+                text-align: center;
+                height: 100%;
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+
+            p {
+                width: 90%;
+                padding: 1rem 0 1rem 1rem;
+                margin: 0;
+                border-left: solid 2px orangered;
+                background-color: #FFF;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+    }
+
+    .plains {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        background-color: #ededed;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 2rem;
+        text-align: center;
+
+        .price {
+            background-color: #FFF;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 5px rgba(0,0,0,.1);
+            margin: 0 0 2rem;
+            color: #000;
+            position: relative;
+
+            @media screen and (max-width: 500px) {
+                width: 100%;
+            }
+
+            p {
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            button {
+                font-size: 1.5rem;
+                width: 100%;
+                font-weight: bold;
+                margin-top: 0;
+            }
+
+            .melhor {
+                position: absolute;
+                padding: .25rem .5rem;
+                background-color: red;
+                color: #FFF;
+                text-align: center;
+                top: 10px;
+                right: -10px;
+                transform: rotate(30deg);
+                font-size: .75rem;
+            }
+        }
+
+        .one {
+            background: linear-gradient(to right, rgb(210, 248, 255), rgb(196, 220, 255));
+            background: -webkit-linear-gradient(to right, rgb(210, 248, 255), rgb(196, 220, 255));
+            border: solid 2px rgb(167, 202, 254);
+        }
+
+        .two {
+            background: linear-gradient(to right, rgb(255, 245, 187), rgb(255, 236, 205));
+            background: -webkit-linear-gradient(to right, rgb(255, 245, 187), rgb(255, 236, 205));
+            border: solid 2px rgb(255, 226, 179);
+            margin: 0 0 1rem;
+        }
+    }
 }

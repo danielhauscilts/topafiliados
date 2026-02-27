@@ -1110,4 +1110,44 @@ $app->delete('/api/bio-produtos/{id}', function (Request $request, Response $res
 
 });
 
+$app->get('/api/review', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM dan43856_afilipro.access WHERE date >= "'. date('Y-m-d') .'" GROUP BY button, page ORDER BY contagem DESC');
+    $data = array();
+
+    if(mysqli_num_rows($query) > 0) {
+        while($row = mysqli_fetch_assoc($query)) {
+            $data[] = $row;
+        }
+        
+        $response->getBody()->write(json_encode($data, true));
+        return $response;
+    }
+
+    $response->getBody()->write(json_encode(["error" => "No info registered"], true) );
+    return $response->withStatus(302);
+});
+
+$app->get('/api/review/{date}', function (Request $request, Response $response, $args) use ($mysql_conn) {
+
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM dan43856_afilipro.access WHERE date >= "'. date($args['date'].' 00:00:00') .'" and date < "'.date($args['date'].' 23:59:59').'" GROUP BY button, page ORDER BY page, contagem DESC');
+    $data = array();
+
+    if(mysqli_num_rows($query) > 0) {
+        while($row = mysqli_fetch_assoc($query)) {
+            $data[] = $row;
+        }
+        
+        $response->getBody()->write(json_encode($data, true));
+        return $response;
+    }
+
+    $response->getBody()->write(json_encode(["error" => "No info registered"], true) );
+    return $response->withStatus(302);
+});
+
 $app->run();

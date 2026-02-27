@@ -38,7 +38,7 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
               <Container>
                 <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="AfiliPRO" height={30} /></Navbar.Brand>
                 {!logged && (
-                  <Button className='btn btn-primary d-md-none' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+                  <Button className='btn btn-primary d-lg-none' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
                 )}
                 {logged && (
                   <Navbar.Toggle aria-controls="basic-navbar-nav" />
