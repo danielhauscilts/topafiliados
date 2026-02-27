@@ -20,6 +20,11 @@ const Bio = () => {
     const [nickname, setNickname] = useState<any>(null);
     const [idAfiliado, setIdAfiliado] = useState<any>(null);
     const [descricao, setDescricao] = useState<any>(null);
+    const [instagram, setInstagram] = useState<any>(null);
+    const [shopee, setShopee] = useState<any>(null);
+    const [tiktok, setTiktok] = useState<any>(null);
+    const [grupoWhatsapp, setGrupoWhatsapp] = useState<any>(null);
+    // const [thumb, setThumb] = useState<any>(null);
 
     const [success, setSuccess] = useState<any>(false);
     const [error, setError] = useState<any>(false);
@@ -41,8 +46,10 @@ const Bio = () => {
             setProducts(e.data.produtos);
             setIdAfiliado(e.data.id_afiliado);
             setDescricao(e.data.descricao);
-
-            console.log('produtos', e.data.produtos);
+            setShopee(e.data.shopee);
+            setInstagram(e.data.instagram);
+            setTiktok(e.data.tiktok);
+            setGrupoWhatsapp(e.data.grupo_whatsapp);
         }).catch(()=>{
             setBio(null);
             setProducts([]);
@@ -60,7 +67,11 @@ const Bio = () => {
                 nickname: nickname,
                 id_user: user.id,
                 id_afiliado: idAfiliado,
-                descricao: descricao
+                descricao: descricao,
+                shopee: shopee,
+                instagram: instagram,
+                tiktok: tiktok,
+                grupoWhatsapp: grupoWhatsapp
             }
         ).then(()=>{
             setSuccess(true);
@@ -80,7 +91,11 @@ const Bio = () => {
                 nickname: nickname,
                 id_user: user.id,
                 id_afiliado: idAfiliado,
-                descricao: descricao
+                descricao: descricao,
+                shopee: shopee,
+                instagram: instagram,
+                tiktok: tiktok,
+                grupoWhatsapp: grupoWhatsapp
             }
         ).then(()=>{
             setSuccess(true);
@@ -118,93 +133,65 @@ const Bio = () => {
                             </p>
                         </Col>
                     )}
-                    {!bio && (
+                    <Col md={4}>
+                        <p><strong>Nome da loja</strong></p>
+                        <input type="text" value={name} onChange={(e)=>{setName(e.target.value)}} placeholder='Nome da Loja' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>Identificador da Loja</strong></p>
+                        <input type="text" value={nickname} onChange={(e)=>{setNickname(e.target.value)}} placeholder='Identificador: ex. nomedaloja' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>ID Afiliado Shopee</strong></p>
+                        <input type="text" value={idAfiliado} onChange={(e)=>{setIdAfiliado(e.target.value)}} placeholder='ID Afiliado: ex. 123456789' />
+                        {!how && (
+                            <div  onClick={()=>{setHow(!how)}} style={{fontSize: '.75rem', fontWeight: 'normal', margin: '0 0 1rem', display: 'block'}}>Como pegar o ID Afiliado Shopee? <strong style={{color: 'orangered'}}>Clique aqui</strong></div>
+                        )}
+                    </Col>
+                    {how && (
                         <>
-                            <Col md={4}>
-                                <p><strong>Nome da loja</strong></p>
-                                <input type="text" onChange={(e)=>{setName(e.target.value)}} placeholder='Nome da Loja' />
-                            </Col>
-                            <Col md={4}>
-                                <p><strong>Identificador da Loja</strong></p>
-                                <input type="text" onChange={(e)=>{setNickname(e.target.value)}} placeholder='Identificador: ex. nomedaloja' />
-                            </Col>
-                            <Col md={4}>
-                                <p><strong>ID Afiliado Shopee <small></small></strong></p>
-                                <input type="text" onChange={(e)=>{setIdAfiliado(e.target.value)}} placeholder='ID Afiliado: ex. 123456789' />
-                            </Col>
-                            <Col md={12}>
-                                <p><strong>Descrição</strong></p>
-                                <textarea onChange={(e)=>{setDescricao(e.target.value)}}></textarea>
-                            </Col>
-                            <Col md={12}>
-                                <Button onClick={(e)=>{e.preventDefault();regBio();}}>Cadastrar</Button>
-                            </Col>
                             <Col md={6}>
-                                <div style={{textAlign: 'center', margin: '2rem 0'}}>
+                                <div style={{textAlign: 'center', marginBottom: '2rem'}}>
                                     <p><strong>Como conseguir meu ID de Afiliado?</strong></p>
                                     <p>Acesse <a href="https://affiliate.shopee.com.br/account_setting" target='_blank'>seu painel Shopee</a> , com seu login da Shopee, copie e cole no campo ID Afiliado o número conforme exemplo na imagem.</p>
+                                    <p><img src={idImage} alt="ID Afiliado" width="100%" /></p>
                                 </div>
                             </Col>
-                            <Col md={12} onClick={()=>{setHow(!how)}} style={{textAlign: 'center', padding: '.5rem', borderTop: 'solid 1px orangered', marginTop: '1rem', cursor: 'pointer'}}>
-                                <strong>Como pegar o ID Afiliado Shopee? Clique aqui</strong>
-                            </Col>
-                            {how && (
-                                <>
-                                    <Col md={6}>
-                                        <div style={{textAlign: 'center', margin: '2rem 0'}}>
-                                            <p><strong>Como conseguir meu ID de Afiliado?</strong></p>
-                                            <p>Acesse <a href="https://affiliate.shopee.com.br/account_setting" target='_blank'>seu painel Shopee</a> , com seu login da Shopee, copie e cole no campo ID Afiliado o número conforme exemplo na imagem.</p>
-                                        </div>
-                                    </Col>
-                                    <Col md={6} style={{marginTop: '2rem'}}>
-                                        <p><img src={idImage} alt="ID Afiliado" width="100%" /></p>
-                                    </Col>
-                                </>
-                            )}
                         </>
                     )}
-                    {bio && (
-                        <>
-                            <Col md={4}>
-                                <p><strong>Nome da loja</strong></p>
-                                <input type="text" value={name} onChange={(e)=>{setName(e.target.value)}} placeholder='Nome da Loja' />
-                            </Col>
-                            <Col md={4}>
-                                <p><strong>Identificador da Loja</strong></p>
-                                <input type="text" value={nickname} onChange={(e)=>{setNickname(e.target.value)}} placeholder='Identificador: ex. nomedaloja' />
-                            </Col>
-                            <Col md={4}>
-                                <p><strong>ID Afiliado Shopee</strong></p>
-                                <input type="text" value={idAfiliado} onChange={(e)=>{setIdAfiliado(e.target.value)}} placeholder='ID Afiliado: ex. 123456789' />
-                            </Col>
-                            <Col md={12}>
-                                <p><strong>Descrição</strong></p>
-                                <textarea value={descricao} onChange={(e)=>{setDescricao(e.target.value)}}></textarea>
-                            </Col>
-                            <Col md={12}>
-                                <Button onClick={(e)=>{e.preventDefault();altBio();}}>Alterar</Button>
-                            </Col>
-                            <Col md={12} onClick={()=>{setHow(!how)}} style={{textAlign: 'center', padding: '.5rem', borderTop: 'solid 1px orangered', marginTop: '1rem', cursor: 'pointer'}}>
-                                <strong>Como pegar o ID Afiliado Shopee? Clique aqui</strong>
-                            </Col>
-                            {how && (
-                                <>
-                                    <Col md={6}>
-                                        <div style={{textAlign: 'center', margin: '2rem 0'}}>
-                                            <p><strong>Como conseguir meu ID de Afiliado?</strong></p>
-                                            <p>Acesse <a href="https://affiliate.shopee.com.br/account_setting" target='_blank'>seu painel Shopee</a> , com seu login da Shopee, copie e cole no campo ID Afiliado o número conforme exemplo na imagem.</p>
-                                        </div>
-                                    </Col>
-                                    <Col md={6} style={{marginTop: '2rem'}}>
-                                        <p><img src={idImage} alt="ID Afiliado" width="100%" /></p>
-                                    </Col>
-                                </>
-                            )}
-                        </>
-                    )}
+                    <Col md={4}>
+                        <p><strong>Nome Shopee<small></small></strong></p>
+                        <input type="text" value={shopee} onChange={(e)=>{setShopee(e.target.value)}} placeholder='ex. /seunomenashopee' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>Instagram<small></small></strong></p>
+                        <input type="text" value={instagram} onChange={(e)=>{setInstagram(e.target.value)}} placeholder='ex. @seuinstagram' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>TikTok<small></small></strong></p>
+                        <input type="text" value={tiktok} onChange={(e)=>{setTiktok(e.target.value)}} placeholder='ex. @seutiktok' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>Grupo do Whatsapp<small></small></strong></p>
+                        <input type="text" value={grupoWhatsapp} onChange={(e)=>{setGrupoWhatsapp(e.target.value)}} placeholder='ex. /codigodogrupowhatsapp' />
+                    </Col>
+                    <Col md={12}>
+                        <p><strong>Descrição</strong></p>
+                        <textarea value={descricao} onChange={(e)=>{setDescricao(e.target.value)}}></textarea>
+                    </Col>
                     {(error || success) && (
                         <Col md={12}>
-                            <p>{error ? 'Houve um erro ao cadastrar' : ''}{success ? 'Bio cadastrado com sucesso':''}</p>
+                            <p style={{textAlign: 'center'}}>{error ? 'Houve um erro ao cadastrar' : ''}{success ? 'Alterações realizadas com sucesso':''}</p>
+                        </Col>
+                    )}
+                    {!bio && (
+                        <Col md={12}>
+                            <Button onClick={(e)=>{e.preventDefault();regBio();}}>Cadastrar</Button>
+                        </Col>
+                    )}
+                    {bio && (
+                        <Col md={12}>
+                            <Button onClick={(e)=>{e.preventDefault();altBio();}}>Alterar</Button>
                         </Col>
                     )}
                 </Row>

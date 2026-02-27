@@ -18,7 +18,6 @@ import "react-image-gallery/styles/css/image-gallery.css";
 // import call from '../assets/call.png';
 import dep from '../assets/prova.jpg';
 import depGaby from '../assets/prova-gaby.jpg';
-import whats from '../assets/whats.png';
 import seller from '../assets/seller.jpg';
 
 // icons
@@ -201,15 +200,20 @@ const Home = () => {
                                     <td>Curso de Afiliado</td>
                                     <td>R$ 160,00/ano</td>
                                 </tr>
+                                <tr>
+                                    <td>Linktr.ee</td>
+                                    <td>R$ 46,00/mês</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>R$ 384,00/ano</td>
+                                </tr>
                             </table>
                             <p><strong style={{fontSize: '1.5rem', color: '#000'}}>Total: + de R$ 12.400,00 /ano</strong></p>
                         </Col>
                     </Row>
                 </Container>
             </div>
-            <p style={{margin: '0 0 2rem', padding: '0 1rem'}}>
-                <a href="https://wa.me/5511937751045" target='_blank'><img src={whats} width='100%' alt="Whatsapp" /></a>
-            </p>
         </div>
         </>
     )

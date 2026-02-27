@@ -1000,6 +1000,10 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
         date_created,
         nickname,
         id_afiliado,
+        shopee,
+        instagram,
+        tiktok,
+        grupo_whatsapp,
         id_user
         ) VALUES ( 
         "'.$data['name'].'",
@@ -1007,6 +1011,10 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
         "'.date('Y-m-d').'",
         "'.$data['nickname'].'",
         "'.$data['id_afiliado'].'",
+        "'.$data['shopee'].'",
+        "'.$data['instagram'].'",
+        "'.$data['tiktok'].'",
+        "'.$data['grupoWhatsapp'].'",
         "'.$data['id_user'].'")');
 
     $response->getBody()->write(json_encode(["success" => "true"], true));
@@ -1040,7 +1048,15 @@ $app->put('/api/bio', function (Request $request, Response $response, $args) use
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    mysqli_query($conn, 'UPDATE bio SET name="'.$data['name'].'", nickname="'.$data['nickname'].'", descricao="'.addslashes($data['descricao']).'", id_afiliado="'.$data['id_afiliado'].'" WHERE id = "'.$data['id'].'"');
+    mysqli_query($conn, 'UPDATE bio SET 
+        name="'.$data['name'].'", 
+        nickname="'.$data['nickname'].'", 
+        descricao="'.addslashes($data['descricao']).'", 
+        shopee="'.addslashes($data['shopee']).'", 
+        instagram="'.addslashes($data['instagram']).'", 
+        tiktok="'.addslashes($data['tiktok']).'", 
+        grupo_whatsapp="'.addslashes($data['grupoWhatsapp']).'", 
+        id_afiliado="'.$data['id_afiliado'].'" WHERE id = "'.$data['id'].'"');
 
     $response->getBody()->write(json_encode(["success" => "true"], true));
     return $response;

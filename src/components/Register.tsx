@@ -39,9 +39,9 @@ function Register() {
 
     const register = () => {
 
-        return new Promise((resolve, reject) => {
+        access('btn_cadastrar_plano_'+plainId, 'Cadastro');
 
-            access('pagamento', 'plano');
+        return new Promise((resolve, reject) => {
 
             if (password !== confPassword) {
                 alert('As senhas não conferem!');
@@ -57,6 +57,8 @@ function Register() {
             ).then((e)=>{
                 window.localStorage.setItem('user', JSON.stringify(e.data.user));
                 window.localStorage.setItem('token', e.data.token);
+
+                access('act_cadastrado_com_sucesso_plano_'+plainId, 'Cadastro');
                 
                 axios.post(`${env}/api/pagamento`,
                         {
@@ -64,12 +66,15 @@ function Register() {
                             "user_id": e.data.user.id
                         }
                     ).then((e:any)=>{
+                        access('act_pagamento_com_sucesso_plano_'+plainId, 'Cadastro');
                         resolve(e.data.id);
                     }).catch(()=>{
+                        access('act_pagamento_com_erro_plano_'+plainId, 'Cadastro');
                         reject();
                     })
 
             }).catch(() => {
+                access('act_cadastrado_com_erro_plano_'+plainId, 'Cadastro');
                 setError('Usuário já registrado');
                 setTimeout(()=>{
                     setError(false);

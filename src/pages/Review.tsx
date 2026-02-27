@@ -10,11 +10,7 @@ const Review = () => {
 
     const [users, setUsers] = useState<any[]>([]);
     const [plano20, setPlano20] = useState(0);
-    const [plano20Home, setPlano20Home] = useState(0);
-    const [plano20HomeMae, setPlano20HomeMae] = useState(0);
     const [plano120, setPlano120] = useState(0);
-    const [plano120Home, setPlano120Home] = useState(0);
-    const [plano120HomeMae, setPlano120HomeMae] = useState(0);
     const [total, setTotal] = useState(0);
 
     const reset = () => {
@@ -33,28 +29,17 @@ const Review = () => {
             let totalSite = 0;
 
             e.data.map((a:any) => {
-                if(a.button == 'plain20') {
+                if(a.button == 'cadastro_plano_20') {
                     plain20 = plain20 + Number(a.contagem)
                 }
-                if(a.button == 'plain120') {
+                if(a.button == 'cadastro_plano_120') {
                     plain120 = plain120 + Number(a.contagem)
                 }
                 if(a.button == 'acesso_home' || a.button == 'acesso_home_mae') {
                     totalSite = totalSite + Number(a.contagem)
                 }
-                if(a.button == 'plain20' && a.page == 'home') {
-                    setPlano20Home(a.contagem)
-                }
-                if(a.button == 'plain20' && a.page == 'home_mae') {
-                    setPlano20HomeMae(a.contagem)
-                }
-                if(a.button == 'plain120' && a.page == 'home') {
-                    setPlano120Home(a.contagem)
-                }
-                if(a.button == 'plain120' && a.page == 'home_mae') {
-                    setPlano120HomeMae(a.contagem)
-                }
             })
+
             setPlano20(plain20);
             setPlano120(plain120);
             setTotal(totalSite);
@@ -63,9 +48,6 @@ const Review = () => {
 
     useEffect(()=>{
         reset();
-        setInterval(()=>{
-            reset();
-        }, 5000);
     }, [])
 
     return (
@@ -84,14 +66,14 @@ const Review = () => {
                 <Row style={{textAlign: 'center'}}>
                     <Col xs={6}>
                         <div style={{padding: '.5rem .5rem .15rem', backgroundColor: '#ededed', borderRadius: '5px'}}>
-                            <div style={{fontWeight: 'bold'}}>Plano Mensal ({plano20})</div>
-                            <p><span style={{color: '#000'}}>Home {plano20Home}</span> / <span style={{color: '#a30f6d'}}>Mãe {plano20HomeMae} </span></p>
+                            <div style={{fontWeight: 'bold'}}>Plano Mensal</div>
+                            <p><span style={{color: '#000'}}>{plano20}</span></p>
                         </div>
                     </Col>
                     <Col xs={6}>
                         <div style={{padding: '.5rem .5rem .15rem', backgroundColor: '#ededed', borderRadius: '5px'}}>
-                            <div style={{fontWeight: 'bold'}}>Plano Anual ({plano120})</div>
-                            <p><span style={{color: '#000'}}>Home {plano120Home}</span> / <span style={{color: '#a30f6d'}}>Mãe {plano120HomeMae}</span></p>
+                            <div style={{fontWeight: 'bold'}}>Plano Anual</div>
+                            <p><span style={{color: '#000'}}>{plano120}</span></p>
                         </div>
                     </Col>
                 </Row>
