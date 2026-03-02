@@ -234,8 +234,8 @@ $app->post('/api/user', function (Request $request, Response $response, $args) u
 
     if (mysqli_num_rows($newUser) > 0) {
 
-        sendMail($args['mail'], 'Conta AfiliPRO criada com sucesso!', 'PARABÉNS, <br />sua conta AfiliPRO foi criada com sucesso, acesse <a href="https://afilipro.com.br" target="_self">AfiliPRO</a> e veja mais detalhes!.');
-        sendMail('administrador@afilipro.com.br', 'Novo cadastro de '.$args['mail'], 'Novo cadastro de '.$args['mail'].' em '.date('H:i:s d/m/Y'));
+        sendMail($args['mail'], 'Conta Stories que Bombam criada com sucesso!', 'PARABÉNS, <br />sua conta Stories que Bombam foi criada com sucesso, acesse <a href="https://storiesquebombam.com.br" target="_self">Stories que Bombam</a> e veja mais detalhes!.');
+        sendMail('administrador@storiesquebombam.com.br', 'Novo cadastro de '.$args['mail'], 'Novo cadastro de '.$args['mail'].' em '.date('H:i:s d/m/Y'));
 
         while($row = mysqli_fetch_assoc($newUser)) {
             $user = $row;
@@ -277,12 +277,12 @@ function sendMail($to, $subject, $message) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.titan.email'; // Example host
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'no-reply@afilipro.com.br';
+        $mail->Username   = 'no-reply@storiesquebombam.com.br';
         $mail->Password   = 'No@reply';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465; // Example port
 
-        $mail->setFrom('no-reply@afilipro.com.br', 'AfiliPRO');
+        $mail->setFrom('no-reply@storiesquebombam.com.br', 'Stories que Bombam');
         $mail->addAddress($to, 'Cliente');
 
         $mail->isHTML(true);
@@ -292,7 +292,7 @@ function sendMail($to, $subject, $message) {
         $mail->send();
         return true;
     } catch (Exception $e) {
-        print("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        // print("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
         return false;
     }
 }
@@ -317,7 +317,7 @@ $app->put('/api/password', function (Request $request, Response $response, $args
     $valid = mysqli_query($conn, 'UPDATE users SET password = "' . md5($newPass) . '" WHERE mail = "'.$args['mail'].'"');
 
     $to = $args['mail'];
-    $subject = "Sua nova senha na AfiliPRO";
+    $subject = "Sua nova senha Stories que Bombam";
     $message = "<html><body>Sua nova senha: ".$newPass."</body></html>";
 
     if (sendMail($to, $subject, $message)) {
@@ -518,8 +518,27 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
     $data = mysqli_query($conn, 'SELECT * FROM produtos WHERE ativo = "1" ' .$filter. ' ORDER BY data DESC, id DESC LIMIT ' . ($page === 0 ? 0 : (int)($page*10)) . ', 10');
     $totalData = mysqli_query($conn, 'SELECT * FROM produtos WHERE ativo = "1" ' . $filter);
 
+    $authHeader = $request->getHeaders()['Authorization'][0];
+    list($type, $token) = explode(" ", $authHeader, 2);
+    $userId = '';
+
+    if ($type === 'Bearer') {
+        // Have token
+        $adminData = mysqli_query($conn, 'SELECT b.id_afiliado as id_afiliado FROM bio as b INNER JOIN users as u ON b.id_user = u.id WHERE u.token = "'.$token.'"');
+
+        if(mysqli_num_rows($adminData) > 0) {
+            $admin = '';
+            while($row = mysqli_fetch_assoc($adminData)) {
+                $admin = $row;
+            }
+            
+            $userId = $admin['id_afiliado'];
+        }
+    }
+    
     mysqli_close($conn);
 
+    
     if ( mysqli_num_rows($data) === 0 ) {
         $response->getBody()->write(json_encode(['error'=>'Not products listed']));
         return $response->withStatus(302);
@@ -529,6 +548,10 @@ $app->get('/api/produtos', function (Request $request, Response $response, $args
     $produtos['items'] = array();
 
     while($row = mysqli_fetch_assoc($data)) {
+        $row['link_rastreavel'] = '';
+        if($userId !== '') {
+            $row['link_rastreavel'] = gerarLinkShopee($row['link'], $userId);
+        }
         $produtos['items'][] = $row;
     }
 
@@ -700,24 +723,24 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
     $data = $request->getParsedBody();
     $order = rand(10000000, 99999999);
 
-    MercadoPagoConfig::setAccessToken("APP_USR-3887967945664963-010215-d64eccfb01703791b2b630537df74c7a-95453539");
+    MercadoPagoConfig::setAccessToken("APP_USR-6574276271143213-030216-165485183b97d56938675a9d184fa720-95453539");
 
     $client = new PreferenceClient();
     $preference = $client->create([
         "items"=> array(
             array(
-            "title" => "AfiliPRO",
-            "quantity" => 1,
-            "unit_price" => ($data['plain'] == "20") ? 29.9 : 197.9
+                "title" => "Stories que Bombam",
+                "quantity" => 1,
+                "unit_price" => 159.9,
             )
         ),
         "back_urls"=> array(
-            "success" => "https://afilipro.com.br/pagamento/sucesso",
-            "failure" => "https://afilipro.com.br/pagamento/falha",
-            "pending" => "https://afilipro.com.br/pagamento/pendente"
+            "success" => "https://storiesquebombam.com.br/pagamento/sucesso",
+            "failure" => "https://storiesquebombam.com.br/pagamento/falha",
+            "pending" => "https://storiesquebombam.com.br/pagamento/pendente"
         ),
         "payment_methods" => array(
-            "installments" => 1
+            "installments" => 10
         ),
         "external_reference" => $order
     ]);
@@ -726,13 +749,7 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
 
     $date = new DateTime();
     
-    if ($data['plain'] == "20") {
-        $endDate = $date->modify("+30 days")->format('Y-m-d');
-    }
-
-    if ($data['plain'] == "120") {
-        $endDate = $date->modify("+1 year")->format('Y-m-d');
-    }
+    $endDate = $date->modify("+1 year")->format('Y-m-d');
 
     mysqli_query($conn, 'INSERT INTO pagamentos (
         id_pagamento, 
@@ -758,8 +775,8 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
         }
     }
 
-    sendMail($user['mail'], 'Falta pouco para ser um Afiliado!', 'Seu pagamento deve ser finalizado para habilitar todas as funções AfiliPRO. <b>APROVEITE!</b>');
-    sendMail('administrador@afilipro.com.br', 'Novo pagamento gerado de '.$user['name'].' - '.$user['mail'], 'Novo pagamento gerado de '.$user['name'].' - '.$user['mail'].' em '.date('H:i:s d/m/Y'));
+    sendMail($user['mail'], 'Falta pouco para ser um Afiliado!', 'Seu pagamento deve ser finalizado para habilitar todas as funções Stories que Bombam. <b>APROVEITE!</b>');
+    sendMail('administrador@storiesquebombam.com.br', 'Novo pagamento gerado de '.$user['name'].' - '.$user['mail'], 'Novo pagamento gerado de '.$user['name'].' - '.$user['mail'].' em '.date('H:i:s d/m/Y'));
 
     $response->getBody()->write(json_encode(["id" => $preference->id, "data"=>date('Y-m-d'), "endDate"=>$endDate, "external_reference"=>$order], true));
     return $response;
@@ -841,8 +858,8 @@ $app->post('/api/notify', function (Request $request, Response $response, $args)
             }
         }
 
-        sendMail($usr['mail'], 'Parabéns você se tornou um Afiliado!', 'Seu pagamento foi aprovado e você já pode utilizar todas as funções AfiliPRO até '.$user['end-date'].explode('-')[2].'/'.$user['end-date'].explode('-')[1].'/'.$user['end-date'].explode('-')[0].'<b><a href="https://afilipro.com.br target="_blank">Acesse agora</a></b>');
-        sendMail('administrador@afilipro.com.br', 'Pagamento aprovado de '.$usr['name'].' - '.$usr['mail'], 'Pagamento de '.$usr['name'].' - '.$usr['mail'].' aprovado em '.date('H:i:s d/m/Y'));
+        sendMail($usr['mail'], 'Parabéns você se tornou um Afiliado!', 'Seu pagamento foi aprovado e você já pode utilizar todas as funções AfiliStories que Bombam até '.$user['end-date'].explode('-')[2].'/'.$user['end-date'].explode('-')[1].'/'.$user['end-date'].explode('-')[0].'<b><a href="https://storiesquebombam.com.br target="_blank">Acesse agora</a></b>');
+        sendMail('administrador@storiesquebombam.com.br', 'Pagamento aprovado de '.$usr['name'].' - '.$usr['mail'], 'Pagamento de '.$usr['name'].' - '.$usr['mail'].' aprovado em '.date('H:i:s d/m/Y'));
     }
 
     $response->getBody()->write(json_encode(["id" => $data['data']['id']], true));
@@ -874,8 +891,8 @@ $app->put('/api/pagamento', function (Request $request, Response $response, $arg
             $user = $row;
         }
 
-        sendMail($user['mail'], 'Parabéns você se tornou um Afiliado!', 'Seu pagamento foi aprovado e você já pode utilizar todas as funções AfiliPRO, <b><a href="https://afilipro.com.br target="_blank">Acesse agora</a></b>');
-        sendMail('administrador@afilipro.com.br', 'Pagamento aprovado de '.$user['name'].' - '.$user['mail'], 'Pagamento de '.$user['name'].' - '.$user['mail'].' aprovado em '.date('H:i:s d/m/Y'));
+        sendMail($user['mail'], 'Parabéns você se tornou um Afiliado!', 'Seu pagamento foi aprovado e você já pode utilizar todas as funções Stories que Bombam, <b><a href="https://storiesquebombam.com.br target="_blank">Acesse agora</a></b>');
+        sendMail('administrador@storiesquebombam.com.br', 'Pagamento aprovado de '.$user['name'].' - '.$user['mail'], 'Pagamento de '.$user['name'].' - '.$user['mail'].' aprovado em '.date('H:i:s d/m/Y'));
         
         $response->getBody()->write(json_encode($user, true));
         return $response;
@@ -1004,6 +1021,7 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
         instagram,
         tiktok,
         grupo_whatsapp,
+        cor,
         id_user
         ) VALUES ( 
         "'.$data['name'].'",
@@ -1015,6 +1033,7 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
         "'.$data['instagram'].'",
         "'.$data['tiktok'].'",
         "'.$data['grupoWhatsapp'].'",
+        "'.$data['cor'].'",
         "'.$data['id_user'].'")');
 
     $response->getBody()->write(json_encode(["success" => "true"], true));
@@ -1056,6 +1075,7 @@ $app->put('/api/bio', function (Request $request, Response $response, $args) use
         instagram="'.addslashes($data['instagram']).'", 
         tiktok="'.addslashes($data['tiktok']).'", 
         grupo_whatsapp="'.addslashes($data['grupoWhatsapp']).'", 
+        cor="'.addslashes($data['cor']).'", 
         id_afiliado="'.$data['id_afiliado'].'" WHERE id = "'.$data['id'].'"');
 
     $response->getBody()->write(json_encode(["success" => "true"], true));
@@ -1130,7 +1150,7 @@ $app->get('/api/review', function (Request $request, Response $response, $args) 
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM dan43856_afilipro.access WHERE date >= "'. date('Y-m-d') .'" GROUP BY button, page ORDER BY contagem DESC');
+    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM access WHERE date >= "'. date('Y-m-d') .'" GROUP BY button, page ORDER BY contagem DESC');
     $data = array();
 
     if(mysqli_num_rows($query) > 0) {
@@ -1150,7 +1170,7 @@ $app->get('/api/review/{date}', function (Request $request, Response $response, 
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM dan43856_afilipro.access WHERE date >= "'. date($args['date'].' 00:00:00') .'" and date < "'.date($args['date'].' 23:59:59').'" GROUP BY button, page ORDER BY page, contagem DESC');
+    $query = mysqli_query($conn, 'SELECT COUNT(id) as contagem, button, page FROM access WHERE date >= "'. date($args['date'].' 00:00:00') .'" and date < "'.date($args['date'].' 23:59:59').'" GROUP BY button, page ORDER BY page, contagem DESC');
     $data = array();
 
     if(mysqli_num_rows($query) > 0) {

@@ -3,7 +3,7 @@ import { Container, Button, Nav, Navbar } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 
 // Assets
-import logo from '../assets/logo_full.svg';
+import logo from '../assets/logo.png';
 
 // Icons
 import { RiLoginBoxFill } from "react-icons/ri";
@@ -34,9 +34,9 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
         {bioP && (
 
           <div className='header-restrict'>
-            <Navbar expand="lg" className='navbar-dark'>
+            <Navbar expand="lg" className='navbar-light'>
               <Container>
-                <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="AfiliPRO" height={30} /></Navbar.Brand>
+                <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="Stories que Bombam" /></Navbar.Brand>
                 {!logged && (
                   <Button className='btn btn-primary d-lg-none' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
                 )}
@@ -45,19 +45,16 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
                 )}
                 <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
                   <Nav>
-                    <Nav.Item>
-                      <Link to="/">Início</Link>
-                    </Nav.Item>
                     {logged && (user.type === 'u' || user.type === 'a') && (
                       <>
                         <Nav.Item>
                           <Link to="/produtos">Produtos</Link>
                         </Nav.Item>
                         <Nav.Item>
-                          <Link to="/conta">Minha conta</Link>
+                          <Link to="/bio">Página personalizada</Link>
                         </Nav.Item>
                         <Nav.Item>
-                          <Link to="/bio">Link da Bio</Link>
+                          <Link to="/conta">Minha conta</Link>
                         </Nav.Item>
                       </>
                     )}
@@ -72,16 +69,6 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
                       <>
                         <Nav.Item>
                           <Link to="/conta">Minha conta</Link>
-                        </Nav.Item>
-                      </>
-                    )}
-                    {user?.type !== 'a' && (
-                      <>
-                        <Nav.Item>
-                          <Link to="/tutoriais">Como cadastrar os produtos?</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                          <Link to="/duvidas">Dúvidas?</Link>
                         </Nav.Item>
                       </>
                     )}

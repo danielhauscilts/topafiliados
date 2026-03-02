@@ -11,7 +11,7 @@ import './Register.scss';
 //icon
 import { FaEye } from "react-icons/fa";
 
-initMercadoPago('APP_USR-0dc798dc-56c5-4274-a39d-8029a47bec99');
+initMercadoPago('APP_USR-ceb63fa9-bcdd-4c5c-8ae3-19ca3b9411fe');
 
 function Register() {
 
@@ -111,22 +111,15 @@ function Register() {
             <Container className='register'>
                 <Row>
                     <Col md={12}>
-                        {plainId === '20' && (
-                            <>
-                                <h1 style={{fontSize: '2rem', textAlign: 'center', color: 'rgb(97, 160, 255)', paddingBottom: '0'}}>Ativando <br />o plano Mensal</h1>
-                                <p style={{textAlign: 'center', fontSize: '2rem', lineHeight: '1.5rem'}}><strong>R$ 29,90</strong><br /><small style={{fontSize: '1rem'}}>Use por 1 mês</small></p>
-                            </>
-                        )}
-                        {plainId === '120' && (
-                            <>
-                                <h1 style={{fontSize: '2rem', textAlign: 'center', color: 'rgb(255, 174, 43)', paddingBottom: '0'}}>Ativando<br />o plano Anual</h1>
-                                <p style={{textAlign: 'center', fontSize: '2rem', lineHeight: '1.5rem'}}><strong>R$ 197,90</strong><br /><small style={{fontSize: '1rem'}}>Use por 1 ano</small></p>
-                            </>
-                        )}
+                        <h1 style={{fontSize: '1rem', textAlign: 'center', color: '#999', paddingBottom: '0', textDecoration: 'line-through'}}>De R$ 249,90</h1>
+                        <p style={{textAlign: 'center', fontSize: '2rem', lineHeight: '1.5rem', marginBottom: '1rem'}}>
+                            por <strong style={{color: 'orangered'}}>R$ 159,90</strong><br />
+                            <small style={{fontSize: '1rem'}}>parcele em 10x de R$ 15,99</small>
+                        </p>
+                        <p>Acesso por 1 ano</p>
                     </Col>
                     <Col md={12}>
                         <div className='reg-form'>
-                            <p style={{color: '#000', fontSize: '1rem'}} className='text-center'><strong>Complete as informações abaixo</strong></p>
                             <Container>
                                 <Row>
                                     <Col xs={12}>
@@ -188,24 +181,16 @@ function Register() {
                     <p style={{fontSize: '.75rem', marginTop: '1rem'}} className='text-center'>Formas de pagamentos aceitos:<br /><img src="/images/payment.jpg?1" alt="Pague com:" /></p>
                         <p>
                             <p style={{margin: '1rem 0 .5rem 1rem'}}><strong>Você terá:</strong></p>
-                            <ul>
+                            <ul style={{textAlign: 'left'}}>
                                 <li>Acesso imediato</li>
                                 <li>{(plainId === '20') ? '1 mês' : '1 ano'} de utilização</li>
-                                <li>Vídeos de produtos para postar</li>
+                                <li>Vídeos prontos</li>
                                 <li>Gerador de links rastreáveis</li>
                                 <li>Site personalizado</li>
                                 <li>Suporte por Whatsapp</li>
                                 <li>Renove somente quando quiser</li>
                             </ul>
                         </p>
-                    </Col>
-                    <Col>
-                        <p className='text-center'>Você poderá verificar seus extratos de pagamento e vigência de contratação, acessando <a href='/conta' target='_self'><strong>Minha Conta</strong></a> a qualquer momento.</p>
-                    </Col>
-                    <Col md={12}>
-                        <div className='regulamento text-center'>
-                            Não de preocupe, dados são protegidos e não serão compartilhados com ninguém, a Afilipro, zela pela <strong>privacidade</strong> de todos os nossos usuários.
-                        </div>
                     </Col>
                 </Row>
             </Container>

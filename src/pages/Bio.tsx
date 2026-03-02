@@ -24,6 +24,7 @@ const Bio = () => {
     const [shopee, setShopee] = useState<any>(null);
     const [tiktok, setTiktok] = useState<any>(null);
     const [grupoWhatsapp, setGrupoWhatsapp] = useState<any>(null);
+    const [cor, setCor] = useState<any>(null);
     // const [thumb, setThumb] = useState<any>(null);
 
     const [success, setSuccess] = useState<any>(false);
@@ -50,6 +51,7 @@ const Bio = () => {
             setInstagram(e.data.instagram);
             setTiktok(e.data.tiktok);
             setGrupoWhatsapp(e.data.grupo_whatsapp);
+            setCor(e.data.cor);
         }).catch(()=>{
             setBio(null);
             setProducts([]);
@@ -71,7 +73,8 @@ const Bio = () => {
                 shopee: shopee,
                 instagram: instagram,
                 tiktok: tiktok,
-                grupoWhatsapp: grupoWhatsapp
+                grupoWhatsapp: grupoWhatsapp,
+                cor: cor
             }
         ).then(()=>{
             setSuccess(true);
@@ -95,7 +98,8 @@ const Bio = () => {
                 shopee: shopee,
                 instagram: instagram,
                 tiktok: tiktok,
-                grupoWhatsapp: grupoWhatsapp
+                grupoWhatsapp: grupoWhatsapp,
+                cor: cor
             }
         ).then(()=>{
             setSuccess(true);
@@ -129,7 +133,7 @@ const Bio = () => {
                     {bio && (
                         <Col md={12}>
                             <p className='link-page'>
-                                Link para a página: <a href={`https://afilipro.com.br/b/${bio.nickname}`} target='_blank'><strong></strong>https://afilipro.com.br/b/{bio.nickname}</a>
+                                Link para a página: <a href={`https://link-sqb.shop/b/${bio.nickname}`} target='_blank'><strong></strong>https://link-sqb.shop/b/{bio.nickname}</a>
                             </p>
                         </Col>
                     )}
@@ -174,6 +178,18 @@ const Bio = () => {
                     <Col md={4}>
                         <p><strong>Grupo do Whatsapp<small></small></strong></p>
                         <input type="text" value={grupoWhatsapp} onChange={(e)=>{setGrupoWhatsapp(e.target.value)}} placeholder='ex. /codigodogrupowhatsapp' />
+                    </Col>
+                    <Col md={4}>
+                        <p><strong>Selecione uma cor de tema</strong></p>
+                        <ul className='cor'>
+                            <li onClick={()=>{setCor('#ea9999')}} style={(cor === '#ea9999' || (bio && bio.cor === '#ea9999')) ? {border: 'solid 1px #555', backgroundColor: '#ea9999'} : {backgroundColor: '#ea9999'}}></li>
+                            <li onClick={()=>{setCor('#e06666')}} style={(cor === '#e06666' || (bio && bio.cor === '#e06666')) ? {border: 'solid 4px #555', backgroundColor: '#e06666'} : {backgroundColor: '#e06666'}}></li>
+                            <li onClick={()=>{setCor('#a64d79')}} style={(cor === '#a64d79' || (bio && bio.cor === '#a64d79')) ? {border: 'solid 4px #555', backgroundColor: '#a64d79'} : {backgroundColor: '#a64d79'}}></li>
+                            <li onClick={()=>{setCor('#3d85c6')}} style={(cor === '#3d85c6' || (bio && bio.cor === '#3d85c6')) ? {border: 'solid 4px #555', backgroundColor: '#3d85c6'} : {backgroundColor: '#3d85c6'}}></li>
+                            <li onClick={()=>{setCor('#45818e')}} style={(cor === '#45818e' || (bio && bio.cor === '#45818e')) ? {border: 'solid 4px #555', backgroundColor: '#45818e'} : {backgroundColor: '#45818e'}}></li>
+                            <li onClick={()=>{setCor('#e69138')}} style={(cor === '#e69138' || (bio && bio.cor === '#e69138')) ? {border: 'solid 4px #555', backgroundColor: '#e69138'} : {backgroundColor: '#e69138'}}></li>
+                            <li onClick={()=>{setCor('#999')}} style={(cor === '#999' || (bio && bio.cor === '#999')) ? {border: 'solid 4px #555', backgroundColor: '#999'} : {backgroundColor: '#999'}}></li>
+                        </ul>
                     </Col>
                     <Col md={12}>
                         <p><strong>Descrição</strong></p>

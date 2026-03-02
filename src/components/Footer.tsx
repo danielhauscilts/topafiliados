@@ -35,33 +35,33 @@ const Footer = () => {
                   <p style={{margin: '1rem 0', fontSize: '1.25rem'}}><strong>Ficou com alguma dúvida?</strong><br /> Teremos o prazer em te atender
                   </p>
                   <p style={{fontSize: '1rem'}}>
-                    <a href="mailto:atendimento@afilipro.com.br"><MdEmail /> atendimento@afilipro.com.br</a><br />
+                    <a href="mailto:atendimento@afilipro.com.br"><MdEmail /> atendimento@storiesquebombam.com.br</a><br />
                     <a href="https://wa.me/5511937751045?text=AfiliPRO"><IoLogoWhatsapp /> +55 (11) 9 3775.1045</a>
                   </p>
                 </Col>
                 <Col md={6}>
                   <ul className='social'>
-                    <li><strong>Siga-nos nas redes</strong></li>
+                    <li><strong style={{color: '#ED1E79'}}>Siga-nos nas redes</strong></li>
                     <li>
                       <a href="https://www.instagram.com/afilipro_oficial" target='_blank'>
-                        <AiFillInstagram /> @afilipro_ocifial
+                        <AiFillInstagram /> @storiesquebombam
                       </a>
                     </li>
                     <li>
                       <a href="https://tiktok.com/@afilipro_oficial" target='_blank'>
-                        <AiFillTikTok /> @afilipro_ocifial
+                        <AiFillTikTok /> @storiesquebombam
                       </a>
                     </li>
                     <li>
                       <a href="https://youtube.com/@afilipro_oficial" target='_blank'>
-                        <FaYoutube /> @afilipro_ocifial
+                        <FaYoutube /> @storiesquebombam
                       </a>
                     </li>
                   </ul>
                 </Col>
                 <Col md={12}>
                   <p style={{fontSize: '.75rem', marginTop: '1rem', textAlign: 'center'}}>
-                    <strong>AfiliPRO</strong> é um produto de <strong>Cilts Serviços para Internet</strong> <br />CNPJ: 14.512.150/0001-99
+                    <strong>Stories que Bombam</strong> é um produto de <strong>Cilts Serviços para Internet</strong> <br />CNPJ: 14.512.150/0001-99
                   </p>
                 </Col>
               </Row>

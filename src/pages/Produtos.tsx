@@ -16,9 +16,9 @@ import { FaCopy } from "react-icons/fa6";
 // import { AiFillPicture } from "react-icons/ai";
 import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
-import { IoIosOpen } from "react-icons/io";
 import { FaToggleOn } from "react-icons/fa";
 import { FaToggleOff } from "react-icons/fa6";
+import { htmlToDOM } from 'html-react-parser';
 
 const Produtos = () => {
 
@@ -30,8 +30,6 @@ const Produtos = () => {
     const [produtos, setProdutos] = useState<any[]>([]);
     const [titulo, setTitulo] = useState<any>(null);
     const [link, setLink] = useState<any>(null);
-    const [linkDois, setLinkDois] = useState<any>(null);
-    const [linkTres, setLinktres] = useState<any>(null);
     const [texto, setTexto] = useState<any>(null);
     const [ce, setCe] = useState<any>(false);
     const [categoria, setCategoria] = useState<any>(null);
@@ -132,7 +130,13 @@ const Produtos = () => {
 
         setLoadingProducts(true);
 
-        axios.get(`${env}/api/produtos` + (params.categoria ? `/${params.categoria}` : '') + (searchParams.get('terms') || searchParams.get('ce') ? '?' : '') + (searchParams.get('terms') ? `terms=${searchParams.get('terms')}`: '') + (searchParams.get('terms') && searchParams.get('ce') ? '&' : '') + (searchParams.get('ce') ? `ce=${searchParams.get('ce')}` : '') + (params.page ? ((!searchParams.get('terms') && !searchParams.get('ce') ? '?' : '&') + `page=${(params.page-1)}`) : ''))
+        axios.get(`${env}/api/produtos` + (params.categoria ? `/${params.categoria}` : '') + (searchParams.get('terms') || searchParams.get('ce') ? '?' : '') + (searchParams.get('terms') ? `terms=${searchParams.get('terms')}`: '') + (searchParams.get('terms') && searchParams.get('ce') ? '&' : '') + (searchParams.get('ce') ? `ce=${searchParams.get('ce')}` : '') + (params.page ? ((!searchParams.get('terms') && !searchParams.get('ce') ? '?' : '&') + `page=${(params.page-1)}`) : ''),
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('token'),
+                    'Content-Type': 'multipart/formdata'
+                }
+            })
             .then((e)=>{
                 console.log('total: ', e.data.total);
                 setTotal(e.data.total);
@@ -179,8 +183,6 @@ const Produtos = () => {
       formData.append("produto", JSON.stringify({
                 titulo: titulo,
                 link: link,
-                linkDois: linkDois,
-                linkTres: linkTres,
                 texto: texto,
                 categoria: categoria,
                 ce: ce ? '1' : '0'
@@ -200,8 +202,6 @@ const Produtos = () => {
             setTitulo(null);
             setTexto(null);
             setLink(null);
-            setLinkDois(null);
-            setLinktres(null);
             setTitulo(null);
             setLoading(false);
             setTimeout(()=>{
@@ -216,7 +216,16 @@ const Produtos = () => {
         })
     };
 
-    const setPosted = (id:any) => {
+    const setPosted = (id:any, el:any) => {
+
+        const actualClass:string = document.getElementById(el)?.children[0].getAttribute('class') || '';
+
+        if (actualClass.indexOf('posted') > -1) {
+            document.getElementById(el)?.children[0].setAttribute('class', actualClass.replace(' posted', ''));
+        } else {
+            document.getElementById(el)?.children[0].setAttribute('class', actualClass+' posted');
+        }
+
         let posted = JSON.parse(window.localStorage.getItem('posted') || "[]");
         const posIndex = posted.indexOf(id);
         if(posIndex === -1) {
@@ -225,7 +234,6 @@ const Produtos = () => {
             delete posted[posIndex];
         }
         window.localStorage.setItem('posted', JSON.stringify(posted));
-        getProdutos();
     }
 
     const showBio = (id: any, link: any) => {
@@ -262,10 +270,11 @@ const Produtos = () => {
                             <select 
                                 style={{width: '100%', borderRadius: '5px', border: 'none'}}
                                 id="categories"
+                                value={params.categoria}
                                 onChange={(e)=>{changeCategory(e.target.value)}}>
-                                <option value="">Mostrar todas</option>
+                                <option value="" selected={!params.categoria ? true : false}>Mostrar todas</option>
                                 {categories.length > 0 && categories.map((e, i) => (
-                                    <option value={e.id} key={i} selected={e.id === params.categoria}>{e.categoria}</option>
+                                    <option value={e.id} key={i}>{e.categoria}</option>
                                 ))}
                             </select>
                         </Col>
@@ -279,7 +288,7 @@ const Produtos = () => {
                     </Row>
                     <Row>
                         <Col xs={2}>Palavra:</Col>
-                        <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} value={terms} onChange={(e)=>{setTerms(e.target.value)}} /></Col>
+                        <Col xs={10}><input type="text" id='terms' style={{width: '100%'}} value={terms || ''} onChange={(e)=>{setTerms(e.target.value)}} /></Col>
                     </Row>
                     <Row>
                         <Col>
@@ -339,16 +348,8 @@ const Produtos = () => {
                                                 )}</p>
                                             </Col>
                                             <Col md={12}>
-                                                <p className='form-title'>Link</p>
+                                                <p className='form-title'>Link para Shopee Vídeos</p>
                                                 <input type="text" id='link' placeholder='Link' onChange={(e)=>{setLink(e.target.value)}} />
-                                            </Col>
-                                            <Col md={12}>
-                                                <p className='form-title'>Link 2</p>
-                                                <input type="text" id='link_2' placeholder='Link' onChange={(e)=>{setLinkDois(e.target.value)}} />
-                                            </Col>
-                                            <Col md={12}>
-                                                <p className='form-title'>Link 3</p>
-                                                <input type="text" id='link_3' placeholder='Link' onChange={(e)=>{setLinktres(e.target.value)}} />
                                             </Col>
                                             <Col md={12}>
                                                 <p className='form-title'>texto</p>
@@ -424,19 +425,11 @@ const Produtos = () => {
                                     </div>
                                     */}
                                     <div className='video'>
-                                        <video width="100%" controls  poster={e.capa ? `${env}/api/${e.capa}` : ''}>
-                                            <source src={`${env}/api/${e.video}`} type="video/mp4"></source>
+                                        <video width="100%" controls  poster={e.capa ? `https://afilipro.com.br/api/${e.capa}` : ''}>
+                                            <source src={`https://afilipro.com.br/api/${e.video}`} type="video/mp4"></source>
                                         </video>
                                         <FaVideo />
                                     </div>
-                                </div>
-                                <div className='downloads'>
-                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="ImageName" download={e.capa} style={{marginBottom: '1rem'}}>
-                                        Baixar Capa <FaFileDownload />
-                                    </a>
-                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} title="ImageName" download={e.video}>
-                                        Baixar Vídeo <FaFileDownload />
-                                    </a>
                                 </div>
                                 <div className='texto' onClick={()=>{
                                         navigator.clipboard.writeText(e.titulo + " " + e.texto).then(() => {
@@ -444,55 +437,47 @@ const Produtos = () => {
                                             alert('#Hashtags copiadas com sucesso!');
                                         });
                                     }}>
-                                    <p>Copiar Título e #hashtags</p>
                                     <span>{e.titulo} {e.texto}</span>
                                     <FaCopy />
                                 </div>
-                                <div className='link' onClick={()=>{
-                                        window.open(e.link, '_self');
-                                    }}>
-                                    <p>Link 1</p>
-                                    <span>{e.link}</span>
-                                    <IoIosOpen />
+                                <div className='downloads'>
+                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.capa}`} title="Capa" download={e.capa} style={{marginBottom: '1rem'}}>
+                                        Baixar Capa <FaFileDownload />
+                                    </a>
+                                    <a href={`${env.indexOf('localhost')>-1?env:'/api'}/${e.video}`} title="Vídeo" download={e.video}>
+                                        Baixar Vídeo <FaFileDownload />
+                                    </a>
+                                    <a href={e.link} title="Shopee" target='_blank'>
+                                        Ir para Shopee <FaFileDownload />
+                                    </a>
+                                    {e.link_rastreavel && (
+                                        <a href="#" onClick={(u)=>{u.preventDefault();
+                                                navigator.clipboard.writeText(e.link_rastreavel).then(() => {
+                                                    alert('Link copiado com sucesso');
+                                                })}}>Copiar link rastreável para Story<FaCopy />
+                                        </a>
+                                    )}
                                 </div>
-                                {e.link_2 && (
-                                    <div className='link' onClick={()=>{
-                                        window.open(e.link_2, '_self');
-                                    }}>
-                                    <p>Link 2</p>
-                                    <span>{e.link_2}</span>
-                                    <IoIosOpen />
-                                </div>
-                                )}
-                                {e.link_3 && (
-                                    <div className='link' onClick={()=>{
-                                        window.open(e.link_3, '_self');
-                                    }}>
-                                    <p>Link 3</p>
-                                    <span>{e.link_3}</span>
-                                    <IoIosOpen />
-                                </div>
-                                )}
-                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) === -1 && 
-                                    <div  onClick={()=>{setPosted(e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', padding:'.5rem 0 0', color: 'orangered', fontWeight: 'bold', borderTop: 'solid 1px #CCC'}}>
-                                        <span>Marcar como postado</span>
-                                    </div>
-                                }
-                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) > -1 && 
-                                    <div onClick={()=>{setPosted(e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
-                                        <span>Desfazer marcação</span>
-                                    </div>
-                                }
                                 {bio && (
                                     <div onClick={()=>{showBio(e.id, e.link)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
-                                        <span>Incluir na Bio</span>
+                                        <span>Incluir no seu Site</span>
                                     </div>
                                 )}
                                 {!bio && (
                                     <div onClick={()=>{navigate('/bio')}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
-                                        <span>Registrar bio</span>
+                                        <span>Registrar ID Shopee</span>
                                     </div>
                                 )}
+                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) === -1 && 
+                                    <div  onClick={()=>{setPosted(e.id, i+'_'+e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', padding:'.5rem 0 0', color: '#ED1E79', fontWeight: 'bold'}}>
+                                        <span>Marcar como postado</span>
+                                    </div>
+                                }
+                                { JSON.parse(window.localStorage.getItem('posted') || '[]').indexOf(e.id) > -1 && 
+                                    <div onClick={()=>{setPosted(e.id, i+'_'+e.id)}} style={{textAlign: 'center', cursor: 'pointer', margin: '1rem 0 0', color: '#555', fontWeight: 'bold'}}>
+                                        <span>Desfazer marcação</span>
+                                    </div>
+                                }
                             </div>
                             {e.ce === '1' && (
                                 <img src={coex} alt="Comissão Extra" className='ce' />

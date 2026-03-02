@@ -5,6 +5,7 @@ import env from '../utils/env';
 import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
+import { BiTargetLock } from 'react-icons/bi';
 
 interface Props {
     show: boolean;
@@ -29,9 +30,8 @@ function Login({show, setShow}: Props) {
             "mail": mail
         }).then(()=>{
             setError('Foi encaminhada uma nova senha para seu e-mail!');
-        }).catch((err)=>{
+        }).catch(()=>{
             setError('Não foi possível encaminhar o e-mail');
-            console.log(err);
         })
     }
 
@@ -52,9 +52,10 @@ function Login({show, setShow}: Props) {
         ).then((e)=>{
             window.localStorage.setItem('user', JSON.stringify(e.data.user));
             window.localStorage.setItem('token', e.data.token);
+            setShow(false);
             setSuccess(true);
-        }).catch((error) => {
-            console.log('Falha na validação do OTP', error.response.data);
+            window.open('/produtos', '_self');
+        }).catch(() => {
             setError('Erro na validação, tente novamente!');
         })
     }
@@ -115,15 +116,6 @@ function Login({show, setShow}: Props) {
                             )}
                         </Row>
                     </>
-                    }
-                    { success && 
-                        <>
-                            <Row>
-                                <Col md={12}>
-                                    Usuário logado com sucesso!
-                                </Col>
-                            </Row>
-                        </>
                     }
                 </Container>
             </form>

@@ -1,9 +1,12 @@
 .footer {
-  background-image: linear-gradient(to right, #555  , #444  );
-  background-image: -webkit-linear-gradient(to right, #555  , #444  );
+  background: #000;
   color: #FFF;
   padding: 1rem 0;
   font-size: 1rem;
+
+  svg {
+    color: #ED1E79 !important;
+  }
 
   a {
     color: #FFF;
