@@ -28,7 +28,7 @@ const Bio = () => {
     // const [thumb, setThumb] = useState<any>(null);
 
     const [success, setSuccess] = useState<any>(false);
-    const [error, setError] = useState<any>(false);
+    const [error, setError] = useState<any>('');
 
     const user = JSON.parse(window.localStorage.getItem('user') || '');
 
@@ -80,8 +80,12 @@ const Bio = () => {
             setSuccess(true);
             setTimeout(()=>{setSuccess(false);}, 3000);
             getBio();
-        }).catch(()=>{
-            setError(true);
+        }).catch((err)=>{
+            if(err.response.data.error === 'Page exist'){
+                setError('O identificador da página escolhida já existe');
+            } else {
+                setError('Erro ao cadastrar');
+            }
             setTimeout(()=>{setError(false);}, 3000);
         })
     }
@@ -103,11 +107,11 @@ const Bio = () => {
             }
         ).then(()=>{
             setSuccess(true);
-            setTimeout(()=>{setSuccess(false);}, 3000);
+            setTimeout(()=>{setSuccess(false);}, 5000);
             getBio();
         }).catch(()=>{
             setError(true);
-            setTimeout(()=>{setError(false);}, 3000);
+            setTimeout(()=>{setError(false);}, 5000);
         })
     }
 
@@ -123,6 +127,12 @@ const Bio = () => {
     }
 
     const [how, setHow] = useState<boolean>(false);
+
+    useEffect(()=>{
+        if (name) {
+            setNickname(name.replace(/ /gi, '').toLowerCase());
+        }
+    }, [name]);
 
     return (
         <>
@@ -143,7 +153,7 @@ const Bio = () => {
                     </Col>
                     <Col md={4}>
                         <p><strong>Identificador da Loja</strong></p>
-                        <input type="text" value={nickname} onChange={(e)=>{setNickname(e.target.value)}} placeholder='Identificador: ex. nomedaloja' />
+                        <input type="text" disabled={true} value={nickname} onChange={(e)=>{setNickname(e.target.value)}} placeholder='Identificador: ex. nomedaloja' />
                     </Col>
                     <Col md={4}>
                         <p><strong>ID Afiliado Shopee</strong></p>
@@ -197,7 +207,9 @@ const Bio = () => {
                     </Col>
                     {(error || success) && (
                         <Col md={12}>
-                            <p style={{textAlign: 'center'}}>{error ? 'Houve um erro ao cadastrar' : ''}{success ? 'Alterações realizadas com sucesso':''}</p>
+                            <p style={{textAlign: 'center'}}>
+                                {error !== '' ? error : ''}
+                                {success ? 'Alterações realizadas com sucesso':''}</p>
                         </Col>
                     )}
                     {!bio && (

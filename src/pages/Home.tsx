@@ -17,7 +17,8 @@ import depGaby from '../assets/prova-gaby.jpg';
 import imgInstagram from '../assets/icons/instagram.png';
 import imgShopee from '../assets/icons/shopee.png';
 import imgTiktok from '../assets/icons/tiktok.png';
-import imgCovers from '../assets/covers.jpg';
+import tutorial_video from '../assets/video.mp4';
+import tutorial_video_cover from '../assets/video.jpg';
 
 // icons
 import { FaArrowRight } from "react-icons/fa";
@@ -49,20 +50,38 @@ const Home = () => {
             <Container>
                 <Row>
                     <Col xs={12}>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 0', fontSize: '1.5rem', color: 'orangered'}}>PACK DE VÍDEOS INTERATIVO</h3>
-                        <h3 style={{textAlign: 'center', margin: '0 0 1rem', fontSize: '1.5rem'}}>Plataforma <span style={{fontWeight: 'bold', color: '#ED1E79'}}>+</span> Telegram</h3>
-                        <p style={{textAlign: 'center', margin: '0 0 1rem'}}>+ de <span style={{color: 'orangered'}}>2.500 vídeos</span> como estes no ano</p>
-                        <p style={{textAlign: 'center', margin: '0 0 2rem'}}><a href='/tutoriais' target='_self'>Assista aqui um video da plataforma</a></p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                        <img src={imgCovers} width='100%' alt="Afiliada" style={{marginBottom: '2rem'}} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                        <p><center><strong>Vídeos virais editados nas principais tendências das Mídias Sociais</strong></center></p>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '1.75rem', color: 'orangered', fontWeight: 'bold'}}>TUDO O QUE UM AFILIADO PRECISA, EM UM ÚNICO LUGAR!</h3>
+                        <p style={{textAlign: 'center', fontSize: '1.5rem', lineHeight: '2.25rem', marginBottom: '2rem'}}>
+                            <strong style={{fontSize: '1.5rem'}}>1 ano de acesso</strong><br />
+                            <span style={{color: '#999'}}>de R$ 159,90</span><br />
+                            <strong style={{fontSize: '2.5rem', color: 'orangered'}}>por R$ 29,90</strong><br />
+                            <small>promoção válida até 09/03</small>
+                        </p>
+                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '2rem'}}>
+                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('comece_agora_mesmo', 'home');location.href = '#plains'}}>Comece agora mesmo <FaArrowRight /></Button>
+                        </p>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '1.25rem'}}><strong>Instagram <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Shopee Vídeo <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Tiktok</strong></h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Pack de vídeos diários</h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Gerador de link comissionado</h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><a href="https://link-sqb.shop/b/Storiesquebombam" target='_blank'>🔗 Um site seu como este<br />
+                        <small>[clique aqui]</small></a></h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: 'green', color: '#FFF', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Link para Grupo do Whatsapp</h3>
+                        <div id="plains">
+                            <Register />
+                        </div>
+                        <p style={{textAlign: 'center', fontSize: '1.25rem', margin: '2rem 0 0rem', fontWeight: 'bold'}}>Conheça nossa plataforma e promova + de <span style={{color: 'orangered'}}>2.500 vídeos</span> como estes no ano</p>
+                        <p style={{fontSize: '2rem'}}>👇</p>
+                        <video width="100%" controls={true} autoPlay={true} style={{border: 'solid 2px #999', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)'}} poster={tutorial_video_cover}>
+                            <source src={tutorial_video} type="video/mp4"></source>
+                        </video>
+                        <div style={{backgroundColor: 'yellow', padding: '1rem', borderRadius: '10px', margin: '2rem 0'}}>
+                            <p style={{fontSize: '1.5rem', margin: '0 0 1rem', color: 'orangered'}}><strong>Cansado de ser BANIDO?</strong></p>
+                            <p style={{margin: '1rem 0'}}><strong>Packs convencionais</strong>, podem te <span style={{color: 'red', textDecoration: 'line-through'}}>BANIR DA PLATAFORMA</span> quando os produtos não condizem com o link, por isso nosso vídeos diários são fiéis aos produtos que representam e removidos do catálogo quando não possuem mais estoque!</p>
+                        </div>
+                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '1rem'}}>
+                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('libere_seu_acesso', 'home');location.href = '#plains'}}>Libere seu acesso agora <FaArrowRight /></Button>
+                        </p>
+                        <p style={{margin: '2rem 0', fontSize: '1.5rem'}}><center><strong><span style={{color: 'orangered'}}>Vídeos virais</span> editados nas principais tendências das Mídias Sociais</strong></center></p>
                         <p style={{marginBottom: '0'}}>
                             <ul className='list-mais'>
                                 <li><span>+</span> Seus links já rastreados em seu ID Shopee;</li>
@@ -74,7 +93,7 @@ const Home = () => {
                         </p>
                     </Col>
                 </Row>
-                <Row style={{textAlign: 'center'}}>
+                <Row style={{textAlign: 'center', margin: '1rem 0 2rem'}}>
                     <Col xs={4}>
                         <img height={60} src={imgInstagram} alt="Instagram" />
                     </Col>
@@ -86,14 +105,6 @@ const Home = () => {
                     </Col>
                 </Row>
             </Container>
-            <Container>
-                <Row className='call'>
-                    <Col md={12}>
-                        <p style={{marginTop: '2rem'}}>Além do <strong style={{color: '#ED1E79'}}>PACK</strong>, a plataforma converte os <strong style={{color: 'orangered'}}>links rastreados</strong> dos produtos já com seu ID Shopee e um <strong style={{color: 'orangered'}}>site personalizado</strong> com seu nome e link para seu <strong>Grupo de Whatsapp</strong>!</p>
-                    </Col>
-                </Row>
-            </Container>
-            <Register />
             <Container>
                 <Row>
                     <Col>

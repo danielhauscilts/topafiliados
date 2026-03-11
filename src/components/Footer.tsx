@@ -6,8 +6,8 @@ import { useLocation } from 'react-router-dom';
 import { MdEmail } from "react-icons/md";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { AiFillInstagram } from "react-icons/ai";
-import { FaYoutube } from "react-icons/fa";
-import { AiFillTikTok } from "react-icons/ai";
+// import { FaYoutube } from "react-icons/fa";
+// import { AiFillTikTok } from "react-icons/ai";
 
 import './Footer.scss';
 
@@ -43,18 +43,8 @@ const Footer = () => {
                   <ul className='social'>
                     <li><strong style={{color: '#ED1E79'}}>Siga-nos nas redes</strong></li>
                     <li>
-                      <a href="https://www.instagram.com/afilipro_oficial" target='_blank'>
-                        <AiFillInstagram /> @storiesquebombam
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://tiktok.com/@afilipro_oficial" target='_blank'>
-                        <AiFillTikTok /> @storiesquebombam
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://youtube.com/@afilipro_oficial" target='_blank'>
-                        <FaYoutube /> @storiesquebombam
+                      <a href="https://www.instagram.com/stories_que_bombam" target='_blank'>
+                        <AiFillInstagram /> @stories_que_bombam
                       </a>
                     </li>
                   </ul>

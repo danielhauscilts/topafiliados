@@ -139,6 +139,7 @@
             cursor: inherit !important;
 
             .video {
+                display: none;
                 opacity: .2;
 
                 svg {
@@ -147,6 +148,7 @@
             }
 
             .downloads a {
+                display: none;
                 background-color: #555;
                 border-color: #555;
                 color: #000;
@@ -154,6 +156,10 @@
 
             .titulo {
                 color: #555;
+            }
+
+            .texto {
+                display: none;
             }
 
             &:after {
@@ -199,7 +205,7 @@
     .filters {
         margin: 0;
         border-bottom: solid 1px #ccc;
-        padding: 1rem 0;
+        padding: 1rem;
         background-color: #ededed;
 
         .filter-title {
@@ -219,6 +225,7 @@
 
 .pagination {
     justify-content: center;
+    padding: 0 1rem;
 
     ul {
         list-style: none;

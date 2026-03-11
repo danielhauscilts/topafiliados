@@ -148,7 +148,8 @@ const Count = () => {
                 {!pId && (
                     <Row style={{marginTop: '1rem'}}>
                         <Col xs={12} className='text-center'>
-                            <Button style={{padding: '1rem 3rem', margin: '1rem 0', fontSize: '1.5rem', width: '100%'}} onClick={()=>{activePayment()}}><strong>R$ 159,90</strong></Button>
+                            <p>Acesso por 1 ano por apenas</p>
+                            <Button style={{padding: '1rem 3rem', margin: '1rem 0', fontSize: '1.5rem', width: '100%'}} onClick={()=>{activePayment()}}><strong>R$ 29,90</strong></Button>
                         </Col>
                     </Row>
                 )}
@@ -159,7 +160,7 @@ const Count = () => {
                                 <>
                                     <p className='text-center'>
                                         <p>Você está contratando o plano por 1 ano</p>
-                                        <p style={{fontSize: '2rem'}}><strong>R$ 159,90</strong></p>
+                                        <p style={{fontSize: '1rem'}}><strong style={{fontSize: '2rem'}}> por R$ 29,90</strong><br />promoção válida até 09/03</p>
                                         <small>Clique abaixo e pague com</small>
                                     </p>
                                     <Wallet initialization={{ preferenceId: pId }} />

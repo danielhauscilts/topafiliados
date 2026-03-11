@@ -12,7 +12,6 @@ import { AiFillInstagram } from "react-icons/ai";
 import { SiShopee } from "react-icons/si";
 import { PiTiktokLogoFill } from "react-icons/pi";
 
-
 const BioPage = () => {
 
     const [bio, setBio] = useState<any>(null);

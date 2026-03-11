@@ -37,6 +37,10 @@ class User {
   date?: string;
 }
 
+if(window.location.href.indexOf('afilipro') > -1) {
+  window.open('https://storiesquebombam.com.br', '_self');
+}
+
 function App() {
 
   const [show, setShow] = useState(false);
@@ -95,12 +99,14 @@ function App() {
         setLogged(false);
         window.localStorage.removeItem('token');
         window.localStorage.removeItem('user');
+        window.open('/', '_self');
       })
     }
   }, [])
 
   return (
     <BrowserRouter>
+
       <Header logged={logged} user={user} setShow={setShow} signout={signout} />
 
       {/* Routes */}

@@ -5,7 +5,6 @@ import env from '../utils/env';
 import { useNavigate } from 'react-router-dom';
 
 import './Login.scss';
-import { BiTargetLock } from 'react-icons/bi';
 
 interface Props {
     show: boolean;
@@ -54,7 +53,11 @@ function Login({show, setShow}: Props) {
             window.localStorage.setItem('token', e.data.token);
             setShow(false);
             setSuccess(true);
-            window.open('/produtos', '_self');
+            if (e.data.user.type !== 'u') {
+                window.open('/conta', '_self');
+            } else {
+                window.open('/produtos', '_self');
+            }
         }).catch(() => {
             setError('Erro na validação, tente novamente!');
         })

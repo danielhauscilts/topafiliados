@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import env from '../utils/env';
 
@@ -9,36 +7,7 @@ import './Learn.scss';
 
 import tutorial_video from "../assets/video/tutorial-video.mp4";
 
-import { FaCopy } from "react-icons/fa6";
-// import { AiFillPicture } from "react-icons/ai";
-import { FaVideo } from "react-icons/fa";
-import { FaFileDownload } from "react-icons/fa";
-import { IoIosOpen } from "react-icons/io";
-
-// icons
-import { FaArrowRight } from "react-icons/fa";
-
 const Learn = () => {
-
-    const Navigate = useNavigate();
-
-    const [produtos, setProdutos] = useState<any[]>([]);
-    const [loadingProducts, setLoadingProducts] = useState<boolean>(false);
-
-    const getProdutos = () => {
-
-        setLoadingProducts(true);
-
-        axios.get(`${env}/api/produtos/home`)
-            .then((e)=>{
-                console.log('total: ', e.data.total);
-                setProdutos(e.data.items);
-                setLoadingProducts(false);
-            }).catch(()=>{
-                setProdutos([]);
-                setLoadingProducts(false);
-            })
-    }
 
     const access = (btn:any, pg:any) => {
 
@@ -51,7 +20,6 @@ const Learn = () => {
     }
 
     useEffect(() => {
-        getProdutos();
         access('pg_tutorial', 'tutoriais');
     }, []);
 

@@ -32,7 +32,10 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
     return (
       <>
         {bioP && (
-
+          <>
+          <div style={{fontSize: '.75rem', textAlign: 'center', backgroundColor: '#000', color: '#fff', padding: '.5rem'}}>
+              <strong style={{color: 'orangered'}}>AfiliPRO</strong> agora é <strong style={{color: '#ED1E79'}}>Stories que Bombam</strong>
+            </div>
           <div className='header-restrict'>
             <Navbar expand="lg" className='navbar-light'>
               <Container>
@@ -87,6 +90,7 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
               </Container>
             </Navbar>
           </div>
+          </>
         )}
       </>
     )

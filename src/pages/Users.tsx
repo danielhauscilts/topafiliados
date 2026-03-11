@@ -55,7 +55,7 @@ const Users = () => {
             <Container>
                 {users && users.length > 0 && users.map((e, i) => (
                     <Row key={i} style={{borderBottom: 'solid 1px #CCC', margin: '.5rem .25rem', padding: '0 0 .5rem'}}>
-                        <Col xs={12} sm={6} md={6} lg={3}><strong>{e.name}</strong></Col>
+                        <Col xs={12} sm={6} md={6} lg={3}><strong>{e.id} - {e.name}</strong></Col>
                         <Col xs={12} sm={6} md={6} lg={3}>{e.mail}</Col>
                         <Col xs={12} sm={4} md={4} lg={2}>{e.phone}</Col>
                         <Col xs={12} sm={4} md={4} lg={2}>{e.date.split('-')[2]}/{e.date.split('-')[1]}/{e.date.split('-')[0]}</Col>

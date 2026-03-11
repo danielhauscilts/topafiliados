@@ -88,7 +88,6 @@ function validateToken($headers, $conn) {
     $valid = mysqli_query($conn, 'SELECT token FROM users WHERE token = "'.$token.'"');
 
     if (mysqli_num_rows($valid) == 0) {
-        mysqli_close($conn);
         return 'Invalid';
     }
 
@@ -278,7 +277,7 @@ function sendMail($to, $subject, $message) {
         $mail->Host       = 'smtp.titan.email'; // Example host
         $mail->SMTPAuth   = true;
         $mail->Username   = 'no-reply@storiesquebombam.com.br';
-        $mail->Password   = 'No@reply';
+        $mail->Password   = 'No@reply1';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465; // Example port
 
@@ -565,7 +564,7 @@ $app->get('/api/links', function (Request $request, Response $response, $args) u
     
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
 
-    $data = mysqli_query($conn, 'SELECT id, titulo, link FROM produtos WHERE link NOT LIKE "%/product/%" AND ativo = "1"');
+    $data = mysqli_query($conn, 'SELECT id, titulo, link FROM produtos WHERE ativo = "1"');
 
     mysqli_close($conn);
 
@@ -647,6 +646,18 @@ $app->get('/api/produtos/{categoria}', function (Request $request, Response $res
 // Cadastra produto
 $app->post('/api/produto', function (Request $request, Response $response, $args) use ($mysql_conn) {
 
+    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    if(authAdmin($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
+    if (validateToken($request->getHeaders(), $conn) === "invalid") {
+        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
+        return $response->withStatus(401);
+    }
+
     $data = $request->getParsedBody();
     $data = json_decode($data["produto"], true);
     $uploadedFiles = $request->getUploadedFiles();
@@ -671,18 +682,6 @@ $app->post('/api/produto', function (Request $request, Response $response, $args
     } else {
         $response->getBody()->write(json_encode(["error" => "Fail to upload or unsupported extension capa"], true) );
         return $response->withStatus(500);
-    }
-
-    $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
-
-    if(authAdmin($request->getHeaders(), $conn) === "invalid") {
-        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
-        return $response->withStatus(401);
-    }
-
-    if (validateToken($request->getHeaders(), $conn) === "invalid") {
-        $response->getBody()->write(json_encode(["error" => "User not authorized"], true) );
-        return $response->withStatus(401);
     }
 
     mysqli_query($conn, 'INSERT INTO produtos (
@@ -731,7 +730,7 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
             array(
                 "title" => "Stories que Bombam",
                 "quantity" => 1,
-                "unit_price" => 159.9,
+                "unit_price" => 29.9,
             )
         ),
         "back_urls"=> array(
@@ -740,7 +739,7 @@ $app->post('/api/pagamento', function (Request $request, Response $response, $ar
             "pending" => "https://storiesquebombam.com.br/pagamento/pendente"
         ),
         "payment_methods" => array(
-            "installments" => 10
+            "installments" => 1
         ),
         "external_reference" => $order
     ]);
@@ -1010,6 +1009,13 @@ $app->post('/api/bio', function (Request $request, Response $response, $args) us
     $data = $request->getParsedBody();
 
     $conn = new mysqli($mysql_conn['host'], $mysql_conn['user'], $mysql_conn['pass'], $mysql_conn['db']);
+
+    $unvaliable = mysqli_query($conn, 'SELECT * FROM bio WHERE nickname = "'.$data['nickname'].'"');
+
+    if (mysqli_num_rows($unvaliable) > 0) {
+        $response->getBody()->write(json_encode(["error" => "Page exist"], true));
+        return $response->withStatus(409);
+    }
 
     mysqli_query($conn, 'INSERT INTO bio (
         name,

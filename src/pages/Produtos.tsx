@@ -18,7 +18,6 @@ import { FaVideo } from "react-icons/fa";
 import { FaFileDownload } from "react-icons/fa";
 import { FaToggleOn } from "react-icons/fa";
 import { FaToggleOff } from "react-icons/fa6";
-import { htmlToDOM } from 'html-react-parser';
 
 const Produtos = () => {
 
@@ -411,7 +410,7 @@ const Produtos = () => {
                     </Row>
                 </Container>
             )}
-            <Container style={{padding: '1rem'}}>
+            <Container style={{padding: '1rem 2rem'}}>
                 <Row>
                     {produtos && produtos.length > 0 && !loadingProducts && produtos.map((e, i) => (
                         <Col key={i} xs={12} sm={6} md={6} lg={4} id={`${i}_${e.id}`} style={{position: 'relative'}}>
