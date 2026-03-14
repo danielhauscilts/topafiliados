@@ -50,37 +50,37 @@ const Home = () => {
             <Container>
                 <Row>
                     <Col xs={12}>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '1.75rem', color: 'orangered', fontWeight: 'bold'}}>TUDO O QUE UM AFILIADO PRECISA, EM UM ÚNICO LUGAR!</h3>
-                        <p style={{textAlign: 'center', fontSize: '1.5rem', lineHeight: '2.25rem', marginBottom: '2rem'}}>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '2.25rem', color: 'orangered', fontWeight: 'bold'}}>SEJA UM AFILIADO<br />DE SUCESSO A PARTIR DE HOJE!</h3>
+                        <p style={{textAlign: 'center', fontSize: '1.5rem', lineHeight: '2.25rem', marginBottom: '2rem', backgroundColor: '#ededed', borderRadius: '10px', padding: '1rem 0'}}>
                             <strong style={{fontSize: '1.5rem'}}>1 ano de acesso</strong><br />
                             <span style={{color: '#999'}}>de R$ 159,90</span><br />
-                            <strong style={{fontSize: '2.5rem', color: 'orangered'}}>por R$ 29,90</strong><br />
-                            <small>promoção válida até 09/03</small>
+                            <strong style={{fontSize: '2.5rem', color: 'orangered'}}>⭐por R$ 29,90⭐</strong><br />
+                            <small>promoção válida até 01/04</small>
                         </p>
-                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '2rem'}}>
-                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('comece_agora_mesmo', 'home');location.href = '#plains'}}>Comece agora mesmo <FaArrowRight /></Button>
+                        <p>
+                            <a href="#know" style={{color: '#000', fontWeight: 'bold', fontSize: '1.25rem'}}>👉 Conheça mais sobre a solução!</a>
                         </p>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '1.25rem'}}><strong>Instagram <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Shopee Vídeo <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Tiktok</strong></h3>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Pack de vídeos diários</h3>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Gerador de link comissionado</h3>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><a href="https://link-sqb.shop/b/Storiesquebombam" target='_blank'>🔗 Um site seu como este<br />
-                        <small>[clique aqui]</small></a></h3>
-                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: 'green', color: '#FFF', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Link para Grupo do Whatsapp</h3>
                         <div id="plains">
                             <Register />
                         </div>
-                        <p style={{textAlign: 'center', fontSize: '1.25rem', margin: '2rem 0 0rem', fontWeight: 'bold'}}>Conheça nossa plataforma e promova + de <span style={{color: 'orangered'}}>2.500 vídeos</span> como estes no ano</p>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 2rem', fontSize: '1.25rem'}}><strong>Instagram <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Shopee Vídeo <span style={{fontWeight: 'bold', color: 'orangered'}}>+</span> Tiktok</strong></h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Pack de Vídeos Virais</h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Gerador de Link Comissionado</h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: '#ededed', padding: '.5rem 0', borderRadius: '10px'}}><a href="https://link-sqb.shop/b/Storiesquebombam" target='_blank'>🔗 Seu Site Personalizado<br />
+                        <small style={{fontSize: '1rem'}}>[clique aqui para ver]</small></a></h3>
+                        <h3 style={{textAlign: 'center', margin: '1rem 0 1rem', fontSize: '1.5rem', backgroundColor: 'green', color: '#FFF', padding: '.5rem 0', borderRadius: '10px'}}><span style={{fontWeight: 'bold', color: '#ED1E79'}}>👉</span> Link para Grupo do Whatsapp</h3>
+                        <p style={{textAlign: 'center', fontSize: '1.25rem', margin: '2rem 0 0rem', fontWeight: 'bold'}} id='know'>Conheça nossa plataforma e promova + de <span style={{color: 'orangered'}}>2.500 produtos</span> como estes no ano</p>
                         <p style={{fontSize: '2rem'}}>👇</p>
-                        <video width="100%" controls={true} autoPlay={true} style={{border: 'solid 2px #999', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)'}} poster={tutorial_video_cover}>
+                        <video width="100%" controls={true} autoPlay={false} style={{border: 'solid 2px #999', borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,.2)'}} poster={tutorial_video_cover}>
                             <source src={tutorial_video} type="video/mp4"></source>
                         </video>
+                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '2rem'}}>
+                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('comece_agora_mesmo', 'home');location.href = '#plains'}}>Comece agora mesmo <FaArrowRight /></Button>
+                        </p>
                         <div style={{backgroundColor: 'yellow', padding: '1rem', borderRadius: '10px', margin: '2rem 0'}}>
                             <p style={{fontSize: '1.5rem', margin: '0 0 1rem', color: 'orangered'}}><strong>Cansado de ser BANIDO?</strong></p>
                             <p style={{margin: '1rem 0'}}><strong>Packs convencionais</strong>, podem te <span style={{color: 'red', textDecoration: 'line-through'}}>BANIR DA PLATAFORMA</span> quando os produtos não condizem com o link, por isso nosso vídeos diários são fiéis aos produtos que representam e removidos do catálogo quando não possuem mais estoque!</p>
                         </div>
-                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '1rem'}}>
-                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('libere_seu_acesso', 'home');location.href = '#plains'}}>Libere seu acesso agora <FaArrowRight /></Button>
-                        </p>
                         <p style={{margin: '2rem 0', fontSize: '1.5rem'}}><center><strong><span style={{color: 'orangered'}}>Vídeos virais</span> editados nas principais tendências das Mídias Sociais</strong></center></p>
                         <p style={{marginBottom: '0'}}>
                             <ul className='list-mais'>
@@ -104,6 +104,13 @@ const Home = () => {
                         <img height={60} src={imgShopee} alt="Shopee" />
                     </Col>
                 </Row>
+                <Row>
+                    <Col>
+                        <p className='text-center' style={{marginTop: '1rem', marginBottom: '1rem'}}>
+                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('libere_seu_acesso', 'home');location.href = '#plains'}}>Libere seu acesso agora <FaArrowRight /></Button>
+                        </p>
+                    </Col>
+                </Row>
             </Container>
             <Container>
                 <Row>
@@ -120,16 +127,7 @@ const Home = () => {
                     </Col>
                 </Row>
             </Container>
-            <Container>
-                <Row>
-                    <Col>
-                        <p className='text-center' style={{marginTop: '2rem', marginBottom: '2rem'}}>
-                            <Button className='gradient' style={{fontSize: '1.5rem', padding: '1rem 1.25rem', width: '100%'}} onClick={(e)=>{e.preventDefault(); access('btn3', 'home');location.href = '#plains'}}>Contrate agora mesmo <FaArrowRight /></Button>
-                        </p>
-                    </Col>
-                </Row>
-            </Container>
-            <div id='bio' className='bio' style={{marginBottom: '0', padding: ' 0 0 2rem'}}>
+            <div id='bio' className='bio' style={{marginBottom: '0', padding: '2rem 0 2rem'}}>
                 <Container>
                     <Row>
                         <Col>

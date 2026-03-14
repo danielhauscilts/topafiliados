@@ -100,77 +100,68 @@ function Register() {
     }
 
     return (
+        
         <div className='Register'>
-            <Container className='register'>
-                <Row>
-                    <Col md={12}>
-                        <h1 style={{lineHeight: '2.75rem'}}>Acesso imediato!</h1>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md={12}>
-                        <p style={{marginBottom: '2rem', fontSize: '1.5rem', lineHeight: '1.75rem'}}><strong>Realize seu cadastro e<br />libere seus acesso agora mesmo!</strong></p>
-                        <div className='reg-form'>
-                            <Container>
-                                <Row>
-                                    <Col xs={12}>
-                                        <input 
-                                            type='text' 
-                                            id='name'
-                                            placeholder='Nome'
-                                            onChange={(e)=>{setName(e.target.value)}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={12}>
-                                        <input 
-                                            type='text' 
-                                            id='mail'
-                                            placeholder='E-mail'
-                                            onChange={(e)=>{setMail(e.target.value)}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={12} className='password-field'>
-                                        <input 
-                                            type='password' 
-                                            id='password'
-                                            placeholder='Senha'
-                                            onChange={(e)=>{setPassword(e.target.value)}} />
-                                            <FaEye onClick={()=>{showPassword('password')}} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={12} className='password-field'>
-                                        <input 
-                                            type='password' 
-                                            id='confPassword'
-                                            placeholder='Confirme a senha'
-                                            onChange={(e)=>{setConfPassword(e.target.value)}} />
-                                            <FaEye  onClick={()=>{showPassword('confPassword')}} />
-                                    </Col>
-                                    <Col>
-                                        <p style={{backgroundColor: 'yellow', padding: '.5rem', borderRadius: '10px', margin: '1rem 0 0'}}>Garantia de 7 dias, não se adaptou devolvemos seu dinheiro!</p>
-                                    </Col>
-                                </Row>
-                                {error && (
-                                    <Row className='error'><Col>{error}</Col></Row>
+            <h1 style={{lineHeight: '2.75rem', fontSize: '2.5rem'}}>Libere seu acesso imediatamente!</h1>
+            <p style={{marginBottom: '2rem', fontSize: '1.5rem', lineHeight: '1.75rem'}}><strong>Realize seu cadastro e<br />comece usar agora mesmo!</strong></p>
+            <div className='reg-form'>
+                <Container>
+                    <Row>
+                        <Col xs={12}>
+                            <input 
+                                type='text' 
+                                id='name'
+                                placeholder='Nome'
+                                onChange={(e)=>{setName(e.target.value)}} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            <input 
+                                type='text' 
+                                id='mail'
+                                placeholder='E-mail'
+                                onChange={(e)=>{setMail(e.target.value)}} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} className='password-field'>
+                            <input 
+                                type='password' 
+                                id='password'
+                                placeholder='Senha'
+                                onChange={(e)=>{setPassword(e.target.value)}} />
+                                <FaEye onClick={()=>{showPassword('password')}} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} className='password-field'>
+                            <input 
+                                type='password' 
+                                id='confPassword'
+                                placeholder='Confirme a senha'
+                                onChange={(e)=>{setConfPassword(e.target.value)}} />
+                                <FaEye  onClick={()=>{showPassword('confPassword')}} />
+                        </Col>
+                    {error && (
+                        <Col>{error}</Col>
+                    )}
+                        <Col xs={12}>
+                            <div style={{margin: '1rem 0 0'}}>
+                                {name && mail && password && confPassword && (password === confPassword) && (
+                                    <Wallet initialization={{ redirectMode: 'self'}} onSubmit={register} onReady={()=>{console.log('ready')}} onError={()=>{setError('Ocorreu um erro ao gerar pagamento, tente novamente!')}} />
                                 )}
-                                <Row>
-                                    <Col xs={12}>
-                                        {name && mail && password && confPassword && (password === confPassword) && (
-                                            <Wallet initialization={{ redirectMode: 'self'}} onSubmit={register} onReady={()=>{console.log('ready')}} onError={()=>{setError('Ocorreu um erro ao gerar pagamento, tente novamente!')}} />
-                                        )}
-                                        {(confPassword === '' || confPassword === null || (password !== confPassword)) && (
-                                            <Button disabled={true} style={{width: '100%', color: '#999', padding: '.5rem 0', fontWeight: 'bold', backgroundColor: '#CCC', border: 'none'}}>FINALIZAR</Button>
-                                        )}
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
+                                {(confPassword === '' || confPassword === null || (password !== confPassword)) && (
+                                    <Button disabled={true} style={{width: '100%', color: '#999', padding: '.5rem 0', fontWeight: 'bold', backgroundColor: '#CCC', border: 'none'}}>FINALIZAR</Button>
+                                )}
+                            </div>
+                        </Col>
+                        <Col>
+                            <p style={{backgroundColor: 'yellow', padding: '.5rem', borderRadius: '10px', margin: '1rem 0 0'}}>Garantia de 7 dias, não se adaptou devolvemos seu dinheiro!</p>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
         </div>
     )
 }

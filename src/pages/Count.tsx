@@ -160,7 +160,7 @@ const Count = () => {
                                 <>
                                     <p className='text-center'>
                                         <p>Você está contratando o plano por 1 ano</p>
-                                        <p style={{fontSize: '1rem'}}><strong style={{fontSize: '2rem'}}> por R$ 29,90</strong><br />promoção válida até 09/03</p>
+                                        <p style={{fontSize: '1rem'}}><strong style={{fontSize: '2rem'}}> por R$ 29,90</strong><br />promoção válida até 01/04</p>
                                         <small>Clique abaixo e pague com</small>
                                     </p>
                                     <Wallet initialization={{ preferenceId: pId }} />

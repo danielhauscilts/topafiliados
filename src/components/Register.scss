@@ -1,62 +1,59 @@
 .Register {
     color: #000;
-    padding: 1rem;
+    padding: 1rem 0;
 
-    .register {
+    h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        color: orangered;
+        background-color: #FFF;
+        margin:  0 0 1rem;
 
-        h1 {
-            font-size: 3rem;
-            font-weight: bold;
+        small {
+            color: #000;
+            font-weight: normal;
+        }
+    }
+
+    ul {
+        margin-bottom: 2rem;
+    }
+
+    .row {
+        margin-bottom: 1rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .reg-form {
+        padding: 0;
+    }
+
+    input {
+        width: 100%;
+        padding: .5rem .75rem;
+        border-radius: 5px;
+        border: solid 1px #ccc;
+    }
+
+    .error {
+        text-align: center;
+        color: #791e1e;
+        margin: 1rem 0;
+    }   
+
+    .call-register {
+        font-size: 2rem;
+        text-align: center;
+        background-color: #ededed;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+
+        strong {
             color: orangered;
-            background-color: #FFF;
-            margin:  0 0 1rem;
-
-            small {
-                color: #000;
-                font-weight: normal;
-            }
-        }
-
-        ul {
-            margin-bottom: 2rem;
-        }
-
-        .row {
-            margin-bottom: 1rem;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-
-        .reg-form {
-            padding: 0;
-        }
-
-        input {
-            width: 100%;
-            padding: .5rem .75rem;
-            border-radius: 5px;
-            border: solid 1px #ccc;
-        }
-
-        .error {
-            text-align: center;
-            color: #791e1e;
-            margin: 1rem 0;
-        }   
-
-        .call-register {
-            font-size: 2rem;
-            text-align: center;
-            background-color: #ededed;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-
-            strong {
-                color: orangered;
-            }
         }
     }
 
