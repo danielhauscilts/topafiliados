@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Container, Button, Nav, Navbar } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -21,8 +21,8 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
     const setShow = props.setShow;
     const signout = props.signout;
 
-    useEffect(()=>{
-      if(location.pathname.indexOf('/b/') === -1) {
+    useLayoutEffect(()=>{
+      if(location.pathname.indexOf('/b/') > -1) {
         setBioP(true);
       } else {
         setBioP(false);
@@ -31,69 +31,79 @@ const Header = (props: {logged: any, user: any, setShow: any, signout: any}) => 
 
     return (
       <>
-        {bioP && (
-          <>
-          <div style={{fontSize: '.75rem', textAlign: 'center', backgroundColor: '#000', color: '#fff', padding: '.5rem'}}>
-              <strong style={{color: 'orangered'}}>AfiliPRO</strong> agora é <strong style={{color: '#ED1E79'}}>Stories que Bombam</strong>
-            </div>
-          <div className='header-restrict'>
-            <Navbar expand="lg" className='navbar-light'>
-              <Container>
-                <Navbar.Brand href="/" style={{ padding: '10px 0'}}><img src={logo} alt="Stories que Bombam" /></Navbar.Brand>
-                {!logged && (
-                  <Button className='btn btn-primary d-lg-none' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
-                )}
-                {logged && (
-                  <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                )}
-                <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
-                  <Nav>
-                    {logged && (user.type === 'u' || user.type === 'a') && (
-                      <>
-                        <Nav.Item>
-                          <Link to="/produtos">Produtos</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                          <Link to="/bio">Página personalizada</Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                          <Link to="/conta">Minha conta</Link>
-                        </Nav.Item>
-                      </>
-                    )}
-                    {logged && user.type === 'a' && (
-                      <>
-                        <Nav.Item>
-                          <Link to="/usuarios">Usuários</Link>
-                        </Nav.Item>
-                      </>
-                    )}
-                    {logged && user.type === 'p' && (
-                      <>
-                        <Nav.Item>
-                          <Link to="/conta">Minha conta</Link>
-                        </Nav.Item>
-                      </>
-                    )}
-                    <Nav.Item className='text-end'>
-                      {logged && (
-                        <>
-                          <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
-                        </>
-                      )}
-                      {!logged && (
-                        <Button className='btn btn-primary d-xs-none d-md-block' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
-                      )}
-                    </Nav.Item>
-                  </Nav>
-                </Navbar.Collapse>
-              </Container>
-            </Navbar>
+        {!bioP && (
+          <div className='header'>
+            {logged && (
+              <>
+                <div className='header-restrict'>
+                  <Navbar expand="lg" className='navbar-light'>
+                    <Container>
+                      <Navbar.Brand href="/" style={{ padding: '10px 0'}}>
+                        <img src={logo} alt="Stories que Bombam" height={60} />
+                      </Navbar.Brand>
+                      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                      <Navbar.Collapse id="basic-navbar-nav" className='justify-content-end'>
+                        <Nav>
+                          {logged && (user.type === 'u' || user.type === 'a') && (
+                            <>
+                              <Nav.Item>
+                                <Link to="/produtos">Produtos</Link>
+                              </Nav.Item>
+                              <Nav.Item>
+                                <Link to="/bio">Página personalizada</Link>
+                              </Nav.Item>
+                              <Nav.Item>
+                                <Link to="/conta">Minha conta</Link>
+                              </Nav.Item>
+                            </>
+                          )}
+                          {logged && user.type === 'a' && (
+                            <>
+                              <Nav.Item>
+                                <Link to="/usuarios">Usuários</Link>
+                              </Nav.Item>
+                            </>
+                          )}
+                          {logged && user.type === 'p' && (
+                            <>
+                              <Nav.Item>
+                                <Link to="/conta">Minha conta</Link>
+                              </Nav.Item>
+                            </>
+                          )}
+                          <Nav.Item className='text-end'>
+                            {logged && (
+                              <>
+                                <Button onClick={(e)=>{e.preventDefault();if(confirm('Deseja realmente deslogar?')){signout()}}}>Deslogar <RiLogoutBoxRFill /></Button>
+                              </>
+                            )}
+                            {!logged && (
+                              <Button className='btn btn-primary d-xs-none d-md-block' id='login' onClick={()=>{setShow(true)}}>Logar <RiLoginBoxFill /></Button>
+                            )}
+                          </Nav.Item>
+                        </Nav>
+                      </Navbar.Collapse>
+                    </Container>
+                  </Navbar>
+                </div>
+              </>
+            )}
+            {!logged && (
+              <>
+                <div className='oferta'>
+                  A oferta termina em <span>17</span> dias, <strong>CORRE</strong>!
+                </div>
+                <div className='logo'>
+                  <img src={logo} alt="Stories que Bombam" />
+                  {!logged && (
+                    <Button className='btn-login' id='login' onClick={()=>{setShow(true)}}><RiLoginBoxFill /></Button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
-          </>
         )}
       </>
-    )
-}
+    )}
 
 export default Header;

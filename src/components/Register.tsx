@@ -102,8 +102,7 @@ function Register() {
     return (
         
         <div className='Register'>
-            <h1 style={{lineHeight: '2.75rem', fontSize: '2.5rem'}}>Libere seu acesso imediatamente!</h1>
-            <p style={{marginBottom: '2rem', fontSize: '1.5rem', lineHeight: '1.75rem'}}><strong>Realize seu cadastro e<br />comece usar agora mesmo!</strong></p>
+            <p style={{marginBottom: '2rem', fontSize: '1.25rem', lineHeight: '1.75rem'}}><strong>Realize seu cadastro e<br />comece usar agora mesmo!</strong></p>
             <div className='reg-form'>
                 <Container>
                     <Row>
@@ -155,9 +154,6 @@ function Register() {
                                     <Button disabled={true} style={{width: '100%', color: '#999', padding: '.5rem 0', fontWeight: 'bold', backgroundColor: '#CCC', border: 'none'}}>FINALIZAR</Button>
                                 )}
                             </div>
-                        </Col>
-                        <Col>
-                            <p style={{backgroundColor: 'yellow', padding: '.5rem', borderRadius: '10px', margin: '1rem 0 0'}}>Garantia de 7 dias, não se adaptou devolvemos seu dinheiro!</p>
                         </Col>
                     </Row>
                 </Container>

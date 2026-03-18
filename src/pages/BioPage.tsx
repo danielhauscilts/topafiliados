@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -29,6 +29,7 @@ const BioPage = () => {
         )
         .then((e)=>{
             setBio(e.data);
+            document.title = e.data.name;
             setProducts(e.data.produtos);
         }).catch(()=>{
             setBio(null);
@@ -36,7 +37,7 @@ const BioPage = () => {
         })
     }
 
-    useEffect(()=>{
+    useLayoutEffect(()=>{
         getBio();
     }, []);
 

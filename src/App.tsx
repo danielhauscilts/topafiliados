@@ -23,6 +23,7 @@ import Bio from './pages/Bio';
 import Validate from './pages/Validate';
 import BioPage from './pages/BioPage';
 import Review from './pages/Review';
+import Achadani from './pages/Achadani';
 import Footer from './components/Footer';
 
 // Components
@@ -116,6 +117,7 @@ function App() {
         <Route path="/duvidas" element={<About />} />
         <Route path="/plano" element={<Plain />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/b/achadani" element={<Achadani />} />
         <Route path="/b/:nick" element={<BioPage />} />
         <Route path="/plano/:plainId" element={<Register />} />
         <Route element={<ProtectRoute children={<Outlet />} />}>

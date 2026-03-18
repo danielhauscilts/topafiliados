@@ -51,7 +51,7 @@ const Footer = () => {
                 </Col>
                 <Col md={12}>
                   <p style={{fontSize: '.75rem', marginTop: '1rem', textAlign: 'center'}}>
-                    <strong>Stories que Bombam</strong> é um produto de <strong>Cilts Serviços para Internet</strong> <br />CNPJ: 14.512.150/0001-99
+                    <strong>Stories que Bombam</strong> é um produto de<br /><strong>Cilts Serviços para Internet</strong> <br />CNPJ: 14.512.150/0001-99
                   </p>
                 </Col>
               </Row>
